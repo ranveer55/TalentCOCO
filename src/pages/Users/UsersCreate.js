@@ -21,7 +21,6 @@ export default function UserCreate() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { id } = useParams();
-  const { user: { users, user, loading, error }, app: { masterdata } } = useSelector((state) => state);
   const isEdit = pathname.includes('edit');
   useEffect(() => {
     if(id){
@@ -45,7 +44,7 @@ export default function UserCreate() {
           ]}
         />
 
-        <UserNewEditForm isEdit={isEdit} currentUser={user} />
+        <UserNewEditForm isEdit={isEdit}  />
       </Container>
     </Page>
   );

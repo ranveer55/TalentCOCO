@@ -3,6 +3,7 @@ import * as ActionTypes from './Types';
 const initialState = {
     isLoading: false,
     error: null,
+    userError:null,
     users: [],
     user: null,
     sortBy: null,
@@ -19,6 +20,9 @@ const Reducer = (state = initialState, {type, payload} = {}) => {
       
         case ActionTypes.FETCH_USER_LOADING:
             return {  ...state,isLoading: true}
+
+        case ActionTypes.USER_ERROR:
+            return {  ...state,userError: payload}
 
         case ActionTypes.FETCH_USERS_SUCCESS:
             return { ...state, isLoading: false, users: payload}

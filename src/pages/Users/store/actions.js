@@ -1,6 +1,7 @@
 import * as ActionTypes from './Types';
 import axios from '../../../utils/axios';
 import { dispatch } from '../../../redux/store';
+import {  setToast } from '../../app/store/actions';
 
 
 export const startLoading = (payload) => ({
@@ -17,14 +18,8 @@ export const getUsersSuccess = (payload) => ({
   type: ActionTypes.FETCH_USERS_SUCCESS,
   payload
 })
-export const addUserSuccess = (payload) => ({
-  type: ActionTypes.ADD_USER_SUCCESS,
-  payload
-})
-export const updateUserSuccess = (payload) => ({
-  type: ActionTypes.UPDATE_USER_SUCCESS,
-  payload
-})
+
+
 export const deleteUsers = (payload) => ({
   type: ActionTypes.DELETE_USER_SUCCESS,
   payload
@@ -44,6 +39,7 @@ export function getUsers() {
       dispatch(getUsersSuccess(response.data.results));
     } catch (error) {
       dispatch(hasError(error));
+      dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }
   };
 }
@@ -56,30 +52,33 @@ export function getUser(id) {
       dispatch(getUserSuccess(response.data));
     } catch (error) {
       dispatch(hasError(error));
+      dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }
   };
 }
 
-export function createUser(data) {
+export function createUser(payload,cb) {
   return async () => {
     dispatch(startLoading());
     try {
-      const response = await axios.post('/users', data);
-      dispatch(addUserSuccess(response.data));
+      const {data, status} = await axios.post('/users', payload);
+      dispatch(setToast({severity:'success', message:'User created', open:true}))
+      cb();
     } catch (error) {
-      dispatch(hasError(error));
+      dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }
   };
 }
 
-export function updateUser(id, payload) {
+export function updateUser(id, payload,cb) {
   return async () => {
     dispatch(startLoading());
     try {
-      const response = await axios.patch(`/users/${id}`, payload);
-      dispatch(updateUserSuccess(response.data));
+      const {data, status} = await axios.patch(`/users/${id}`, payload);
+      dispatch(setToast({severity:'success', message:'User Updated', open:true}))
+      cb();
     } catch (error) {
-      dispatch(hasError(error));
+      dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }
   };
 }
@@ -90,8 +89,9 @@ export function deleteUser(id) {
     try {
       const response = await axios.delete(`/users/${id}`);
       dispatch(deleteUsers(response.data));
+      dispatch(setToast({severity:'success', message:'User Deleted', open:true}))
     } catch (error) {
-      dispatch(hasError(error));
+      dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }
   };
 }

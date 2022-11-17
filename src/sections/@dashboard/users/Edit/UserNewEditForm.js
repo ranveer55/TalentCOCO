@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useCallback, useEffect, useMemo } from 'react';
-import { useSnackbar } from 'notistack';
+
 import { useNavigate } from 'react-router-dom';
+import { capitalize } from 'lodash';
 import Mixed from 'yup/lib/mixed';
 // form
 import { useForm, Controller } from 'react-hook-form';
@@ -11,6 +12,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, InputLabel, Select, MenuItem, FormControl } from '@mui/material';
 import { useDispatch, useSelector } from '../../../../redux/store';
+import CompanyAutoComplete from '../../../../pages/Companys/CompanyAutocomplete';
 // utils
 import { fData } from '../../../../utils/formatNumber';
 // routes
@@ -23,34 +25,41 @@ import Label from '../../../../components/Label';
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../../components/hook-form';
 
 
+
+
 // ----------------------------------------------------------------------
 
 UserNewEditForm.propTypes = {
   isEdit: PropTypes.bool,
-  currentUser: PropTypes.object,
+  user: PropTypes.object,
 };
 
-export default function UserNewEditForm({ isEdit, currentUser }) {
+export default function UserNewEditForm({ isEdit }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
+
+  const { user: { user, loading, error,userError }, app: { masterdata } } = useSelector((state) => state);
+  const roles = masterdata && masterdata.roles ? masterdata.roles: []
+ 
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email(),
     password: Yup.mixed().required('Password is required'),
-    role: Yup.string().required('Role Number is required'),
- });
+    role: Yup.string().required('Role is required'),
+    company: Yup.object().required('Company is required'),
+  });
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.name || '',
-      email: currentUser?.email || '',
-      password: currentUser?.password || '',
-      role: currentUser?.role || '',
+      name: user?.name || '',
+      email: user?.email || '',
+      password: user?.password || '',
+      role: user?.role || '',
+      company: user?.company || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentUser]
+    [user]
   );
 
   const methods = useForm({
@@ -70,32 +79,39 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
   const values = watch();
 
   useEffect(() => {
-    if (isEdit && currentUser) {
+    if (isEdit && user) {
       reset(defaultValues);
     }
     if (!isEdit) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentUser]);
+  }, [isEdit, user]);
+
+  const cb =() =>{
+    reset();
+    navigate('/dashboard/users/list')
+  }
 
   const onSubmit = async () => {
     try {
-      if(currentUser){
-        dispatch(updateUser(currentUser.id,defaultValues))
-       }else{
-         dispatch(createUser(defaultValues));
-       }
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.users.user);
+      const payload ={...defaultValues, company:defaultValues?.company?.id}
+      if (user) {
+        delete payload.password
+        dispatch(updateUser(user.id, payload,cb))
+      } else {
+       
+        dispatch(createUser(payload,cb));
+      }
+      
     } catch (error) {
       console.error(error);
     }
   };
 
   
+
+
   const handleName = (e) => {
     const name = e.target.value;
     setValue('name', String(e.target.value))
@@ -116,10 +132,16 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
     setValue('role', String(e.target.value))
     defaultValues.role = role;
   };
+  const handleComapny = (comapny) => {
+    setValue('company', comapny)
+    defaultValues.company = comapny;
+  };
+
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
-        
+
         <Grid item xs={12} md={8}>
           <Card sx={{ p: 3 }}>
             <Box
@@ -130,20 +152,32 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="name" label="User Name" onChange={(e) => handleName(e)}/>
+              <RHFTextField name="name" label="User Name" onChange={(e) => handleName(e)} />
               <RHFTextField name="email" label="Email Address" onChange={(e) => handleEmail(e)} />
               <RHFTextField name="password" label="Password" onChange={(e) => handlePassword(e)} />
-              <RHFTextField name="role" label="Role" onChange={(e) => handleRole(e)}/>
+              <FormControl sx={{ width: "100%" }}>
+                <InputLabel id="demo-simple-select-label">Role</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={defaultValues.role}
+                  label="Language"
+                  onChange={(e) => handleRole(e)}
+                >
+                  {roles.map((r) => <MenuItem key={r} value={r}>{capitalize(r)}</MenuItem>)}
+                </Select>
+              </FormControl>
+              <CompanyAutoComplete  value={defaultValues.company} onAddCompanies={handleComapny}/>
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+              <LoadingButton type="submit" variant="contained" loading={loading}>
                 {!isEdit ? 'Create User' : 'Save Changes'}
               </LoadingButton>
             </Stack>
           </Card>
         </Grid>
-        <Grid item xs={12} md={8}>{}</Grid>
+        <Grid item xs={12} md={8}>{ }</Grid>
       </Grid>
     </FormProvider>
   );

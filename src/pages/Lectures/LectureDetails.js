@@ -1,5 +1,5 @@
 import { sentenceCase,paramCase } from 'change-case';
-import { useParams } from 'react-router-dom';
+import {useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
@@ -25,7 +25,7 @@ import {
  } from '../../sections/@dashboard/lectures/lecture-details';
 
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
-import { getLecture } from './store/actions';
+import { getLecturedetail } from './store/actions';
 // ----------------------------------------------------------------------
 
 const LECTURE_DESCRIPTION = [
@@ -57,14 +57,14 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function LectureDetails() {
+  const navigate = useNavigate();
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { CourseId,lessonId,id } = useParams();
   const [value, setValue] = useState('2');
   const { lectures, error, checkout } = useSelector((state) => state.lecture);
-  const lecture = lectures.find((lecture) => paramCase(lecture.id) === id);
-   useEffect(() => {
-    dispatch(getLecture());
+    useEffect(() => {
+    dispatch(getLecturedetail(id));
   }, [dispatch]);
 
   const handleAddCart = (lecture) => {
@@ -84,25 +84,24 @@ export default function LectureDetails() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Lecture',
-              href: PATH_DASHBOARD.lectures.lecture,
+              href:PATH_DASHBOARD.lecture(CourseId,lessonId),
             },
              {
               name: 'Lecture Detail',
-              href: PATH_DASHBOARD.lectures.root,
-            },
+              },
             
           ]}
         />
 
         <CartWidget />
 
-        {lecture && (
+        {lectures && (
           <>
             <Card>
               <Grid container>
                 <Grid item xs={12} >
                   <LectureDetailsSummary
-                    lecture={lecture}
+                    lecture={lectures}
                     onAddCart={handleAddCart}
                     onGotoStep={handleGotoStep}
                   />
@@ -127,14 +126,14 @@ export default function LectureDetails() {
                
                 <Divider />
                <TabPanel value="2">
-                  <LectureDetailsReview lecture={lecture} />
+                  <LectureDetailsReview lecture={lectures} />
                 </TabPanel>
               </TabContext>
             </Card>
           </>
         )}
 
-        {!lecture && <SkeletonProduct />}
+        {!lectures && <SkeletonProduct />}
 
         {error && <Typography variant="h6">404 Product not found</Typography>}
       </Container>

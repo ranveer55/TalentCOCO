@@ -16,6 +16,12 @@ import {
   TablePagination,
   FormControlLabel,
 } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import LinearProgress from '@mui/material/LinearProgress';
+
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCourse,deleteCourse } from './store/actions';
@@ -49,7 +55,6 @@ const TABLE_HEAD = [
   { id: 'totalLessons', label: 'Total Lessons', align: 'left' },
   { id: 'instructor.name', label: 'Instructor Name', align: 'left' },
   { id: 'active', label: 'Active', align: 'left' },
-  { id: 'reviews.avg', label: 'Reviews Average', align: 'left' },
   {id:'btn', label: 'View Lesson', align: 'left'},
   {id:''},
   ];
@@ -88,6 +93,9 @@ export default function Course() {
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
+  const [open, setDeleteOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   useEffect(() => {
     dispatch(getCourse());
@@ -106,14 +114,30 @@ export default function Course() {
   };
 
   const handleDeleteRow = (id) => {
-    dispatch(getCourse(id));
-    const deleteRow = tableData.filter((row) => row.id !== id);
+    setDeleteOpen(true)
+    setDeleteId(id)
+   };
+ 
+  const handleClose = () => {
+    setDeleteOpen(false)
+    setLoading(false)
+   };
+ 
+  const RemoveSingleRow = () => {
+    setLoading(true)
+     setDeleteOpen(false)
+     dispatch(deleteCourse(deleteId));
+     setLoading(false)
+    const deleteRow = tableData.filter((row) => row.id !== deleteId);
     setSelected([]);
     setTableData(deleteRow);
   };
-
+ 
   const handleDeleteRows = (selected) => {
-    dispatch(getCourse(selected));
+     setLoading(true)
+     setDeleteOpen(false)
+    dispatch(deleteCourse(selected));
+    setLoading(false)
     const deleteRows = tableData.filter((row) => !selected.includes(row.id));
     setSelected([]);
     setTableData(deleteRows);
@@ -247,6 +271,27 @@ export default function Course() {
               sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
             />
           </Box>
+          <div>
+                        <Dialog
+                            open={open}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description" >
+                            {loading === true ? <LinearProgress /> : <></>}
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    Are you sure you want to delete the Problems?</DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button variant="contained" onClick={()=>{handleClose()}} style={{ background: "Silver", height: "34px", width: "42px" }}>
+                                    Cancel
+                                </Button>
+                                <Button variant="contained" color="primary" onClick={() => {RemoveSingleRow()}} autoFocus >
+                                    Ok
+                                </Button>
+
+                            </DialogActions>
+                        </Dialog>
+                    </div>
         </Card>
       </Container>
     </Page>
@@ -267,7 +312,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
   tableData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    tableData = tableData.filter((course) => course.title.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+    tableData = tableData.filter((course) => course.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
   }
 
   return tableData;

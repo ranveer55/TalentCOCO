@@ -5,7 +5,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getLesson } from './store/actions';
+import { getLessonDetail } from './store/actions';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -21,12 +21,11 @@ export default function LessonCreate() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const { pathname } = useLocation();
-  const { id } = useParams();
+  const { CourseId,id } = useParams();
   const { lessons } = useSelector((state) => state.lesson);
   const isEdit = pathname.includes('edit');
-  const currentLesson = lessons.find((lesson) => paramCase(lesson.id) === id);
-  useEffect(() => {
-    dispatch(getLesson());
+   useEffect(() => {
+    dispatch(getLessonDetail(id));
   }, [dispatch]);
 
   return (
@@ -38,13 +37,13 @@ export default function LessonCreate() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Lessons',
-              href: PATH_DASHBOARD.lessons.root,
+              href: PATH_DASHBOARD.lesson(paramCase(CourseId)),
             },
             { id: !isEdit ? 'New Lesson' : id },
           ]}
         />
 
-        <LessonNewEditForm isEdit={isEdit} currentLesson={currentLesson} />
+        <LessonNewEditForm isEdit={isEdit} currentLesson={lessons} />
       </Container>
     </Page>
   );

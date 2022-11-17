@@ -52,10 +52,11 @@ export default function CourseNewEditForm({ isEdit, currentCourse }) {
   const NewCourseSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').min(8),
     description: Yup.string().required('Description is required').min(1),
-    hours: Yup.number(),
-    poster: Yup.string().required('Poster is required'),
-    language: Yup.string(),
-    level: Yup.string(),
+    hours: Yup.number().required('Hours is required'),
+    poster: Yup.string(),
+    language: Yup.string().required('Language is required'),
+    level: Yup.string().required('Level is required'),
+    companyId: Yup.string().required('CompanyId is required'),
 
   });
 
@@ -67,6 +68,7 @@ export default function CourseNewEditForm({ isEdit, currentCourse }) {
       poster: currentCourse?.poster ||null,
       language: currentCourse?.language || '',
       level: currentCourse?.level || '',
+      companyId: currentCourse?.companyId || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentCourse]

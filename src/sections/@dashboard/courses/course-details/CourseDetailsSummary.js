@@ -37,58 +37,11 @@ CourseDetailsSummary.propTypes = {
 export default function CourseDetailsSummary({ course, onAddCart, onGotoStep, ...other }) {
    const navigate = useNavigate();
 
-  const {
-    id,
-    title,
-    price,
-  } = course;
-  const alreadyCourse = false
-
-  const defaultValues = {
-    id,
-    title,
-    price,
-
-  };
-
-  const methods = useForm({
-    defaultValues,
-  });
-
-  const { watch,handleSubmit } = methods;
-
-  const values = watch();
-
-  const onSubmit = async (data) => {
-    try {
-      if (!alreadyCourse) {
-        onAddCart({
-          ...data,
-          subtotal: data.price * data.quantity,
-        });
-      }
-      onGotoStep(0);
-      navigate(PATH_DASHBOARD.eCommerce.course);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleAddCart = async () => {
-    try {
-      onAddCart({
-        ...values,
-        subtotal: values.price * values.quantity,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
+  
+  
   return (
     <RootStyle {...other} sx={{ marginTop: "2px" }}>
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid container xs={12}>
+         <Grid container xs={12}>
           <Grid item xs={6}>
             <Typography variant="h5" >
               Name:
@@ -184,7 +137,7 @@ export default function CourseDetailsSummary({ course, onAddCart, onGotoStep, ..
           </Grid>
           <Grid item xs={6}>
             <Typography>
-              {course.reviews.avg}
+              {course?.reviews?.avg}
             </Typography>
           </Grid>
         </Grid>
@@ -194,37 +147,21 @@ export default function CourseDetailsSummary({ course, onAddCart, onGotoStep, ..
         <Divider sx={{ borderStyle: 'dashed' }} />
            <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
            <Grid container xs={12}>
-          <Grid item xs={3}>{}</Grid>
+          <Grid item xs={9}>{}</Grid>
           <Grid item xs={3}>
           <Button
             fullWidth
-
             size="large"
-            color="warning"
-            variant="contained"
-            startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
-            onClick={handleAddCart}
+             variant="contained"
+            onClick={()=>navigate(PATH_DASHBOARD.course)}
             sx={{ whiteSpace: 'nowrap' }}
           >
-            Add to Cart
+          Back
           </Button>
           </Grid>
-          <Grid item xs={1}>{}</Grid>
-          <Grid item xs={3}>
-          <Button fullWidth size="large" type="submit" variant="contained">
-            Buy Now
-          </Button>
-          </Grid>
-          <Grid item xs={2}>{}</Grid>
-        </Grid>
-
+         </Grid>
         </Stack>
-
-        <Stack alignItems="center" sx={{ mt: 3 }}>
-          <SocialsButton initialColor />
-        </Stack>
-       </FormProvider>
-    </RootStyle>
+       </RootStyle>
   );
 }
 

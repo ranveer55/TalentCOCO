@@ -33,10 +33,10 @@ export default function LessonNewEditForm({ isEdit, currentLesson }) {
   const dispatch = useDispatch();
   const { CourseId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
-  const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(false);
 
   const NewLessonSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required').min(8),
+    name: Yup.string().required('Name is required').min(3),
     description: Yup.string().required('Description is required').min(1),
     order: Yup.number(),
     active: Yup.boolean(),
@@ -154,7 +154,7 @@ export default function LessonNewEditForm({ isEdit, currentLesson }) {
                 <FormControlLabel
                   control={<Switch size="large" checked={checked} onChange={handleChange} />}
                   label="Active"
-                  sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }}
+                 
                 />
               </FormGroup>
             </Box>

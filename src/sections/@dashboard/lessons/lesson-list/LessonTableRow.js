@@ -47,8 +47,7 @@ export default function LessonTableRow({CourseId, row, selected, onEditRow,onVie
       </TableCell>
 
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} />
-        <Typography variant="subtitle2" noWrap>                    
+         <Typography variant="subtitle2" noWrap>                    
           {name}
         </Typography>
       </TableCell>

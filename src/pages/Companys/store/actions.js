@@ -9,29 +9,29 @@ import { dispatch } from '../../../redux/store';
 
 
 export const startLoading = (payload) => ({
-    type: ActionTypes.FETCH_FILE_LOADING,
+    type: ActionTypes.FETCH_COMPANY_LOADING,
     payload
 })
 
 
 export const getCompanySuccess = (payload) => ({
-    type: ActionTypes.FETCH_FILE_SUCCESS,
+    type: ActionTypes.FETCH_COMPANY_SUCCESS,
     payload
 })
 export const addCompanySuccess = (payload) => ({
-    type: ActionTypes.ADD_FILE_SUCCESS,
+    type: ActionTypes.ADD_COMPANY_SUCCESS,
     payload
 })
 export const updateCompanySuccess = (payload) => ({
-    type: ActionTypes.UPDATE_FILE_SUCCESS,
+    type: ActionTypes.UPDATE_COMPANY_SUCCESS,
     payload
 })
 export const deleteCompanys = (payload) => ({
-    type: ActionTypes.DELETE_FILE_SUCCESS,
+    type: ActionTypes.DELETE_COMPANY_SUCCESS,
     payload
 })
 export const hasError=(payload) =>({
-    type: ActionTypes.FETCH_FILE_ERROR,
+    type: ActionTypes.FETCH_COMPANY_ERROR,
     payload
 
 })

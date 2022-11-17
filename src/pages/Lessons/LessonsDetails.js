@@ -25,7 +25,7 @@ import {
  } from '../../sections/@dashboard/lessons/lesson-details';
 
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
-import { getLesson } from './store/actions';
+import { getLessonDetail } from './store/actions';
 // ----------------------------------------------------------------------
 
 const LESSON_DESCRIPTION = [
@@ -59,12 +59,11 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 export default function LessonDetails() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const {CourseId, id } = useParams();
   const [value, setValue] = useState('2');
   const { lessons, error, checkout } = useSelector((state) => state.lesson);
-  const lesson = lessons.find((lesson) => paramCase(lesson.id) === id);
    useEffect(() => {
-    dispatch(getLesson());
+    dispatch(getLessonDetail(id));
   }, [dispatch]);
 
   const handleAddCart = (lesson) => {
@@ -84,7 +83,7 @@ export default function LessonDetails() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Lesson',
-              href: PATH_DASHBOARD.lessons.lesson,
+              href: PATH_DASHBOARD.lesson(paramCase(CourseId)),
             },
              {
               name: 'Lesson Detail',
@@ -96,13 +95,14 @@ export default function LessonDetails() {
 
         <CartWidget />
 
-        {lesson && (
+        {lessons && (
           <>
             <Card>
               <Grid container>
                 <Grid item xs={12} >
                   <LessonDetailsSummary
-                    lesson={lesson}
+                   CourseId={CourseId}
+                    lesson={lessons}
                     onAddCart={handleAddCart}
                     onGotoStep={handleGotoStep}
                   />
@@ -127,14 +127,14 @@ export default function LessonDetails() {
                
                 <Divider />
                <TabPanel value="2">
-                  <LessonDetailsReview lesson={lesson} />
+                  <LessonDetailsReview lesson={lessons} />
                 </TabPanel>
               </TabContext>
             </Card>
           </>
         )}
 
-        {!lesson && <SkeletonProduct />}
+        {!lessons && <SkeletonProduct />}
 
         {error && <Typography variant="h6">404 Product not found</Typography>}
       </Container>

@@ -9,29 +9,33 @@ import { dispatch } from '../../../redux/store';
 
 
 export const startLoading = (payload) => ({
-    type: ActionTypes.FETCH_FILE_LOADING,
+    type: ActionTypes.FETCH_COURSE_LOADING,
     payload
 })
 
 
 export const getCourseSuccess = (payload) => ({
-    type: ActionTypes.FETCH_FILE_SUCCESS,
+    type: ActionTypes.FETCH_COURSE_SUCCESS,
+    payload
+})
+export const getCoursedetailSuccess = (payload) => ({
+    type: ActionTypes.FETCH_COURSEDETAIL_SUCCESS,
     payload
 })
 export const addCourseSuccess = (payload) => ({
-    type: ActionTypes.ADD_FILE_SUCCESS,
+    type: ActionTypes.ADD_COURSE_SUCCESS,
     payload
 })
 export const updateCourseSuccess = (payload) => ({
-    type: ActionTypes.UPDATE_FILE_SUCCESS,
+    type: ActionTypes.UPDATE_COURSE_SUCCESS,
     payload
 })
 export const deleteCourses = (payload) => ({
-    type: ActionTypes.DELETE_FILE_SUCCESS,
+    type: ActionTypes.DELETE_COURSE_SUCCESS,
     payload
 })
 export const hasError=(payload) =>({
-    type: ActionTypes.FETCH_FILE_ERROR,
+    type: ActionTypes.FETCH_COURSE_ERROR,
     payload
 
 })
@@ -42,19 +46,44 @@ export function getCourse() {
       dispatch(startLoading(true));
       try {
         const response = await axios.get('/course');
+        if (response){
         dispatch(getCourseSuccess(response.data.results));
+        }
+        else{
+          dispatch(hasError(response.data));
+        }
+      } catch (error) {
+        dispatch(hasError(error));
+      }
+    };
+  }
+export function getCourseDetail(id) {
+    return async () => {
+      dispatch(startLoading(true));
+      try {
+        const response = await axios.get(`/course/${id}`);
+        if (response){
+        dispatch(getCoursedetailSuccess(response.data));
+        }
+        else{
+          dispatch(hasError(response.data));
+        }
       } catch (error) {
         dispatch(hasError(error));
       }
     };
   }
   export function createCourse(data) {
-    console.log("data",data)
     return async () => {
       dispatch(startLoading());
       try {
         const response = await axios.post('/course', data);
+         if (response){
         dispatch(addCourseSuccess(response.data));
+        }
+        else{
+          dispatch(hasError(response.data));
+        }
       } catch (error) {
         dispatch(hasError(error));
       }
@@ -64,8 +93,13 @@ export function getCourse() {
     return async () => {
       dispatch(startLoading());
       try {
-        const response = await axios.patch(`/users/${id}`, payload);
+        const response = await axios.patch(`/course/${id}`, payload);
+        if (response && response.status==='304'){
         dispatch(updateCourseSuccess(response.data));
+        }
+        else{
+          dispatch(hasError(response.data));
+        }
       } catch (error) {
         dispatch(hasError(error));
       }
@@ -75,7 +109,7 @@ export function getCourse() {
     return async () => {
       dispatch(startLoading());
       try {
-        const response = await axios.delete(`/users/${id}`);
+        const response = await axios.delete(`/course/${id}`);
         dispatch(deleteCourses(response.data));
       } catch (error) {
         dispatch(hasError(error));
@@ -83,59 +117,3 @@ export function getCourse() {
     };
   }
   
-/* export const getTestCases =  (id) => {
-    return async (dispatch) => {
-        const data = await axios.get(`checktestcases/problem/${id}`)
-        if (data && data.status==true) {
-            dispatch(setProblemTestCaseSuccess(data.data))
-        } 
-    }
-}
-
-export const submitProblem =  (p) => {
-    return async (dispatch) => {
-        dispatch(setLoading(true))
-        dispatch(setBackdrop(true))
-        const data = await axios.post(`challenge/submit`,p)
-        dispatch(setLoading(false))
-        dispatch(setBackdrop(false))
-        if (data && data.status ===false) {
-            if(data.refresh){
-                dispatch(setToast({severity:'warning', message:'Some Test Case pending', open:true}))
-                setTimeout(()=>{
-                    window.location.reload()
-                },1000)
-               
-            } else if(data.completed){
-                dispatch(setToast({severity:'success', message:'Assessment completed successfully', open:true}))
-                setTimeout(()=>{
-                    window.location.href='/challenges'
-                },1000)
-               
-            } else {
-                dispatch(setToast({severity:'error', message:data.data, open:true}))
-            }
-            
-        }  else if (data && data.status==true) {
-            dispatch(setProblemSuccess(data.data))
-        } 
-        else {
-            dispatch(setToast({severity:'error', message:'Something went wrong', open:true}))
-        }
-    }
-}
-export const executeTestCase =  (testcase, code) => {
-    return async (dispatch) => {
-        dispatch(setLoading(true))
-        const data = await axios.post(`challenge/test`,{id:testcase.id,code})
-        dispatch(setLoading(false))
-        if (data && data.status ===false) {
-            dispatch(setToast({severity:'error', message:data.data, open:true}))
-        }  else if (data && data.status==true) {
-            // dispatch(setProblemSuccess(data.data))
-        } 
-        else {
-            dispatch(setToast({severity:'error', message:'Something went wrong', open:true}))
-        }
-    }
-} */

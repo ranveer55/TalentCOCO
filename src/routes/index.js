@@ -47,8 +47,7 @@ export default function Router() {
             </GuestGuard>
           ),
         },
-        { path: 'login-unprotected', element: <Login /> },
-        { path: 'register-unprotected', element: <Register /> },
+       
         { path: 'reset-password', element: <ResetPassword /> },
         { path: 'new-password', element: <NewPassword /> },
         { path: 'verify', element: <VerifyCode /> },
@@ -86,11 +85,11 @@ export default function Router() {
         {
           path: 'users',
           children: [
-            { element: <Navigate to="/dashboard/Users/users/user" replace />, index: true },
-            { path: 'user', element: <User /> },
-            { path: 'user/new', element: <UserCreate /> },
-            { path: 'user/:id/edit', element: <UserCreate /> },
-            { path: 'user/:id', element: <CourseDetails /> },
+            { element: <Navigate to="/dashboard/users/list" replace />, index: true },
+            { path: 'list', element: <User /> },
+            { path: 'new', element: <UserCreate /> },
+            { path: ':id/edit', element: <UserCreate /> },
+            { path: ':id', element: <CourseDetails /> },
           ],
         },
         {
@@ -262,7 +261,7 @@ const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/Ecom
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 // USERS
-const User = Loadable(lazy(() => import('../pages/Users/Users')));
+const User = Loadable(lazy(() => import('../pages/Users/List')));
 const UserCreate = Loadable(lazy(() => import('../pages/Users/UsersCreate')));
 const UserDetails = Loadable(lazy(() => import('../pages/Users/UsersDetails')));
 // COURSE

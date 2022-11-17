@@ -43,15 +43,16 @@ import { UserTableRow, UserTableToolbar } from '../../sections/@dashboard/users/
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: '' },
+  { id: 'company', label: 'Company', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left' },
   { id: 'role', label: 'Role', align: 'left' },
   { id: 'isEmailVerified', label: 'Verified', align: 'center' },
-  { id: '' },
+  { id: 'action', label: 'Action', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function User() {
+export default function List() {
   const {
     dense,
     page,
@@ -80,7 +81,6 @@ export default function User() {
   const dispatch = useDispatch();
 
   const { users, isLoading } = useSelector((state) => state.user);
-  console.log("users",users)
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
@@ -133,10 +133,10 @@ export default function User() {
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   return (
-    <Page title="users: User List">
+    <Page title="User List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="User List"
+          heading="User"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {

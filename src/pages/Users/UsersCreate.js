@@ -21,11 +21,13 @@ export default function UserCreate() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { id } = useParams();
-  const { users } = useSelector((state) => state.user);
+  const { user: { users, user, loading, error }, app: { masterdata } } = useSelector((state) => state);
   const isEdit = pathname.includes('edit');
-  const currentUser = users.find((user) => paramCase(user.id) === id);
-   useEffect(() => {
-    dispatch(getUser());
+  useEffect(() => {
+    if(id){
+      dispatch(getUser(id));
+    }
+    
   }, [dispatch]);
 
   return (
@@ -43,7 +45,7 @@ export default function UserCreate() {
           ]}
         />
 
-        <UserNewEditForm isEdit={isEdit} currentUser={currentUser} />
+        <UserNewEditForm isEdit={isEdit} currentUser={user} />
       </Container>
     </Page>
   );

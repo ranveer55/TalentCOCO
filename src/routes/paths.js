@@ -65,6 +65,12 @@ export const PATH_DASHBOARD = {
     edit: (name) => path(ROOTS_DASHBOARD, `/user/${name}/edit`),
     demoEdit: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),
   },
+  users: {
+    user: path(ROOTS_DASHBOARD, '/users/list'),
+    new: path(ROOTS_DASHBOARD, '/users/new'),
+    view: (id) => path(ROOTS_DASHBOARD, `/users/${id}`),
+    edit: (id) => path(ROOTS_DASHBOARD, `/users/${id}/edit`),
+  },
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),
     shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),
@@ -88,12 +94,7 @@ export const PATH_DASHBOARD = {
     new: path(ROOTS_DASHBOARD, '/course/new'),
     view: (id) => path(ROOTS_DASHBOARD, `/course/view/${id}`),
     edit: (id) => path(ROOTS_DASHBOARD, `/course/${id}/edit`),
-  users: {
-    user: path(ROOTS_DASHBOARD, '/users/user'),
-    new: path(ROOTS_DASHBOARD, '/users/user/new'),
-    view: (id) => path(ROOTS_DASHBOARD, `/users/user/${id}`),
-    edit: (id) => path(ROOTS_DASHBOARD, `/users/user/${id}/edit`),
-  },
+  
   lectures: {
     
     

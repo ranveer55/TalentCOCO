@@ -1,0 +1,10 @@
+export const SET_MASTERDATA = 'SET_MASTERDATA';
+export const LOADING = 'LOADING';
+export const BACKDROP = 'BACKDROP';
+export const LOGOUT = 'LOGOUT';
+export const SET_TOAST = 'SET_TOAST';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAILED = 'LOGIN_FAILED';
+export const SIGN_UP_LOADING = 'SIGN_UP_LOADING';
+export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
+export const SIGN_UP_FAILED = 'SIGN_UP_FAILED';

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
@@ -13,6 +14,8 @@ import { HEADER, NAVBAR } from '../../config';
 import DashboardHeader from './header';
 import NavbarVertical from './navbar/NavbarVertical';
 import NavbarHorizontal from './navbar/NavbarHorizontal';
+
+import {getMasterData} from '../../pages/app/store/actions'
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +44,7 @@ const MainStyle = styled('main', {
 
 export default function DashboardLayout() {
   const { collapseClick, isCollapse } = useCollapseDrawer();
+  const dispatch =useDispatch()
 
   const { themeLayout } = useSettings();
 
@@ -49,6 +53,10 @@ export default function DashboardLayout() {
   const [open, setOpen] = useState(false);
 
   const verticalLayout = themeLayout === 'vertical';
+
+  useEffect(()=>{
+    dispatch(getMasterData())
+  },[])
 
   if (verticalLayout) {
     return (

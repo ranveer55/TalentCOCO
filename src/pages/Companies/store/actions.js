@@ -5,86 +5,86 @@ import {  setToast } from '../../app/store/actions';
 
 
 export const startLoading = (payload) => ({
-  type: ActionTypes.FETCH_USER_LOADING,
+  type: ActionTypes.FETCH_COMPANY_LOADING,
   payload
 })
 
 
-export const getUserSuccess = (payload) => ({
-  type: ActionTypes.FETCH_USER_SUCCESS,
+export const getCompanySuccess = (payload) => ({
+  type: ActionTypes.FETCH_COMPANY_SUCCESS,
   payload
 })
-export const getUsersSuccess = (payload) => ({
-  type: ActionTypes.FETCH_USERS_SUCCESS,
-  payload
-})
-
-
-export const deleteUsers = (payload) => ({
-  type: ActionTypes.DELETE_USER_SUCCESS,
+export const getCompaniesSuccess = (payload) => ({
+  type: ActionTypes.FETCH_COMPANIES_SUCCESS,
   payload
 })
 
 
-export function getUsers() {
+export const deleteCompanies = (payload) => ({
+  type: ActionTypes.DELETE_COMPANY_SUCCESS,
+  payload
+})
+
+
+export function getCompanies() {
   return async () => {
     dispatch(startLoading(true));
     try {
-      const response = await axios.get('/users');
-      dispatch(getUsersSuccess(response.data.results));
+      const response = await axios.get('/companies');
+      dispatch(getCompaniesSuccess(response.data.results));
     } catch (error) {
       dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }
   };
 }
 
-export function getUser(id) {
+export function getCompany(id) {
   return async () => {
     dispatch(startLoading(true));
     try {
-      const response = await axios.get(`/users/${id}`);
-      dispatch(getUserSuccess(response.data));
+      const response = await axios.get(`/companies/${id}`);
+      dispatch(getCompanySuccess(response.data));
     } catch (error) {
       dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }
   };
 }
 
-export function createUser(payload,cb) {
+export function createCompany(payload,cb) {
   return async () => {
     dispatch(startLoading());
     try {
-      const {data, status} = await axios.post('/users', payload);
-      dispatch(setToast({severity:'success', message:'User created', open:true}))
+      const {data, status} = await axios.post('/companies', payload);
+      dispatch(setToast({severity:'success', message:'Company created', open:true}))
       cb();
-      dispatch(getUserSuccess(null));
+      dispatch(getCompanySuccess(null));
     } catch (error) {
       dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }
   };
 }
 
-export function updateUser(id, payload,cb) {
+export function updateCompany(id, payload,cb) {
   return async () => {
     dispatch(startLoading());
     try {
-      const {data, status} = await axios.patch(`/users/${id}`, payload);
-      dispatch(setToast({severity:'success', message:'User Updated', open:true}))
+      const {data, status} = await axios.patch(`/companies/${id}`, payload);
+      dispatch(setToast({severity:'success', message:'Company Updated', open:true}))
       cb();
-      dispatch(getUserSuccess(null));
+      dispatch(getCompanySuccess(null));
     } catch (error) {
       dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }
   };
 }
 
-export function deleteUser(id) {
+export function deleteCompany(id) {
   return async () => {
     dispatch(startLoading());
     try {
-      const response = await axios.delete(`/users/${id}`);
-      dispatch(deleteUsers(response.data));
-      dispatch(setToast({severity:'success', message:'User Deleted', open:true}))
+      const response = await axios.delete(`/companies/${id}`);
+      dispatch(deleteCompanies(response.data));
+      dispatch(setToast({severity:'success', message:'Company Deleted', open:true}))
     } catch (error) {
       dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }

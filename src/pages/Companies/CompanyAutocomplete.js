@@ -9,12 +9,14 @@ import { Box, Avatar, TextField, Typography, Autocomplete, Chip } from '@mui/mat
 // components
 import Iconify from '../../components/Iconify';
 import SearchNotFound from '../../components/SearchNotFound';
+import { IMAGE_PATH } from '../../config'
 
 
 
 
 const AutocompleteStyle = styled('div')(({ theme }) => ({
     '& .MuiAutocomplete-root': {
+        zIndex:999,
         minWidth: 280,
         marginLeft: theme.spacing(0),
         '&.Mui-focused .MuiAutocomplete-inputRoot': {
@@ -53,7 +55,8 @@ export default function CompanyAutoComplete({  value, onAddCompanies }) {
             <AutocompleteStyle>
                 <Autocomplete
                     // size="small"
-                    disablePortal
+                    // disablePortal
+
                     popupIcon={null}
                     noOptionsText={<SearchNotFound searchQuery={query} />}
                     onChange={(event, val) => handleAddCompanies(val)}
@@ -76,7 +79,7 @@ export default function CompanyAutoComplete({  value, onAddCompanies }) {
                                         position: 'relative',
                                     }}
                                 >
-                                    <Avatar alt={name} src={poster} />
+                                    <Avatar alt={name} src={IMAGE_PATH+ poster} />
                                     <Box
                                         sx={{
                                             top: 0,
@@ -121,7 +124,7 @@ export default function CompanyAutoComplete({  value, onAddCompanies }) {
                                     size="small"
                                     label={name}
                                     color="info"
-                                    poster={<Avatar alt={name} src={poster} />}
+                                    poster={<Avatar alt={name} src={IMAGE_PATH+ poster} />}
                                 />
                             );
                         })

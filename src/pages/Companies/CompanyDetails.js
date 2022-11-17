@@ -22,24 +22,10 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import {
   CompanyDetailsSummary,
   CompanyDetailsReview,
- } from '../../sections/@dashboard/companys/company-details';
+ } from '../../sections/@dashboard/companies/company-details';
 
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 import { getCompany } from './store/actions';
-// ----------------------------------------------------------------------
-
-const COMPANY_DESCRIPTION = [
-  {
-    title: '100% Original',
-    description: 'It is made by a chemical process called fermentation that uses sugars and yeast.',
-    icon: 'ic:round-verified',
-  },
-  {
-    title: 'affordable price',
-    description: 'its price is low enough that you (or most people) have enough money to buy it.',
-    icon: 'ic:round-verified-user',
-  }, 
-];
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
   margin: 'auto',
@@ -60,21 +46,13 @@ export default function CompanyDetails() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [value, setValue] = useState('2');
-  const { companys, error, checkout } = useSelector((state) => state.company);
-  const company = companys.find((company) => paramCase(company.id) === id);
-   useEffect(() => {
-    dispatch(getCompany());
+  const { company: { company, loading }} = useSelector((state) => state);
+  useEffect(() => {
+    if(id){
+      dispatch(getCompany(id));
+    }
+    
   }, [dispatch]);
-
-  const handleAddCart = (company) => {
-    dispatch(addCart(company));
-  };
-
-  const handleGotoStep = (step) => {
-    dispatch(onGotoStep(step));
-  };
-
   return (
     <Page title="Company:Details">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -84,59 +62,28 @@ export default function CompanyDetails() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Company',
-              href: PATH_DASHBOARD.companys.company,
+              href: PATH_DASHBOARD.companies.company,
             },
              {
               name: 'Company Detail',
-              href: PATH_DASHBOARD.companys.root,
+              href: PATH_DASHBOARD.companies.root,
             },
             
           ]}
         />
 
-        <CartWidget />
-
         {company && (
           <>
-            <Card>
-              <Grid container>
-                <Grid item xs={12} >
-                  <CompanyDetailsSummary
-                    company={company}
-                    onAddCart={handleAddCart}
-                    onGotoStep={handleGotoStep}
-                  />
-                </Grid>
-                 </Grid>
-            </Card>
-
-            <Grid container sx={{ my: 8 }}>
-              {COMPANY_DESCRIPTION.map((company) => (
-                <Grid item xs={12} md={4} key={company.name}>
-                  <Box sx={{ my: 2, mx: 'auto', maxWidth: 280, textAlign: 'center' }}>
-                    <Typography variant="subtitle1" gutterBottom>
+            <Card sx={{p:2}}>
+            <Typography variant="subtitle1" gutterBottom>
+                      {company.name}
+                </Typography>
+                <Typography variant="p" gutterBottom>
                       {company.description}
-                    </Typography>
-                   </Box>
-                </Grid>
-              ))}
-            </Grid>
-
-            <Card>
-              <TabContext value={value}>
-               
-                <Divider />
-               <TabPanel value="2">
-                  <CompanyDetailsReview company={company} />
-                </TabPanel>
-              </TabContext>
+                </Typography>
             </Card>
           </>
         )}
-
-        {!company && <SkeletonProduct />}
-
-        {error && <Typography variant="h6">404 Product not found</Typography>}
       </Container>
     </Page>
   );

@@ -13,7 +13,7 @@ import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import CompanyNewEditForm from '../../sections/@dashboard/companys/Edit/CompanyNewEditForm';
+import CompanyNewEditForm from '../../sections/@dashboard/companies/Edit/CompanyNewEditForm';
 
 // ----------------------------------------------------------------------
 
@@ -22,29 +22,30 @@ export default function CompanyCreate() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { id } = useParams();
-  const { companys } = useSelector((state) => state.company);
   const isEdit = pathname.includes('edit');
-  const currentCompany = companys.find((company) => paramCase(company.id) === id);
   useEffect(() => {
-    dispatch(getCompany());
+    if(id){
+      dispatch(getCompany(id));
+    }
+    
   }, [dispatch]);
 
   return (
-    <Page title="Companys: Create a new Company">
+    <Page title=" Create a new Company">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading={!isEdit ? 'Create a new Company' : 'Edit Company'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Companys',
-              href: PATH_DASHBOARD.companys.root,
+              name: 'Companies',
+              href: PATH_DASHBOARD.companies.root,
             },
             { id: !isEdit ? 'New Company' : id },
           ]}
         />
 
-        <CompanyNewEditForm isEdit={isEdit} currentCompany={currentCompany} />
+        <CompanyNewEditForm isEdit={isEdit} />
       </Container>
     </Page>
   );

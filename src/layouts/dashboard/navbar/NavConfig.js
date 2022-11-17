@@ -74,6 +74,16 @@ const navConfig = [
           { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout },
         ],
       },
+
+      {
+        title: 'companies',
+        path: PATH_DASHBOARD.companies.root,
+        icon: ICONS.cart,
+        children: [
+          { title: 'list', path: PATH_DASHBOARD.companies.list },
+          { title: 'create', path: PATH_DASHBOARD.companies.new },
+          ],
+      },
       // USERS
       {
         title: 'users',
@@ -114,15 +124,7 @@ const navConfig = [
           ],
       },
       // COMPANY
-      {
-        title: 'companys',
-        path: PATH_DASHBOARD.companys.root,
-        icon: ICONS.cart,
-        children: [
-          { title: 'list', path: PATH_DASHBOARD.companys.company },
-          { title: 'create', path: PATH_DASHBOARD.companys.new },
-          ],
-      },
+     
       // TALLY
       {
         title: 'tally',

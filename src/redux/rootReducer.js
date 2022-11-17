@@ -11,7 +11,7 @@ import userReducer from  '../pages/Users/store/Reducer';
 import courseReducer from '../pages/Courses/store/Reducer';
 import lectureReducer from '../pages/Lectures/store/Reducer';
 import lessonReducer from '../pages/Lessons/store/Reducer';
-import companyReducer from '../pages/Companys/store/Reducer';
+import companyReducer from '../pages/Companies/store/Reducer';
 import appReducer from '../pages/app/store/Reducer';
 import tallyReducer from './slices/Tally';
 import teamReducer from './slices/Team';

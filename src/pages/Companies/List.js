@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCompany,deleteCompany } from './store/actions';
+import { getCompanies,deleteCompany } from './store/actions';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -37,22 +37,21 @@ import {
   TableSelectedActions,
 } from '../../components/table';                     
 // sections
-import { CompanyTableRow, CompanyTableToolbar } from '../../sections/@dashboard/companys/company-list';
+import { CompanyTableRow, CompanyTableToolbar } from '../../sections/@dashboard/companies/company-list';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'description',label: 'Description', align: 'left' },
-  { id: 'poster', label: 'Poster', align: 'center' },
-  { id: 'courses', label: 'Courses', align: 'left' },
+  { id: 'courses', label: 'Total Courses', align: 'left' },
   { id: 'active', label: 'Active', align: 'left' },
   {id:''},
   ];
 
 // ----------------------------------------------------------------------
 
-export default function Company() {
+export default function List() {
   const {
     dense,
     page,
@@ -80,20 +79,20 @@ export default function Company() {
 
   const dispatch = useDispatch();
 
-  const { companys, isLoading } = useSelector((state) => state.company);
+  const { companies, isLoading } = useSelector((state) => state.company);
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
-    dispatch(getCompany());
+    dispatch(getCompanies());
   }, [dispatch]);
 
   useEffect(() => {
-    if (companys.length) {
-      setTableData(companys);
+    if (companies.length) {
+      setTableData(companies);
     }
-  }, [companys]);
+  }, [companies]);
 
 
   const handleFilterName = (filterName) => {
@@ -102,24 +101,24 @@ export default function Company() {
   };
 
   const handleDeleteRow = (id) => {
-    dispatch(getCompany(id));
+    dispatch(deleteCompany(id));
     const deleteRow = tableData.filter((row) => row.id !== id);
     setSelected([]);
     setTableData(deleteRow);
   };
 
   const handleDeleteRows = (selected) => {
-    dispatch(getCompany(selected));
+    dispatch(deleteCompany(selected));
     const deleteRows = tableData.filter((row) => !selected.includes(row.id));
     setSelected([]);
     setTableData(deleteRows);
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.companys.edit(paramCase(id)));
+    navigate(PATH_DASHBOARD.companies.edit(paramCase(id)));
   };
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.companys.view(paramCase(id)));
+    navigate(PATH_DASHBOARD.companies.view(paramCase(id)));
  };
 
   const dataFiltered = applySortFilter({
@@ -133,15 +132,15 @@ export default function Company() {
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   return (
-    <Page title="Companys: Company List">
+    <Page title="Company List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="company List"
+          heading="Companies"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'companys',
-              href: PATH_DASHBOARD.companys.root,
+              name: 'companies',
+              href: PATH_DASHBOARD.companies.root,
             },
             
           ]}
@@ -150,7 +149,7 @@ export default function Company() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
               component={RouterLink}
-              to={PATH_DASHBOARD.companys.new}
+              to={PATH_DASHBOARD.companies.new}
             >
               New Company
             </Button>
@@ -263,7 +262,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
   tableData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    tableData = tableData.filter((company) => company.title.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+    tableData = tableData.filter((company) => company.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
   }
 
   return tableData;

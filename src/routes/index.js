@@ -93,6 +93,16 @@ export default function Router() {
           ],
         },
         {
+          path: 'companies',
+          children: [
+            { element: <Navigate to="/dashboard/companies/list" replace />, index: true },
+            { path: 'list', element: <Company /> },
+            { path: 'new', element: <CompanyCreate /> },
+            { path: ':id/edit', element: <CompanyCreate /> },
+            { path: ':id', element: <CompanyDetails /> },
+          ],
+        },
+        {
           children: [
             { path: 'course', element: <Course /> },
             { path: 'course/:CourseId', element: <Lesson /> },
@@ -123,16 +133,7 @@ export default function Router() {
 
           ],
         },
-        {
-          path: 'companys',
-          children: [
-            { element: <Navigate to="/dashboard/Companys/companys/company" replace />, index: true },
-            { path: 'company', element: <Company /> },
-            { path: 'company/new', element: <CompanyCreate /> },
-            { path: 'company/:id/edit', element: <CompanyCreate /> },
-            { path: 'company/:id', element: <CompanyDetails /> },
-          ],
-        },
+       
         {
           path: 'tallys',
           children: [
@@ -277,9 +278,9 @@ const Lesson = Loadable(lazy(() => import('../pages/Lessons/Lessons')));
 const LessonCreate = Loadable(lazy(() => import('../pages/Lessons/LessonsCreate')));
 const LessonDetails = Loadable(lazy(() => import('../pages/Lessons/LessonsDetails')));
 // COMPANY
-const Company = Loadable(lazy(() => import('../pages/Companys/Companys')));
-const CompanyCreate = Loadable(lazy(() => import('../pages/Companys/CompanysCreate')));
-const CompanyDetails = Loadable(lazy(() => import('../pages/Companys/CompanysDetails')));
+const Company = Loadable(lazy(() => import('../pages/Companies/List')));
+const CompanyCreate = Loadable(lazy(() => import('../pages/Companies/CompanyCreate')));
+const CompanyDetails = Loadable(lazy(() => import('../pages/Companies/CompanyDetails')));
 // TALLY
 const Tally = Loadable(lazy(() => import('../pages/dashboard/Tally')));
 const TallyCreate = Loadable(lazy(() => import('../pages/dashboard/TallyCreate')));

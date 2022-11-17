@@ -12,7 +12,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, InputLabel, Select, MenuItem, FormControl } from '@mui/material';
 import { useDispatch, useSelector } from '../../../../redux/store';
-import CompanyAutoComplete from '../../../../pages/Companys/CompanyAutocomplete';
+import CompanyAutoComplete from '../../../../pages/Companies/CompanyAutocomplete';
 // utils
 import { fData } from '../../../../utils/formatNumber';
 // routes

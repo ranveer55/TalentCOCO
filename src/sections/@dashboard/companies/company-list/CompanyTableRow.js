@@ -7,6 +7,7 @@ import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mu
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
+import {IMAGE_PATH} from '../../../../config'
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +23,8 @@ CompanyTableRow.propTypes = {
 export default function CompanyTableRow({ row, selected, onEditRow,onViewRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { name, avatarUrl, description, poster, isVerified, courses ,active} = row;
+  const { name, poster, description,courses ,active} = row;
+  const avatarUrl =IMAGE_PATH+poster;
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -48,12 +50,11 @@ export default function CompanyTableRow({ row, selected, onEditRow,onViewRow, on
       </TableCell>
 
       <TableCell align="left">{description}</TableCell>
-      <TableCell align="left">{poster}</TableCell>
       <TableCell align="left">{courses}</TableCell>
        <TableCell align="left">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={(active === 'banned' && 'error') || 'success'}
+          color={(active === true && 'success') || 'error'}
           sx={{ textTransform: 'capitalize' }}
         >
           {active}

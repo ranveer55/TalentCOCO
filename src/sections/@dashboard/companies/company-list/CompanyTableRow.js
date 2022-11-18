@@ -43,6 +43,7 @@ export default function CompanyTableRow({ row, selected, onEditRow,onViewRow, on
       </TableCell>
 
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+        <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>                    
           {name}
         </Typography>

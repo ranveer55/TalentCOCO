@@ -5,7 +5,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getLecture } from './store/actions';
+import { getLecturedetail } from './store/actions';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -21,12 +21,13 @@ export default function LectureCreate() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const { pathname } = useLocation();
-  const { id } = useParams();
+  const { id,CourseId, lessonId} = useParams();
   const { lectures } = useSelector((state) => state.lecture);
   const isEdit = pathname.includes('edit');
-  const currentLecture = lectures.find((lecture) => paramCase(lecture.id) === id);
-  useEffect(() => {
-    dispatch(getLecture());
+   useEffect(() => {
+    if(id!==undefined){
+    dispatch(getLecturedetail(id));
+    }
   }, [dispatch]);
 
   return (
@@ -38,13 +39,13 @@ export default function LectureCreate() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Lectures',
-              href: PATH_DASHBOARD.lectures.root,
+              href: PATH_DASHBOARD.lecture(CourseId,lessonId),
             },
             { id: !isEdit ? 'New Lecture' : id },
           ]}
         />
 
-        <LectureNewEditForm isEdit={isEdit} currentLecture={currentLecture} />
+        <LectureNewEditForm isEdit={isEdit} currentLecture={lectures} />
       </Container>
     </Page>
   );

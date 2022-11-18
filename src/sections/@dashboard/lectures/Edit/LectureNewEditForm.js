@@ -9,7 +9,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { styled } from '@mui/material/styles';
-import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, FormGroup, InputLabel, Select, MenuItem, FormControl } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Paper from '@mui/material/Paper';
+import { Box, MobileStepper, Button, Snackbar, Card, Grid, Stack, Switch, Typography, FormControlLabel, FormGroup, InputLabel, Select, MenuItem, FormControl } from '@mui/material';
 import { useDispatch, useSelector } from '../../../../redux/store';
 // utils
 import { fData } from '../../../../utils/formatNumber';
@@ -24,6 +26,8 @@ import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar, RHFE
 
 // ----------------------------------------------------------------------
 
+
+
 LectureNewEditForm.propTypes = {
   isEdit: PropTypes.bool,
   currentLecture: PropTypes.object,
@@ -33,19 +37,23 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
   marginBottom: theme.spacing(1),
 }));
-
+let url={
+  src: `https://www.youtube.com`,
+  url: '/react'
+}
 export default function LectureNewEditForm({ isEdit, currentLecture }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { error } = useSelector((state) => state.lecture);
   const { CourseId, lessonId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
-  const [checked, setChecked] = useState(false);
   const NewLectureSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').min(3),
     description: Yup.string().required('Description is required').min(1),
     lessonId: Yup.string().required('Description is required').min(1),
     type: Yup.string(),
     body: Yup.string(),
+    video: Yup.string(),
     order: Yup.number(),
     active: Yup.boolean(),
   });
@@ -57,8 +65,9 @@ export default function LectureNewEditForm({ isEdit, currentLecture }) {
       type: currentLecture?.type || '',
       order: currentLecture?.order || '',
       body: currentLecture?.body || '',
+      video: currentLecture?.video || '',
       lessonId: lessonId || '',
-      active: currentLecture?.active || checked,
+      active: currentLecture?.active || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentLecture]
@@ -91,11 +100,17 @@ export default function LectureNewEditForm({ isEdit, currentLecture }) {
   }, [isEdit, currentLecture]);
 
   const onSubmit = async () => {
+    if(defaultValues.type !=='video'){
+      defaultValues.video=url;
+    }
+    if(defaultValues.type !=='body'){
+      defaultValues.body="text";
+    }
     try {
-      if (currentLecture) {
+      if (currentLecture.id) {
         dispatch(updateLecture(currentLecture.id, defaultValues))
       } else {
-        dispatch(createLecture(defaultValues));
+          dispatch(createLecture(defaultValues));
       }
       await new Promise((resolve) => setTimeout(resolve, 500));
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
@@ -105,7 +120,7 @@ export default function LectureNewEditForm({ isEdit, currentLecture }) {
     }
   };
 
-
+  
   const handleName = (e) => {
     const name = e.target.value;
     setValue('name', String(e.target.value))
@@ -120,7 +135,7 @@ export default function LectureNewEditForm({ isEdit, currentLecture }) {
     const type = e.target.value;
     setValue('type', String(e.target.value))
     defaultValues.type = type;
-  };
+    };
   const handleOrder = (e) => {
     const order = e.target.value;
     setValue('order', Number(e.target.value))
@@ -129,11 +144,22 @@ export default function LectureNewEditForm({ isEdit, currentLecture }) {
   const handleBody = (e) => {
     setValue('body', String(e))
     defaultValues.body = e;
-  };
 
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
   };
+  const handleVideo = (e) => {
+    url={
+      src: `https://www.youtube.com`,
+      url: e.target.value
+    }
+     setValue('video', String(e.target.value))
+    defaultValues.video = url;
+      };
+
+      const handleChange = (e) => {
+        const active = e.target.checked;
+        setValue('active', Boolean(e.target.checked))
+        defaultValues.active = active;
+      };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -148,25 +174,30 @@ export default function LectureNewEditForm({ isEdit, currentLecture }) {
             >
               <RHFTextField name="name" label="Lecture Name" onChange={(e) => handleName(e)} />
               <RHFTextField name="description" label="Description" multiline rows={5} onChange={(e) => handleDescription(e)} />
-              <div>
+              <FormControl sx={{ width: "100%" }}>
+                <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={defaultValues.type}
+                  label="Type"
+                  onChange={(e) => handleType(e)}
+                >
+                  <MenuItem value={'text'}>text</MenuItem>
+                  <MenuItem value={'mcq'}>mcq</MenuItem>
+                  <MenuItem value={'coding'}>coding</MenuItem>
+                  <MenuItem value={'video'}>video</MenuItem>
+                  <MenuItem value={'exercise'}>exercise</MenuItem>
+                </Select>
+              </FormControl>
+              {defaultValues.type === 'coding' ? <div>
                 <LabelStyle>Body</LabelStyle>
                 <RHFEditor simple name="body" onChange={(e) => handleBody(e)} />
-              </div>
-              <FormControl sx={{ width: "100%" }}>
-                  <InputLabel id="demo-simple-select-label">Type</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={defaultValues.type}
-                    label="Type"
-                    onChange={(e) => handleType(e)}
-                  >
-                    <MenuItem value={'text'}>text</MenuItem>
-                    <MenuItem value={'mcq'}>mcq</MenuItem>
-                    <MenuItem value={'coding'}>coding</MenuItem>
-                    <MenuItem value={'exercise'}>exercise</MenuItem>
-                  </Select>
-                </FormControl>
+              </div> : defaultValues.type === 'video' && <>
+                <LabelStyle>Video</LabelStyle>
+                <RHFTextField name="video" label="Video Url" onChange={(e) => handleVideo(e)} />
+              </> }
+                      
             </Box>
           </Card>
         </Grid>
@@ -178,13 +209,13 @@ export default function LectureNewEditForm({ isEdit, currentLecture }) {
                 sx={{
                   display: 'grid',
                   rowGap: 3,
-                  
+
                 }}
               >
                 <RHFTextField name="order" label="Order" onChange={(e) => handleOrder(e)} />
-                 <FormGroup sx={{marginLeft:'10px'}}>
+                <FormGroup sx={{ marginLeft: '10px' }}>
                   <FormControlLabel
-                    control={<Switch size="large" checked={checked} onChange={handleChange} />}
+                    control={<Switch size="large" name='active' onChange={handleChange} />}
                     label="Active"
                     labelPlacement="start"
                     sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }}

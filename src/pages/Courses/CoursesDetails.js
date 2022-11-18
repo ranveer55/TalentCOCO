@@ -25,7 +25,7 @@ import {
  } from '../../sections/@dashboard/courses/course-details';
 
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
-import { getCourse } from '../../redux/slices/Course';
+import { getCourseDetail } from './store/actions';
 // ----------------------------------------------------------------------
 
 const COURSE_DESCRIPTION = [
@@ -61,14 +61,13 @@ export default function CourseDetails() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [value, setValue] = useState('2');
-  const { courses, error, checkout } = useSelector((state) => state.course);
-  const course = courses.find((course) => paramCase(course.id) === id);
+  const { courses, error } = useSelector((state) => state.course);
    useEffect(() => {
-    dispatch(getCourse());
+    dispatch(getCourseDetail(id));
   }, [dispatch]);
-
-  const handleAddCart = (course) => {
-    dispatch(addCart(course));
+  
+  const handleAddCart = (courses) => {
+    dispatch(addCart(courses));
   };
 
   const handleGotoStep = (step) => {
@@ -96,13 +95,13 @@ export default function CourseDetails() {
 
         <CartWidget />
 
-        {course && (
+        {courses && (
           <>
             <Card>
               <Grid container>
-                <Grid course xs={12} >
+                <Grid item xs={12} >
                   <CourseDetailsSummary
-                    course={course}
+                    course={courses}
                     onAddCart={handleAddCart}
                     onGotoStep={handleGotoStep}
                   />
@@ -112,7 +111,7 @@ export default function CourseDetails() {
 
             <Grid container sx={{ my: 8 }}>
               {COURSE_DESCRIPTION.map((course) => (
-                <Grid course xs={12} md={4} key={course.name}>
+                <Grid item xs={12} md={4} key={course.name}>
                   <Box sx={{ my: 2, mx: 'auto', maxWidth: 280, textAlign: 'center' }}>
                     <Typography variant="subtitle1" gutterBottom>
                       {course.level}
@@ -127,14 +126,14 @@ export default function CourseDetails() {
                
                 <Divider />
                <TabPanel value="2">
-                  <CourseDetailsReview course={course} />
+                  <CourseDetailsReview course={courses} />
                 </TabPanel>
               </TabContext>
             </Card>
           </>
         )}
 
-        {!course && <SkeletonProduct />}
+        {!courses && <SkeletonProduct />}
 
         {error && <Typography variant="h6">404 Product not found</Typography>}
       </Container>

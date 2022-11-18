@@ -9,29 +9,33 @@ import { dispatch } from '../../../redux/store';
 
 
 export const startLoading = (payload) => ({
-    type: ActionTypes.FETCH_FILE_LOADING,
+    type: ActionTypes.FETCH_LECTURE_LOADING,
     payload
 })
 
 
 export const getLectureSuccess = (payload) => ({
-    type: ActionTypes.FETCH_FILE_SUCCESS,
+    type: ActionTypes.FETCH_LECTURE_SUCCESS,
+    payload
+})
+export const getLecturedetailSuccess = (payload) => ({
+    type: ActionTypes.FETCH_LECTUREDETAIL_SUCCESS,
     payload
 })
 export const addLectureSuccess = (payload) => ({
-    type: ActionTypes.ADD_FILE_SUCCESS,
+    type: ActionTypes.ADD_LECTURE_SUCCESS,
     payload
 })
 export const updateLectureSuccess = (payload) => ({
-    type: ActionTypes.UPDATE_FILE_SUCCESS,
+    type: ActionTypes.UPDATE_LECTURE_SUCCESS,
     payload
 })
 export const deleteLectures = (payload) => ({
-    type: ActionTypes.DELETE_FILE_SUCCESS,
+    type: ActionTypes.DELETE_LECTURE_SUCCESS,
     payload
 })
 export const hasError=(payload) =>({
-    type: ActionTypes.FETCH_FILE_ERROR,
+    type: ActionTypes.FETCH_LECTURE_ERROR,
     payload
 
 })
@@ -42,7 +46,28 @@ export function getLecture() {
       dispatch(startLoading(true));
       try {
         const response = await axios.get('/lecture');
+        if(response.data.results){
         dispatch(getLectureSuccess(response.data.results));
+      }
+      else if(response.code>=400){
+        dispatch(hasError(response.message)); 
+      }
+      } catch (error) {
+        dispatch(hasError(error));
+      }
+    };
+  }
+  export function getLecturedetail(id) {
+    return async () => {
+      dispatch(startLoading());
+      try {
+        const response = await axios.get(`/lecture/${id}`);
+        if(response.data){
+        dispatch(getLecturedetailSuccess(response.data));
+        }
+        else if(response.code>=400){
+          dispatch(hasError(response.message)); 
+        }
       } catch (error) {
         dispatch(hasError(error));
       }
@@ -53,7 +78,8 @@ export function getLecture() {
       dispatch(startLoading());
       try {
         const response = await axios.post('/lecture', data);
-        dispatch(addLectureSuccess(response.data));
+         dispatch(addLectureSuccess(response.data));
+        
       } catch (error) {
         dispatch(hasError(error));
       }
@@ -64,7 +90,12 @@ export function getLecture() {
       dispatch(startLoading());
       try {
         const response = await axios.patch(`/lecture/${id}`, payload);
+        if(response.data.results){
         dispatch(updateLectureSuccess(response.data));
+        }
+        else if(response.code>=400){
+          dispatch(hasError(response.message)); 
+        }
       } catch (error) {
         dispatch(hasError(error));
       }
@@ -75,66 +106,15 @@ export function getLecture() {
       dispatch(startLoading());
       try {
         const response = await axios.delete(`/lecture/${id}`);
+        if(response.data.results){
         dispatch(deleteLectures(response.data));
+        }
+        else if(response.code>=400){
+          dispatch(hasError(response.message)); 
+        }
       } catch (error) {
         dispatch(hasError(error));
       }
     };
   }
   
-/* export const getTestCases =  (id) => {
-    return async (dispatch) => {
-        const data = await axios.get(`checktestcases/problem/${id}`)
-        if (data && data.status==true) {
-            dispatch(setProblemTestCaseSuccess(data.data))
-        } 
-    }
-}
-
-export const submitProblem =  (p) => {
-    return async (dispatch) => {
-        dispatch(setLoading(true))
-        dispatch(setBackdrop(true))
-        const data = await axios.post(`challenge/submit`,p)
-        dispatch(setLoading(false))
-        dispatch(setBackdrop(false))
-        if (data && data.status ===false) {
-            if(data.refresh){
-                dispatch(setToast({severity:'warning', message:'Some Test Case pending', open:true}))
-                setTimeout(()=>{
-                    window.location.reload()
-                },1000)
-               
-            } else if(data.completed){
-                dispatch(setToast({severity:'success', message:'Assessment completed successfully', open:true}))
-                setTimeout(()=>{
-                    window.location.href='/challenges'
-                },1000)
-               
-            } else {
-                dispatch(setToast({severity:'error', message:data.data, open:true}))
-            }
-            
-        }  else if (data && data.status==true) {
-            dispatch(setProblemSuccess(data.data))
-        } 
-        else {
-            dispatch(setToast({severity:'error', message:'Something went wrong', open:true}))
-        }
-    }
-}
-export const executeTestCase =  (testcase, code) => {
-    return async (dispatch) => {
-        dispatch(setLoading(true))
-        const data = await axios.post(`challenge/test`,{id:testcase.id,code})
-        dispatch(setLoading(false))
-        if (data && data.status ===false) {
-            dispatch(setToast({severity:'error', message:data.data, open:true}))
-        }  else if (data && data.status==true) {
-            // dispatch(setProblemSuccess(data.data))
-        } 
-        else {
-            dispatch(setToast({severity:'error', message:'Something went wrong', open:true}))
-        }
-    }
-} */

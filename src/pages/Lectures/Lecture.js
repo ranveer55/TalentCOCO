@@ -1,11 +1,12 @@
 import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
-import { useNavigate,useParams, Link as RouterLink } from 'react-router-dom';
+import { useNavigate, useParams, Link as RouterLink } from 'react-router-dom';
 // @mui
 import {
   Box,
   Card,
   Table,
+  Typography,
   Button,
   Switch,
   Tooltip,
@@ -16,9 +17,15 @@ import {
   TablePagination,
   FormControlLabel,
 } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import LinearProgress from '@mui/material/LinearProgress';
+
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getLecture,deleteLecture } from './store/actions';
+import { getLecture, deleteLecture } from './store/actions';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -43,12 +50,12 @@ import { LectureTableRow, LectureTableToolbar } from '../../sections/@dashboard/
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'description',label: 'Description', align: 'left' },
+  { id: 'description', label: 'Description', align: 'left' },
   { id: 'type', label: 'Type', align: 'left' },
   { id: 'order', label: 'Order', align: 'center' },
   { id: 'active', label: 'Active', align: 'left' },
-  {id:''},
-  ];
+  { id: '' },
+];
 
 // ----------------------------------------------------------------------
 
@@ -73,15 +80,18 @@ export default function Lecture() {
   } = useTable({
     defaultOrderBy: 'createdAt',
   });
-  
+
   const { themeStretch } = useSettings();
 
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const { CourseId,lessonId } = useParams();
-  const { lectures, isLoading } = useSelector((state) => state.lecture);
+  const { CourseId, lessonId } = useParams();
+  const { lectures, error, isLoading } = useSelector((state) => state.lecture);
   const [tableData, setTableData] = useState([]);
+  const [open, setDeleteOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   const [filterName, setFilterName] = useState('');
 
@@ -100,27 +110,42 @@ export default function Lecture() {
     setFilterName(filterName);
     setPage(0);
   };
-
   const handleDeleteRow = (id) => {
-    dispatch(deleteLecture(id));
-    const deleteRow = tableData.filter((row) => row.id !== id);
+    setDeleteOpen(true)
+    setDeleteId(id)
+  };
+
+  const handleClose = () => {
+    setDeleteOpen(false)
+    setLoading(false)
+  };
+
+  const RemoveSingleRow = () => {
+    setLoading(true)
+    setDeleteOpen(false)
+    dispatch(deleteLecture(deleteId));
+    setLoading(false)
+    const deleteRow = tableData.filter((row) => row.id !== deleteId);
     setSelected([]);
     setTableData(deleteRow);
   };
 
   const handleDeleteRows = (selected) => {
+    setLoading(true)
+    setDeleteOpen(false)
     dispatch(deleteLecture(selected));
+    setLoading(false)
     const deleteRows = tableData.filter((row) => !selected.includes(row.id));
     setSelected([]);
     setTableData(deleteRows);
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.editLecture(CourseId,lessonId,id));
+    navigate(PATH_DASHBOARD.editLecture(CourseId, lessonId, id));
   };
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.viewLecture(CourseId,lessonId,id));
- };
+    navigate(PATH_DASHBOARD.viewLecture(CourseId, lessonId, id));
+  };
 
   const dataFiltered = applySortFilter({
     tableData,
@@ -140,18 +165,26 @@ export default function Lecture() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'lectures',
+              name: 'Course',
+              href: PATH_DASHBOARD.course,
+            },
+            {
+              name: 'Lessons',
+              href: PATH_DASHBOARD.lesson(paramCase(CourseId)),
+            },
+            {
+              name: 'Lectures',
               href: PATH_DASHBOARD.lectures.root,
             },
-            
+
           ]}
           action={
             <Button
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
               component={RouterLink}
-              to={PATH_DASHBOARD.newLecture(CourseId,lessonId)}
-              >
+              to={PATH_DASHBOARD.newLecture(CourseId, lessonId)}
+            >
               New Lecture
             </Button>
           }
@@ -160,7 +193,7 @@ export default function Lecture() {
         <Card>
           <LectureTableToolbar filterName={filterName} onFilterName={handleFilterName} />
 
-          <Scrollbar>
+          {lectures ?<Scrollbar>
             <TableContainer sx={{ minWidth: 960, position: 'relative' }}>
               {selected.length > 0 && (
                 <TableSelectedActions
@@ -224,7 +257,7 @@ export default function Lecture() {
                 </TableBody>
               </Table>
             </TableContainer>
-          </Scrollbar>
+          </Scrollbar>: <Typography variant="h6">{error}</Typography>}
 
           <Box sx={{ position: 'relative' }}>
             <TablePagination
@@ -243,6 +276,27 @@ export default function Lecture() {
               sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
             />
           </Box>
+          <div>
+                        <Dialog
+                            open={open}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description" >
+                            {loading === true ? <LinearProgress /> : <></>}
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    Are you sure you want to delete the Problems?</DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button variant="contained" onClick={()=>{handleClose()}} style={{ background: "Silver", height: "34px", width: "42px" }}>
+                                    Cancel
+                                </Button>
+                                <Button variant="contained" color="primary" onClick={() => {RemoveSingleRow()}} autoFocus >
+                                    Ok
+                                </Button>
+
+                            </DialogActions>
+                        </Dialog>
+                    </div>
         </Card>
       </Container>
     </Page>
@@ -263,7 +317,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
   tableData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    tableData = tableData.filter((lecture) => lecture.title.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+    tableData = tableData.filter((lecture) => lecture.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
   }
 
   return tableData;

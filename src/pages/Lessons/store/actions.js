@@ -9,29 +9,33 @@ import { dispatch } from '../../../redux/store';
 
 
 export const startLoading = (payload) => ({
-    type: ActionTypes.FETCH_FILE_LOADING,
+    type: ActionTypes.FETCH_LESSON_LOADING,
     payload
 })
 
 
 export const getLessonSuccess = (payload) => ({
-    type: ActionTypes.FETCH_FILE_SUCCESS,
+    type: ActionTypes.FETCH_LESSON_SUCCESS,
+    payload
+})
+export const getLessonDetailSuccess = (payload) => ({
+    type: ActionTypes.FETCH_LESSONDETAIL_SUCCESS,
     payload
 })
 export const addLessonSuccess = (payload) => ({
-    type: ActionTypes.ADD_FILE_SUCCESS,
+    type: ActionTypes.ADD_LESSON_SUCCESS,
     payload
 })
 export const updateLessonSuccess = (payload) => ({
-    type: ActionTypes.UPDATE_FILE_SUCCESS,
+    type: ActionTypes.UPDATE_LESSON_SUCCESS,
     payload
 })
 export const deleteLessons = (payload) => ({
-    type: ActionTypes.DELETE_FILE_SUCCESS,
+    type: ActionTypes.DELETE_LESSON_SUCCESS,
     payload
 })
 export const hasError=(payload) =>({
-    type: ActionTypes.FETCH_FILE_ERROR,
+    type: ActionTypes.FETCH_LESSON_ERROR,
     payload
 
 })
@@ -48,6 +52,18 @@ export function getLesson() {
       }
     };
   }
+  export function getLessonDetail(id) {
+    return async () => {
+      dispatch(startLoading());
+      try {
+        const response = await axios.get(`/lesson/${id}`);
+        dispatch(getLessonDetailSuccess(response.data));
+      } catch (error) {
+        dispatch(hasError(error));
+      }
+    };
+  }
+  
   export function createLesson(data) {
       return async () => {
       dispatch(startLoading());
@@ -63,8 +79,13 @@ export function getLesson() {
    return async () => {
       dispatch(startLoading());
       try {
-        const response = await axios.patch(`/users/${id}`, payload);
+        const response = await axios.patch(`/lesson/${id}`, payload);
+        if(response.data){
         dispatch(updateLessonSuccess(response.data));
+        }
+        else if(response.code>=400){
+          dispatch(hasError(response.message)); 
+        }
       } catch (error) {
         dispatch(hasError(error));
       }
@@ -74,7 +95,7 @@ export function getLesson() {
     return async () => {
       dispatch(startLoading());
       try {
-        const response = await axios.delete(`/users/${id}`);
+        const response = await axios.delete(`/lesson/${id}`);
         dispatch(deleteLessons(response.data));
       } catch (error) {
         dispatch(hasError(error));

@@ -16,6 +16,12 @@ import {
   TablePagination,
   FormControlLabel,
 } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import LinearProgress from '@mui/material/LinearProgress';
+
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getLesson,deleteLesson } from './store/actions';
@@ -82,6 +88,9 @@ export default function Lesson() {
   const { CourseId } = useParams();
   const { lessons, isLoading } = useSelector((state) => state.lesson);
   const [tableData, setTableData] = useState([]);
+  const [open, setDeleteOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   const [filterName, setFilterName] = useState('');
 
@@ -102,18 +111,35 @@ export default function Lesson() {
   };
 
   const handleDeleteRow = (id) => {
-    dispatch(deleteLesson (id));
-    const deleteRow = tableData.filter((row) => row.id !== id);
+    setDeleteOpen(true)
+    setDeleteId(id)
+   };
+ 
+  const handleClose = () => {
+    setDeleteOpen(false)
+    setLoading(false)
+   };
+ 
+   const RemoveSingleRow = () => {
+    setLoading(true)
+     setDeleteOpen(false)
+     dispatch(deleteLesson(deleteId));
+     setLoading(false)
+    const deleteRow = tableData.filter((row) => row.id !== deleteId);
     setSelected([]);
     setTableData(deleteRow);
   };
-
+ 
   const handleDeleteRows = (selected) => {
-    dispatch(deleteLesson (selected));
+     setLoading(true)
+     setDeleteOpen(false)
+    dispatch(deleteLesson(selected));
+    setLoading(false)
     const deleteRows = tableData.filter((row) => !selected.includes(row.id));
     setSelected([]);
     setTableData(deleteRows);
   };
+
 
   const handleEditRow = (id) => {
     navigate(PATH_DASHBOARD.editLesson(CourseId,id));
@@ -140,8 +166,12 @@ export default function Lesson() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'lessons',
-              href: PATH_DASHBOARD.lessons.root,
+              name: 'Course',
+              href: PATH_DASHBOARD.course,
+            },
+            {
+              name: 'Lessons',
+              href: PATH_DASHBOARD.lesson(paramCase(CourseId)),
             },
             
           ]}
@@ -244,6 +274,27 @@ export default function Lesson() {
               sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
             />
           </Box>
+          <div>
+                        <Dialog
+                            open={open}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description" >
+                            {loading === true ? <LinearProgress /> : <></>}
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    Are you sure you want to delete the Problems?</DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button variant="contained" onClick={()=>{handleClose()}} style={{ background: "Silver", height: "34px", width: "42px" }}>
+                                    Cancel
+                                </Button>
+                                <Button variant="contained" color="primary" onClick={() => {RemoveSingleRow()}} autoFocus >
+                                    Ok
+                                </Button>
+
+                            </DialogActions>
+                        </Dialog>
+                    </div>
         </Card>
       </Container>
     </Page>
@@ -264,7 +315,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
   tableData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    tableData = tableData.filter((lesson) => lesson.title.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+    tableData = tableData.filter((lesson) => lesson.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
   }
 
   return tableData;

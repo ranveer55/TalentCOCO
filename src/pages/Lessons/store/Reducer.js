@@ -17,18 +17,20 @@ const initialState = {
 const Reducer = (state = initialState, {type, payload} = {}) => {
        switch (type) {
       
-        case ActionTypes.FETCH_FILE_LOADING:
+        case ActionTypes.FETCH_LESSON_LOADING:
             return {  ...state,isLoading: true}
 
-        case ActionTypes.FETCH_FILE_SUCCESS:
+        case ActionTypes.FETCH_LESSON_SUCCESS:
             return { ...state, isLoading: false, lessons: payload}
-        case ActionTypes.ADD_FILE_SUCCESS:
+        case ActionTypes.FETCH_LESSONDETAIL_SUCCESS:
             return { ...state, isLoading: false, lessons: payload}
-        case ActionTypes.UPDATE_FILE_SUCCESS:
+        case ActionTypes.ADD_LESSON_SUCCESS:
             return { ...state, isLoading: false, lessons: payload}
-        case ActionTypes.DELETE_FILE_SUCCESS:
+        case ActionTypes.UPDATE_LESSON_SUCCESS:
             return { ...state, isLoading: false, lessons: payload}
-        case ActionTypes.FETCH_FILE_ERROR:
+        case ActionTypes.DELETE_LESSON_SUCCESS:
+            return { ...state, isLoading: false, lessons: payload}
+        case ActionTypes.FETCH_LESSON_ERROR:
             return { ...state, isLoading: false, error: payload }
                 default:
             return state;

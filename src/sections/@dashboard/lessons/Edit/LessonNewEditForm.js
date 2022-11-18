@@ -8,7 +8,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, InputLabel, FormGroup, Select, MenuItem, FormControl } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import { Box, Card, Grid, Stack, Switch,Snackbar, Typography, FormControlLabel, InputLabel, FormGroup, Select, MenuItem, FormControl } from '@mui/material';
 import { useDispatch, useSelector } from '../../../../redux/store';
 // utils
 import { fData } from '../../../../utils/formatNumber';
@@ -33,10 +34,10 @@ export default function LessonNewEditForm({ isEdit, currentLesson }) {
   const dispatch = useDispatch();
   const { CourseId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
-  const [checked, setChecked] = useState(true);
-
+  const [open, setOpen] = useState(false);
+  const { error } = useSelector((state) => state.lesson);
   const NewLessonSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required').min(8),
+    name: Yup.string().required('Name is required').min(3),
     description: Yup.string().required('Description is required').min(1),
     order: Yup.number(),
     active: Yup.boolean(),
@@ -49,7 +50,7 @@ export default function LessonNewEditForm({ isEdit, currentLesson }) {
       name: currentLesson?.name || '',
       description: currentLesson?.description || '',
       order: currentLesson?.order || '',
-      active: currentLesson?.active || checked,
+      active: currentLesson?.active || '',
       courseId: CourseId || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,7 +85,7 @@ export default function LessonNewEditForm({ isEdit, currentLesson }) {
 
   const onSubmit = async () => {
     try {
-      if (currentLesson) {
+      if (currentLesson.id) {
         dispatch(updateLesson(currentLesson.id, defaultValues))
       } else {
         dispatch(createLesson(defaultValues));
@@ -97,22 +98,7 @@ export default function LessonNewEditForm({ isEdit, currentLesson }) {
     }
   };
 
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-
-      if (file) {
-        setValue(
-          'avatarUrl',
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        );
-      }
-    },
-    [setValue]
-  );
-  const handleName = (e) => {
+    const handleName = (e) => {
     const name = e.target.value;
     setValue('name', String(e.target.value))
     defaultValues.name = name;
@@ -133,9 +119,28 @@ export default function LessonNewEditForm({ isEdit, currentLesson }) {
     defaultValues.order = order;
   };
 
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
+  const handleChange = (e) => {
+    const active = e.target.checked;
+    setValue('active', Boolean(e.target.checked))
+    defaultValues.active = active;
   };
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen({ open: false })
+  };
+  const Snackbarrender = () => {
+    setOpen(true)
+    return (
+      open ? <Snackbar open={open} autoHideDuration={5000} onClose={handleClose} style={{ marginTop: '0px', width: '100%' }}>
+        <Alert elevation={6} variant="filled" onClose={handleClose} severity={error.massage} >
+          {error.massage}
+        </Alert>
+      </Snackbar> : null
+    )
+  }
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -150,14 +155,14 @@ export default function LessonNewEditForm({ isEdit, currentLesson }) {
               <RHFTextField name="name" label="Lesson Name" onChange={(e) => handleName(e)} />
               <RHFTextField name="description" label="Description" multiline rows={5} onChange={(e) => handleDescription(e)} />
               <RHFTextField name="order" label="Order" onChange={(e) => handleOrder(e)} />
-              <FormGroup sx={{marginLeft:'10px'}}>
-                <FormControlLabel
-                  control={<Switch size="large" checked={checked} onChange={handleChange} />}
-                  label="Active"
-                  sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }}
-                />
-              </FormGroup>
-            </Box>
+              <FormGroup sx={{ marginLeft: '10px' }}>
+                  <FormControlLabel
+                    control={<Switch name='active' size="large"  onChange={handleChange} />}
+                    label="Active"
+                    
+                  />
+                </FormGroup>
+               </Box>
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                 {!isEdit ? 'Create Lesson' : 'Save Changes'}
@@ -166,9 +171,10 @@ export default function LessonNewEditForm({ isEdit, currentLesson }) {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={4}>{}       
+        <Grid item xs={12} md={4}>{ }
         </Grid>
       </Grid>
+      { Snackbarrender}
     </FormProvider>
   );
 }

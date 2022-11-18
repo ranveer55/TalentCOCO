@@ -25,21 +25,9 @@ import {
  } from '../../sections/@dashboard/lessons/lesson-details';
 
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
-import { getLessonDetail } from './store/actions';
+import { getLesson } from './store/actions';
 // ----------------------------------------------------------------------
 
-const LESSON_DESCRIPTION = [
-  {
-    title: '100% Original',
-    description: 'It is made by a chemical process called fermentation that uses sugars and yeast.',
-    icon: 'ic:round-verified',
-  },
-  {
-    title: 'affordable price',
-    description: 'its price is low enough that you (or most people) have enough money to buy it.',
-    icon: 'ic:round-verified-user',
-  }, 
-];
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
   margin: 'auto',
@@ -60,21 +48,12 @@ export default function LessonDetails() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const {CourseId, id } = useParams();
-  const [value, setValue] = useState('2');
-  const { lessons, error, checkout } = useSelector((state) => state.lesson);
+  const { lesson: { lesson, loading }} = useSelector((state) => state);
    useEffect(() => {
-    dispatch(getLessonDetail(id));
+    dispatch(getLesson(id));
   }, [dispatch]);
 
-  const handleAddCart = (lesson) => {
-    dispatch(addCart(lesson));
-  };
-
-  const handleGotoStep = (step) => {
-    dispatch(onGotoStep(step));
-  };
-
-  return (
+   return (
     <Page title="Lesson:Details">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
@@ -93,50 +72,19 @@ export default function LessonDetails() {
           ]}
         />
 
-        <CartWidget />
-
-        {lessons && (
-          <>
-            <Card>
-              <Grid container>
-                <Grid item xs={12} >
-                  <LessonDetailsSummary
-                   CourseId={CourseId}
-                    lesson={lessons}
-                    onAddCart={handleAddCart}
-                    onGotoStep={handleGotoStep}
-                  />
-                </Grid>
-                 </Grid>
-            </Card>
-
-            <Grid container sx={{ my: 8 }}>
-              {LESSON_DESCRIPTION.map((lesson) => (
-                <Grid item xs={12} md={4} key={lesson.name}>
-                  <Box sx={{ my: 2, mx: 'auto', maxWidth: 280, textAlign: 'center' }}>
-                    <Typography variant="subtitle1" gutterBottom>
+{lesson && (
+              <>
+            <Card sx={{p:2}}>
+            <Typography variant="subtitle1" gutterBottom>
+                      {lesson.name}
+                </Typography>
+                <Typography variant="p" gutterBottom>
                       {lesson.description}
-                    </Typography>
-                   </Box>
-                </Grid>
-              ))}
-            </Grid>
-
-            <Card>
-              <TabContext value={value}>
-               
-                <Divider />
-               <TabPanel value="2">
-                  <LessonDetailsReview lesson={lessons} />
-                </TabPanel>
-              </TabContext>
+                </Typography>
             </Card>
-          </>
-        )}
+          </>   
+          )}
 
-        {!lessons && <SkeletonProduct />}
-
-        {error && <Typography variant="h6">404 Product not found</Typography>}
       </Container>
     </Page>
   );

@@ -5,7 +5,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCourseDetail } from './store/actions';
+import { getCourse} from './store/actions';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -21,11 +21,10 @@ export default function CourseCreate() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { id } = useParams();
-   const { courses } = useSelector((state) => state.course);
   const isEdit = pathname.includes('edit');
   useEffect(() => {
-    if(id!==undefined){
-    dispatch(getCourseDetail(id));
+    if(id){
+    dispatch(getCourse(id));
     }
   }, [dispatch]);
 
@@ -44,7 +43,7 @@ export default function CourseCreate() {
           ]}
         />
 
-        <CourseNewEditForm isEdit={isEdit} currentCourse={courses} />
+        <CourseNewEditForm isEdit={isEdit} />
       </Container>
     </Page>
   );

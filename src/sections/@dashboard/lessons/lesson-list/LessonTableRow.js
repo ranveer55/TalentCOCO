@@ -53,7 +53,7 @@ export default function LessonTableRow({CourseId, row, selected, onEditRow,onVie
       </TableCell>
 
       <TableCell align="left">{description}</TableCell>
-      <TableCell align="left">{order}</TableCell>
+      <TableCell align="center">{order}</TableCell>
       <TableCell align="left">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}

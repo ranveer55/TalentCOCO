@@ -24,7 +24,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getLesson,deleteLesson } from './store/actions';
+import { getLessons,deleteLesson } from './store/actions';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -95,7 +95,7 @@ export default function Lesson() {
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
-    dispatch(getLesson());
+    dispatch(getLessons());
   }, [dispatch]);
 
   useEffect(() => {

@@ -29,7 +29,7 @@ CourseTableRow.propTypes = {
 export default function CourseTableRow({ row, selected, onEditRow, onViewRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { id, name, avatarUrl, description, hours, isVerified, reviews, poster, totalLessons, instructor, language, level, active } = row;
+  const { id, name,description, hours, poster, totalLessons,language, level, active } = row;
   const [openMenu, setOpenMenuActions] = useState(null);
   const CourseId = id
   const handleOpenMenu = (event) => {
@@ -58,11 +58,7 @@ export default function CourseTableRow({ row, selected, onEditRow, onViewRow, on
       <TableCell align="left">{hours}</TableCell>
       <TableCell align="left">{language}</TableCell>
       <TableCell align="left">{level}</TableCell>
-      <TableCell align="left">{totalLessons}</TableCell>
-      {instructor && instructor.map((i) => (
-        <>
-          <TableCell align="left">{i?.name}</TableCell>
-        </>))}
+      <TableCell align="center">{totalLessons}</TableCell>
       <TableCell align="left">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}

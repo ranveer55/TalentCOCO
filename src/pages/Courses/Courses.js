@@ -24,7 +24,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCourse,deleteCourse } from './store/actions';
+import { getCourses,deleteCourse } from './store/actions';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -53,7 +53,6 @@ const TABLE_HEAD = [
   { id: 'language', label: 'Language', align: 'left' },
   { id: 'level', label: 'Level', align: 'left' },
   { id: 'totalLessons', label: 'Total Lessons', align: 'left' },
-  { id: 'instructor.name', label: 'Instructor Name', align: 'left' },
   { id: 'active', label: 'Active', align: 'left' },
   {id:'btn', label: 'View Lesson', align: 'left'},
   {id:''},
@@ -91,14 +90,13 @@ export default function Course() {
 
   const { courses, isLoading } = useSelector((state) => state.course);
   const [tableData, setTableData] = useState([]);
-
   const [filterName, setFilterName] = useState('');
   const [open, setDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
   useEffect(() => {
-    dispatch(getCourse());
+    dispatch(getCourses());
   }, [dispatch]);
 
   useEffect(() => {

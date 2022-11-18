@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { paramCase } from 'change-case';
 import * as Yup from 'yup';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
@@ -9,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import Alert from '@mui/material/Alert';
-import { Box, Card, Grid, Stack, Switch,Snackbar, Typography, FormControlLabel, InputLabel, FormGroup, Select, MenuItem, FormControl } from '@mui/material';
+import { Box, Card, Grid, Stack, Switch, Snackbar, Typography, FormControlLabel, InputLabel, FormGroup, Select, MenuItem, FormControl } from '@mui/material';
 import { useDispatch, useSelector } from '../../../../redux/store';
 // utils
 import { fData } from '../../../../utils/formatNumber';
@@ -29,13 +30,12 @@ LessonNewEditForm.propTypes = {
   currentLesson: PropTypes.object,
 };
 
-export default function LessonNewEditForm({ isEdit, currentLesson }) {
+export default function LessonNewEditForm({ isEdit }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { CourseId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
-  const [open, setOpen] = useState(false);
-  const { error } = useSelector((state) => state.lesson);
+  const { lesson: { lesson, loading } } = useSelector((state) => state);
   const NewLessonSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').min(3),
     description: Yup.string().required('Description is required').min(1),
@@ -47,14 +47,14 @@ export default function LessonNewEditForm({ isEdit, currentLesson }) {
 
   const defaultValues = useMemo(
     () => ({
-      name: currentLesson?.name || '',
-      description: currentLesson?.description || '',
-      order: currentLesson?.order || '',
-      active: currentLesson?.active || '',
-      courseId: CourseId || '',
+      name: isEdit ? lesson?.name || '' : '',
+      description: isEdit ? lesson?.description || '' : '',
+      order: isEdit ? lesson?.order || '' : '',
+      active: isEdit ? lesson?.active || '' : '',
+      courseId: CourseId,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentLesson]
+    [lesson]
   );
 
   const methods = useForm({
@@ -74,31 +74,35 @@ export default function LessonNewEditForm({ isEdit, currentLesson }) {
   const values = watch();
 
   useEffect(() => {
-    if (isEdit && currentLesson) {
+    if (isEdit && lesson) {
       reset(defaultValues);
     }
     if (!isEdit) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentLesson]);
+  }, [isEdit, lesson]);
+
+  const cb = () => {
+    reset();
+    navigate(PATH_DASHBOARD.lesson(paramCase(CourseId)))
+  }
 
   const onSubmit = async () => {
     try {
-      if (currentLesson.id) {
-        dispatch(updateLesson(currentLesson.id, defaultValues))
+
+      if (lesson) {
+        dispatch(updateLesson(lesson.id, defaultValues, cb))
       } else {
-        dispatch(createLesson(defaultValues));
+
+        dispatch(createLesson(defaultValues, cb));
       }
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.lesson(CourseId));
+
     } catch (error) {
       console.error(error);
     }
   };
-
-    const handleName = (e) => {
+  const handleName = (e) => {
     const name = e.target.value;
     setValue('name', String(e.target.value))
     defaultValues.name = name;
@@ -124,22 +128,6 @@ export default function LessonNewEditForm({ isEdit, currentLesson }) {
     setValue('active', Boolean(e.target.checked))
     defaultValues.active = active;
   };
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpen({ open: false })
-  };
-  const Snackbarrender = () => {
-    setOpen(true)
-    return (
-      open ? <Snackbar open={open} autoHideDuration={5000} onClose={handleClose} style={{ marginTop: '0px', width: '100%' }}>
-        <Alert elevation={6} variant="filled" onClose={handleClose} severity={error.massage} >
-          {error.massage}
-        </Alert>
-      </Snackbar> : null
-    )
-  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -156,13 +144,13 @@ export default function LessonNewEditForm({ isEdit, currentLesson }) {
               <RHFTextField name="description" label="Description" multiline rows={5} onChange={(e) => handleDescription(e)} />
               <RHFTextField name="order" label="Order" onChange={(e) => handleOrder(e)} />
               <FormGroup sx={{ marginLeft: '10px' }}>
-                  <FormControlLabel
-                    control={<Switch name='active' size="large"  onChange={handleChange} />}
-                    label="Active"
-                    
-                  />
-                </FormGroup>
-               </Box>
+                <FormControlLabel
+                  control={<Switch name='active' size="large" onChange={handleChange} />}
+                  label="Active"
+
+                />
+              </FormGroup>
+            </Box>
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                 {!isEdit ? 'Create Lesson' : 'Save Changes'}
@@ -174,7 +162,6 @@ export default function LessonNewEditForm({ isEdit, currentLesson }) {
         <Grid item xs={12} md={4}>{ }
         </Grid>
       </Grid>
-      { Snackbarrender}
     </FormProvider>
   );
 }

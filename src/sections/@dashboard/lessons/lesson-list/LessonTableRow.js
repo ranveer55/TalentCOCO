@@ -38,7 +38,7 @@ export default function LessonTableRow({CourseId, row, selected, onEditRow,onVie
     setOpenMenuActions(null);
   };
   const onShowRow = () => {
-     navigate(PATH_DASHBOARD.course.lecture(CourseId,lessonId));
+     navigate(PATH_DASHBOARD.course.lectures(CourseId,lessonId));
 };
   return (
     <TableRow hover selected={selected}>

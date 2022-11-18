@@ -22,13 +22,7 @@ export default function LectureCreate() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { id,CourseId, lessonId} = useParams();
-  const { lectures } = useSelector((state) => state.lecture);
   const isEdit = pathname.includes('edit');
-   useEffect(() => {
-    if(id!==undefined){
-    dispatch(getLecturedetail(id));
-    }
-  }, [dispatch]);
 
   return (
     <Page title="Lectures: Create a new Lecture">
@@ -45,7 +39,7 @@ export default function LectureCreate() {
           ]}
         />
 
-        <LectureNewEditForm isEdit={isEdit} currentLecture={lectures} />
+        <LectureNewEditForm isEdit={isEdit}/>
       </Container>
     </Page>
   );

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 // form
+import { capitalize, unescape } from 'lodash';
 import { useFormContext, Controller } from 'react-hook-form';
 // @mui
 import { FormHelperText } from '@mui/material';
@@ -22,7 +23,7 @@ export default function RHFEditor({ name, ...other }) {
       render={({ field, fieldState: { error } }) => (
         <Editor
           id={name}
-          value={field.value}
+          value={field.value ? unescape(field.value):''}
           onChange={field.onChange}
           error={!!error}
           helperText={

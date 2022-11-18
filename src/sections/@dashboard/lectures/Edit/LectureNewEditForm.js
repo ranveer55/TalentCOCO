@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { capitalize, unescape } from 'lodash';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { styled } from '@mui/material/styles';
@@ -19,10 +20,14 @@ import { fData } from '../../../../utils/formatNumber';
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // _mock
 import { countries } from '../../../../_mock';
-import { createLecture, updateLecture } from '../../../../pages/Lectures/store/actions'
+import { createLecture, getLecture, updateLecture } from '../../../../pages/Lectures/store/actions'
 // components
 import Label from '../../../../components/Label';
+// import LectureMcq from '../../../../pages/MCQ/LectureMcq'
+import McqList from '../../../../pages/MCQ/McqList'
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar, RHFEditor } from '../../../../components/hook-form';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -30,48 +35,55 @@ import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar, RHFE
 
 LectureNewEditForm.propTypes = {
   isEdit: PropTypes.bool,
-  currentLecture: PropTypes.object,
+  lecture: PropTypes.object,
 };
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
   color: theme.palette.text.secondary,
   marginBottom: theme.spacing(1),
 }));
-let url={
-  src: `https://www.youtube.com`,
-  url: '/react'
-}
-export default function LectureNewEditForm({ isEdit, currentLecture }) {
+
+
+export default function LectureNewEditForm({ isEdit }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { error } = useSelector((state) => state.lecture);
-  const { CourseId, lessonId } = useParams();
-  const { enqueueSnackbar } = useSnackbar();
+
+  const { lecture: { lecture, isLoading }, app: { masterdata } } = useSelector((state) => state);
+  const LectureTypes = masterdata && masterdata.LectureTypes ? masterdata.LectureTypes: []
+
+  const { CourseId, lessonId,id } = useParams();
+
+  useEffect(() => {
+    if(id){
+      dispatch(getLecture(id));
+    }
+    
+  }, [dispatch]);
+
   const NewLectureSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').min(3),
-    description: Yup.string().required('Description is required').min(1),
-    lessonId: Yup.string().required('Description is required').min(1),
+    body: Yup.string().required('Body is required').min(1),
+    lessonId: Yup.string().required('Lesson is required').min(1),
     type: Yup.string(),
-    body: Yup.string(),
-    video: Yup.string(),
     order: Yup.number(),
     active: Yup.boolean(),
+    mcq: Yup.array()
   });
 
   const defaultValues = useMemo(
     () => ({
-      name: currentLecture?.name || '',
-      description: currentLecture?.description || '',
-      type: currentLecture?.type || '',
-      order: currentLecture?.order || '',
-      body: currentLecture?.body || '',
-      video: currentLecture?.video || '',
+      name: lecture?.name || '',
+      type: lecture?.type || '',
+      order: lecture?.order || '',
+      body: lecture?.body || '',
       lessonId: lessonId || '',
-      active: currentLecture?.active || '',
+      active: lecture?.active || '',
+      mcq: lecture?.mcq || [],
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentLecture]
+    [lecture]
   );
+  
 
   const methods = useForm({
     resolver: yupResolver(NewLectureSchema),
@@ -88,54 +100,47 @@ export default function LectureNewEditForm({ isEdit, currentLecture }) {
   } = methods;
 
   const values = watch();
-
   useEffect(() => {
-    if (isEdit && currentLecture) {
+    if (isEdit && lecture) {
       reset(defaultValues);
     }
     if (!isEdit) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentLecture]);
+  }, [isEdit, lecture]);
+
+  const cb =() =>{
+    reset();
+    navigate(`/dashboard/course/${CourseId}/lesson/${lessonId}`)
+  }
 
   const onSubmit = async () => {
-    if(defaultValues.type !=='video'){
-      defaultValues.video=url;
-    }
-    if(defaultValues.type !=='body'){
-      defaultValues.body="text";
-    }
     try {
-      if (currentLecture.id) {
-        dispatch(updateLecture(currentLecture.id, defaultValues))
+      const payload =defaultValues;
+      if (lecture) {
+        dispatch(updateLecture(lecture.id, payload,cb))
       } else {
-          dispatch(createLecture(defaultValues));
-      }
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.lecture(CourseId, lessonId));
+       
+        dispatch(createLecture(payload,cb));
+      } 
+      
     } catch (error) {
       console.error(error);
     }
   };
 
-  
+
   const handleName = (e) => {
     const name = e.target.value;
     setValue('name', String(e.target.value))
     defaultValues.name = name;
   };
-  const handleDescription = (e) => {
-    const description = e.target.value;
-    setValue('description', String(e.target.value))
-    defaultValues.description = description;
-  };
   const handleType = (e) => {
     const type = e.target.value;
     setValue('type', String(e.target.value))
     defaultValues.type = type;
-    };
+  };
   const handleOrder = (e) => {
     const order = e.target.value;
     setValue('order', Number(e.target.value))
@@ -146,20 +151,17 @@ export default function LectureNewEditForm({ isEdit, currentLecture }) {
     defaultValues.body = e;
 
   };
-  const handleVideo = (e) => {
-    url={
-      src: `https://www.youtube.com`,
-      url: e.target.value
-    }
-     setValue('video', String(e.target.value))
-    defaultValues.video = url;
-      };
 
-      const handleChange = (e) => {
-        const active = e.target.checked;
-        setValue('active', Boolean(e.target.checked))
-        defaultValues.active = active;
-      };
+  const handleChange = (e) => {
+    const active = e.target.checked;
+    setValue('active', Boolean(e.target.checked))
+    defaultValues.active = active;
+  };
+  const setMCQOrder = (val) => {
+  
+    setValue('mcq', val)
+    defaultValues.mcq = val;
+  };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -173,34 +175,19 @@ export default function LectureNewEditForm({ isEdit, currentLecture }) {
               }}
             >
               <RHFTextField name="name" label="Lecture Name" onChange={(e) => handleName(e)} />
-              <RHFTextField name="description" label="Description" multiline rows={5} onChange={(e) => handleDescription(e)} />
-              <FormControl sx={{ width: "100%" }}>
-                <InputLabel id="demo-simple-select-label">Type</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={defaultValues.type}
-                  label="Type"
-                  onChange={(e) => handleType(e)}
-                >
-                  <MenuItem value={'text'}>text</MenuItem>
-                  <MenuItem value={'mcq'}>mcq</MenuItem>
-                  <MenuItem value={'coding'}>coding</MenuItem>
-                  <MenuItem value={'video'}>video</MenuItem>
-                  <MenuItem value={'exercise'}>exercise</MenuItem>
-                </Select>
-              </FormControl>
-              {defaultValues.type === 'coding' ? <div>
+             
+              {defaultValues.type !== 'mcq' && <div>
                 <LabelStyle>Body</LabelStyle>
                 <RHFEditor simple name="body" onChange={(e) => handleBody(e)} />
-              </div> : defaultValues.type === 'video' && <>
-                <LabelStyle>Video</LabelStyle>
-                <RHFTextField name="video" label="Video Url" onChange={(e) => handleVideo(e)} />
-              </> }
-                      
+              </div> }
+              { defaultValues.type === 'MCQ' && isEdit && <McqList isLoading={isLoading} lecture={isEdit ? lecture: defaultValues } setMCQOrder={setMCQOrder} />}
+              {/* { defaultValues.type === 'MCQ' && isEdit && <LectureMcq lecture={isEdit ? lecture: defaultValues } setMCQOrder={setMCQOrder} />} */}
+
+
             </Box>
           </Card>
         </Grid>
+      
 
         <Grid item xs={12} md={4}>
           <Card sx={{ p: 3 }}>
@@ -211,7 +198,19 @@ export default function LectureNewEditForm({ isEdit, currentLecture }) {
                   rowGap: 3,
 
                 }}
-              >
+              > <FormControl sx={{ width: "100%" }}>
+                  <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={defaultValues.type}
+                    label="Type"
+                    onChange={(e) => handleType(e)}
+                  >{
+                    LectureTypes.map((item)=> <MenuItem key={item} value={item}>{capitalize(item)}</MenuItem>)
+                  }
+                  </Select>
+                </FormControl>
                 <RHFTextField name="order" label="Order" onChange={(e) => handleOrder(e)} />
                 <FormGroup sx={{ marginLeft: '10px' }}>
                   <FormControlLabel
@@ -232,6 +231,7 @@ export default function LectureNewEditForm({ isEdit, currentLecture }) {
           </Card>
         </Grid>
       </Grid>
+     
     </FormProvider>
   );
 }

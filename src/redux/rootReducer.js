@@ -10,6 +10,7 @@ import kanbanReducer from './slices/kanban';
 import userReducer from  '../pages/Users/store/Reducer';
 import courseReducer from '../pages/Courses/store/Reducer';
 import lectureReducer from '../pages/Lectures/store/Reducer';
+import mcqReducer from '../pages/MCQ/store/Reducer';
 import lessonReducer from '../pages/Lessons/store/Reducer';
 import companyReducer from '../pages/Companies/store/Reducer';
 import appReducer from '../pages/app/store/Reducer';
@@ -38,6 +39,12 @@ const coursePersistConfig = {
 };
 const lecturePersistConfig = {
   key: 'lecture',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['sortBy', 'checkout'],
+};
+const mcqPersistConfig = {
+  key: 'mcq',
   storage,
   keyPrefix: 'redux-',
   whitelist: ['sortBy', 'checkout'],
@@ -84,6 +91,7 @@ const rootReducer = combineReducers({
   product: persistReducer(productPersistConfig, productReducer),
   course: persistReducer(coursePersistConfig, courseReducer),
   lecture: persistReducer(lecturePersistConfig, lectureReducer),
+  mcq: persistReducer(mcqPersistConfig, mcqReducer),
   lesson: persistReducer(lessonPersistConfig, lessonReducer),
   company: persistReducer(companyPersistConfig, companyReducer),
   tally: persistReducer(tallyPersistConfig, tallyReducer),

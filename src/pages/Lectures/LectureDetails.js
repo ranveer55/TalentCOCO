@@ -25,21 +25,7 @@ import {
  } from '../../sections/@dashboard/lectures/lecture-details';
 
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
-import { getLecturedetail } from './store/actions';
-// ----------------------------------------------------------------------
-
-const LECTURE_DESCRIPTION = [
-  {
-    title: '100% Original',
-    description: 'It is made by a chemical process called fermentation that uses sugars and yeast.',
-    icon: 'ic:round-verified',
-  },
-  {
-    title: 'affordable price',
-    description: 'its price is low enough that you (or most people) have enough money to buy it.',
-    icon: 'ic:round-verified-user',
-  }, 
-];
+import { getLecture } from './store/actions';
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
   margin: 'auto',
@@ -60,21 +46,14 @@ export default function LectureDetails() {
   const navigate = useNavigate();
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
-  const { CourseId,lessonId,id } = useParams();
+  const {id } = useParams();
   const [value, setValue] = useState('2');
-  const { lectures, error, checkout } = useSelector((state) => state.lecture);
+  const { lecture} = useSelector((state) => state.lecture);
     useEffect(() => {
-    dispatch(getLecturedetail(id));
-  }, [dispatch]);
-
-  const handleAddCart = (lecture) => {
-    dispatch(addCart(lecture));
-  };
-
-  const handleGotoStep = (step) => {
-    dispatch(onGotoStep(step));
-  };
-
+      if(id){
+        dispatch(getLecture(id));
+      }
+  }, [id]);
   return (
     <Page title="Lecture:Details">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -95,47 +74,21 @@ export default function LectureDetails() {
 
         <CartWidget />
 
-        {lectures && (
+        {lecture && (
           <>
             <Card>
               <Grid container>
                 <Grid item xs={12} >
                   <LectureDetailsSummary
-                    lecture={lectures}
-                    onAddCart={handleAddCart}
-                    onGotoStep={handleGotoStep}
+                    lecture={lecture}
                   />
                 </Grid>
                  </Grid>
             </Card>
-
-            <Grid container sx={{ my: 8 }}>
-              {LECTURE_DESCRIPTION.map((lecture) => (
-                <Grid item xs={12} md={4} key={lecture.name}>
-                  <Box sx={{ my: 2, mx: 'auto', maxWidth: 280, textAlign: 'center' }}>
-                    <Typography variant="subtitle1" gutterBottom>
-                      {lecture.lession}
-                    </Typography>
-                   </Box>
-                </Grid>
-              ))}
-            </Grid>
-
-            <Card>
-              <TabContext value={value}>
-               
-                <Divider />
-               <TabPanel value="2">
-                  <LectureDetailsReview lecture={lectures} />
-                </TabPanel>
-              </TabContext>
-            </Card>
           </>
         )}
 
-        {!lectures && <SkeletonProduct />}
-
-        {error && <Typography variant="h6">404 Product not found</Typography>}
+        {!lecture && <SkeletonProduct />}
       </Container>
     </Page>
   );

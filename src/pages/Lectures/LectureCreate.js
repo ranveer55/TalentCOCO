@@ -25,7 +25,9 @@ export default function LectureCreate() {
   const { lectures } = useSelector((state) => state.lecture);
   const isEdit = pathname.includes('edit');
    useEffect(() => {
+    if(id!==undefined){
     dispatch(getLecturedetail(id));
+    }
   }, [dispatch]);
 
   return (

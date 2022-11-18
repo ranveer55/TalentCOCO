@@ -56,9 +56,7 @@ export default function CourseNewEditForm({ isEdit, currentCourse }) {
     poster: Yup.string(),
     language: Yup.string().required('Language is required'),
     level: Yup.string().required('Level is required'),
-    companyId: Yup.string().required('CompanyId is required'),
-
-  });
+ });
 
   const defaultValues = useMemo(
     () => ({
@@ -68,8 +66,7 @@ export default function CourseNewEditForm({ isEdit, currentCourse }) {
       poster: currentCourse?.poster ||null,
       language: currentCourse?.language || '',
       level: currentCourse?.level || '',
-      companyId: currentCourse?.companyId || '',
-    }),
+      }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentCourse]
   );
@@ -102,7 +99,7 @@ export default function CourseNewEditForm({ isEdit, currentCourse }) {
 
   const onSubmit = async () => {
     try {
-      if(currentCourse){
+      if(currentCourse.id){
        dispatch(updateCourse(currentCourse.id,defaultValues))
       }else{
         dispatch(createCourse(defaultValues));

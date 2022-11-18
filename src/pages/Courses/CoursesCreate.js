@@ -21,10 +21,12 @@ export default function CourseCreate() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { id } = useParams();
-  const { courses } = useSelector((state) => state.course);
+   const { courses } = useSelector((state) => state.course);
   const isEdit = pathname.includes('edit');
   useEffect(() => {
+    if(id!==undefined){
     dispatch(getCourseDetail(id));
+    }
   }, [dispatch]);
 
   return (

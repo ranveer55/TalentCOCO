@@ -80,7 +80,12 @@ export function getLesson() {
       dispatch(startLoading());
       try {
         const response = await axios.patch(`/lesson/${id}`, payload);
+        if(response.data){
         dispatch(updateLessonSuccess(response.data));
+        }
+        else if(response.code>=400){
+          dispatch(hasError(response.message)); 
+        }
       } catch (error) {
         dispatch(hasError(error));
       }

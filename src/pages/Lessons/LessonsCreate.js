@@ -25,7 +25,9 @@ export default function LessonCreate() {
   const { lessons } = useSelector((state) => state.lesson);
   const isEdit = pathname.includes('edit');
    useEffect(() => {
+    if(id!==undefined){
     dispatch(getLessonDetail(id));
+    }
   }, [dispatch]);
 
   return (

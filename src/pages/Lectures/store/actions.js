@@ -49,8 +49,8 @@ export function getLecture() {
         if(response.data.results){
         dispatch(getLectureSuccess(response.data.results));
       }
-      if(response.code>=400){
-        dispatch(getLectureSuccess(response.message)); 
+      else if(response.code>=400){
+        dispatch(hasError(response.message)); 
       }
       } catch (error) {
         dispatch(hasError(error));
@@ -62,7 +62,12 @@ export function getLecture() {
       dispatch(startLoading());
       try {
         const response = await axios.get(`/lecture/${id}`);
+        if(response.data){
         dispatch(getLecturedetailSuccess(response.data));
+        }
+        else if(response.code>=400){
+          dispatch(hasError(response.message)); 
+        }
       } catch (error) {
         dispatch(hasError(error));
       }
@@ -73,7 +78,8 @@ export function getLecture() {
       dispatch(startLoading());
       try {
         const response = await axios.post('/lecture', data);
-        dispatch(addLectureSuccess(response.data));
+         dispatch(addLectureSuccess(response.data));
+        
       } catch (error) {
         dispatch(hasError(error));
       }
@@ -84,7 +90,12 @@ export function getLecture() {
       dispatch(startLoading());
       try {
         const response = await axios.patch(`/lecture/${id}`, payload);
+        if(response.data.results){
         dispatch(updateLectureSuccess(response.data));
+        }
+        else if(response.code>=400){
+          dispatch(hasError(response.message)); 
+        }
       } catch (error) {
         dispatch(hasError(error));
       }
@@ -95,7 +106,12 @@ export function getLecture() {
       dispatch(startLoading());
       try {
         const response = await axios.delete(`/lecture/${id}`);
+        if(response.data.results){
         dispatch(deleteLectures(response.data));
+        }
+        else if(response.code>=400){
+          dispatch(hasError(response.message)); 
+        }
       } catch (error) {
         dispatch(hasError(error));
       }

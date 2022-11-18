@@ -66,16 +66,32 @@ export const PATH_DASHBOARD = {
     demoEdit: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),
   },
   users: {
-    list: path(ROOTS_DASHBOARD, '/users/list'),
+    root: path(ROOTS_DASHBOARD, '/users'),
+    list: path(ROOTS_DASHBOARD, '/users'),
     new: path(ROOTS_DASHBOARD, '/users/new'),
     view: (id) => path(ROOTS_DASHBOARD, `/users/${id}`),
     edit: (id) => path(ROOTS_DASHBOARD, `/users/${id}/edit`),
   },
   companies: {
-    list: path(ROOTS_DASHBOARD, '/companies/list'),
+    root: path(ROOTS_DASHBOARD, '/companies'),
+    list: path(ROOTS_DASHBOARD, '/companies'),
     new: path(ROOTS_DASHBOARD, '/companies/new'),
     view: (id) => path(ROOTS_DASHBOARD, `/companies/${id}`),
     edit: (id) => path(ROOTS_DASHBOARD, `/companies/${id}/edit`),
+  },
+  course: {
+    root: path(ROOTS_DASHBOARD, '/course'),
+    lesson: (CourseId) => path(ROOTS_DASHBOARD, `/course/${CourseId}`),
+    newLesson: (CourseId) => path(ROOTS_DASHBOARD, `/course/${CourseId}/new`),
+    editLesson: (CourseId, id) => path(ROOTS_DASHBOARD, `/course/${CourseId}/${id}/edit`),
+    viewLesson: (CourseId, id) => path(ROOTS_DASHBOARD, `/course/${CourseId}/view/${id}`),
+    lectures: (CourseId, lessonId) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}`),
+    newLecture: (CourseId, lessonId) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}/lecture/new`),
+    editLecture: (CourseId, lessonId, id) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}/lecture/${id}/edit`),
+    viewLecture: (CourseId, lessonId, id) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}/lecture/view/${id}`),
+    new: path(ROOTS_DASHBOARD, '/course/new'),
+    view: (id) => path(ROOTS_DASHBOARD, `/course/view/${id}`),
+    edit: (id) => path(ROOTS_DASHBOARD, `/course/${id}/edit`),
   },
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),
@@ -88,25 +104,14 @@ export const PATH_DASHBOARD = {
     demoEdit: path(ROOTS_DASHBOARD, '/e-commerce/product/nike-blazer-low-77-vintage/edit'),
     demoView: path(ROOTS_DASHBOARD, '/e-commerce/product/nike-air-force-1-ndestrukt'),
   },
-   course: path(ROOTS_DASHBOARD, '/course'),
-    lesson:(CourseId) => path(ROOTS_DASHBOARD, `/course/${CourseId}`),
-    newLesson:  (CourseId) => path(ROOTS_DASHBOARD, `/course/${CourseId}/new`),
-    editLesson: (CourseId,id) => path(ROOTS_DASHBOARD, `/course/${CourseId}/${id}/edit`),
-    viewLesson: (CourseId,id) => path(ROOTS_DASHBOARD, `/course/${CourseId}/view/${id}`),
-    lecture:(CourseId,lessonId) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}`),
-    newLecture:  (CourseId,lessonId) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}/lecture/new`),
-    editLecture: (CourseId,lessonId,id) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}/lecture/${id}/edit`),
-    viewLecture: (CourseId,lessonId,id) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}/lecture/view/${id}`),
-    new: path(ROOTS_DASHBOARD, '/course/new'),
-    view: (id) => path(ROOTS_DASHBOARD, `/course/view/${id}`),
-    edit: (id) => path(ROOTS_DASHBOARD, `/course/${id}/edit`),
-  
+ 
+
   lectures: {
-    
-    
+
+
   },
   lessons: {
-     new: path(ROOTS_DASHBOARD, '/lessons/lesson/new'),
+    new: path(ROOTS_DASHBOARD, '/lessons/lesson/new'),
     view: (id) => path(ROOTS_DASHBOARD, `/lessons/lesson/view/${id}`),
     edit: (id) => path(ROOTS_DASHBOARD, `/lessons/lesson/${id}/edit`),
   },

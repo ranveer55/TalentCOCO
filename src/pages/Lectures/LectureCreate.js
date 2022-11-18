@@ -36,10 +36,10 @@ export default function LectureCreate() {
         <HeaderBreadcrumbs
           heading={!isEdit ? 'Create a new Lecture' : 'Edit Lecture'}
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Dashboard', href: PATH_DASHBOARD.course.root },
             {
               name: 'Lectures',
-              href: PATH_DASHBOARD.lecture(CourseId,lessonId),
+              href: PATH_DASHBOARD.course.lectures(CourseId,lessonId),
             },
             { id: !isEdit ? 'New Lecture' : id },
           ]}

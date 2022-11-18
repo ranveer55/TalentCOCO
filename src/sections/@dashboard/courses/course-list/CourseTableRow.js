@@ -40,7 +40,7 @@ export default function CourseTableRow({ row, selected, onEditRow, onViewRow, on
     setOpenMenuActions(null);
   };
   const onShowRow = (CourseId) => {
-    navigate(PATH_DASHBOARD.lesson(paramCase(CourseId)));
+    navigate(PATH_DASHBOARD.course.lesson(paramCase(CourseId)));
   };
 
   return (

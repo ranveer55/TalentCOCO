@@ -144,10 +144,10 @@ export default function Course() {
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.edit(paramCase(id)));
+    navigate(PATH_DASHBOARD.course.edit(paramCase(id)));
   };
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.view(paramCase(id)));
+    navigate(PATH_DASHBOARD.course.view(paramCase(id)));
  };
 
   const dataFiltered = applySortFilter({
@@ -166,10 +166,10 @@ export default function Course() {
         <HeaderBreadcrumbs
           heading="Course List"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Dashboard', href: PATH_DASHBOARD.course.root },
             {
               name: 'courses',
-              href: PATH_DASHBOARD.root,
+              href: PATH_DASHBOARD.course.root,
             },
             
           ]}
@@ -178,7 +178,7 @@ export default function Course() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
               component={RouterLink}
-              to={PATH_DASHBOARD.new}
+              to={PATH_DASHBOARD.course.new}
             >
               New Course
             </Button>

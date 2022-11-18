@@ -81,10 +81,10 @@ export default function LectureDetails() {
         <HeaderBreadcrumbs
           heading="Lecture Details"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Dashboard', href: PATH_DASHBOARD.course.root },
             {
               name: 'Lecture',
-              href:PATH_DASHBOARD.lecture(CourseId,lessonId),
+              href:PATH_DASHBOARD.course.lectures(CourseId,lessonId),
             },
              {
               name: 'Lecture Detail',

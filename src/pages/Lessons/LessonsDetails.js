@@ -83,12 +83,12 @@ export default function LessonDetails() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Lesson',
-              href: PATH_DASHBOARD.lesson(paramCase(CourseId)),
+              href: PATH_DASHBOARD.course.lesson(paramCase(CourseId)),
             },
-             {
-              name: 'Lesson Detail',
-              href: PATH_DASHBOARD.lessons.root,
-            },
+            //  {
+            //   name: 'Lesson Detail',
+            //   href: PATH_DASHBOARD.course.lessons.root,
+            // },
             
           ]}
         />

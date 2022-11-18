@@ -83,23 +83,21 @@ export default function Router() {
           ],
         },
         {
-          path: 'users',
+       
           children: [
-            { element: <Navigate to="/dashboard/users/list" replace />, index: true },
-            { path: 'list', element: <User /> },
-            { path: 'new', element: <UserCreate /> },
-            { path: ':id/edit', element: <UserCreate /> },
-            { path: ':id', element: <CourseDetails /> },
+            
+            { path: 'users', element: <User /> },
+            { path: 'users/new', element: <UserCreate /> },
+            { path: 'users/:id/edit', element: <UserCreate /> },
+            { path: 'users/:id', element: <UserDetails /> },
           ],
         },
         {
-          path: 'companies',
           children: [
-            { element: <Navigate to="/dashboard/companies/list" replace />, index: true },
-            { path: 'list', element: <Company /> },
-            { path: 'new', element: <CompanyCreate /> },
-            { path: ':id/edit', element: <CompanyCreate /> },
-            { path: ':id', element: <CompanyDetails /> },
+            { path: 'companies', element: <Company /> },
+            { path: 'companies/new', element: <CompanyCreate /> },
+            { path: 'companies/:id/edit', element: <CompanyCreate /> },
+            { path: 'companies/:id', element: <CompanyDetails /> },
           ],
         },
         {

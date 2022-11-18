@@ -39,7 +39,7 @@ export default function LessonCreate() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Lessons',
-              href: PATH_DASHBOARD.lesson(paramCase(CourseId)),
+              href: PATH_DASHBOARD.course.lesson(paramCase(CourseId)),
             },
             { id: !isEdit ? 'New Lesson' : id },
           ]}

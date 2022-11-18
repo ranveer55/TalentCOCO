@@ -142,10 +142,10 @@ export default function Lesson() {
 
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.editLesson(CourseId,id));
+    navigate(PATH_DASHBOARD.course.editLesson(CourseId,id));
   };
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.viewLesson(CourseId,id));
+    navigate(PATH_DASHBOARD.course.viewLesson(CourseId,id));
  };
 
   const dataFiltered = applySortFilter({
@@ -164,14 +164,14 @@ export default function Lesson() {
         <HeaderBreadcrumbs
           heading="Lesson List"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Dashboard', href: PATH_DASHBOARD.course.root },
             {
               name: 'Course',
-              href: PATH_DASHBOARD.course,
+              href: PATH_DASHBOARD.course.course,
             },
             {
               name: 'Lessons',
-              href: PATH_DASHBOARD.lesson(paramCase(CourseId)),
+              href: PATH_DASHBOARD.course.lesson(paramCase(CourseId)),
             },
             
           ]}
@@ -180,7 +180,7 @@ export default function Lesson() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
               component={RouterLink}
-              to={PATH_DASHBOARD.newLesson(CourseId)}
+              to={PATH_DASHBOARD.course.newLesson(CourseId)}
             >
               New Lesson
             </Button>

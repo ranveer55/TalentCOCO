@@ -106,136 +106,72 @@ const navConfig = [
           ],
       },
       // LECTURES
-      {
-        title: 'lectures',
-        path: PATH_DASHBOARD.lectures.root,
-        icon: ICONS.cart,
-        children: [
-          { title: 'create', path: PATH_DASHBOARD.lectures.new },
-          ],
-      },
+      // {
+      //   title: 'lectures',
+      //   path: PATH_DASHBOARD.lectures.root,
+      //   icon: ICONS.cart,
+      //   children: [
+      //     { title: 'create', path: PATH_DASHBOARD.lectures.new },
+      //     ],
+      // },
       // LESSONS
-      {
-        title: 'lessons',
-        path: PATH_DASHBOARD.lessons.root,
-        icon: ICONS.cart,
-        children: [
-             { title: 'create', path: PATH_DASHBOARD.lessons.new },
-          ],
-      },
+      // {
+      //   title: 'lessons',
+      //   path: PATH_DASHBOARD.lessons.root,
+      //   icon: ICONS.cart,
+      //   children: [
+      //        { title: 'create', path: PATH_DASHBOARD.lessons.new },
+      //     ],
+      // },
       // COMPANY
      
       // TALLY
-      {
-        title: 'tally',
-        path: PATH_DASHBOARD.tallys.root,
-        icon: ICONS.cart,
-        children: [
-          { title: 'list', path: PATH_DASHBOARD.tallys.tally },
-          { title: 'create', path: PATH_DASHBOARD.tallys.new },
-        ],
-      },
-      // TEAM
-      {
-        title: 'team',
-        path: PATH_DASHBOARD.tallys.root,
-        icon: ICONS.cart,
-        children: [
-          { title: 'list', path: PATH_DASHBOARD.teams.team },
-          { title: 'create', path: PATH_DASHBOARD.teams.new },
-        ],
-      },
-
+     
       // INVOICE
-      {
-        title: 'invoice',
-        path: PATH_DASHBOARD.invoice.root,
-        icon: ICONS.invoice,
-        children: [
-          { title: 'list', path: PATH_DASHBOARD.invoice.list },
-          { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
-          { title: 'create', path: PATH_DASHBOARD.invoice.new },
-          { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
-        ],
-      },
+      // {
+      //   title: 'invoice',
+      //   path: PATH_DASHBOARD.invoice.root,
+      //   icon: ICONS.invoice,
+      //   children: [
+      //     { title: 'list', path: PATH_DASHBOARD.invoice.list },
+      //     { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
+      //     { title: 'create', path: PATH_DASHBOARD.invoice.new },
+      //     { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
+      //   ],
+      // },
 
       // BLOG
-      {
-        title: 'blog',
-        path: PATH_DASHBOARD.blog.root,
-        icon: ICONS.blog,
-        children: [
-          { title: 'posts', path: PATH_DASHBOARD.blog.posts },
-          { title: 'post', path: PATH_DASHBOARD.blog.demoView },
-          { title: 'create', path: PATH_DASHBOARD.blog.new },
-        ],
-      },
+      // {
+      //   title: 'blog',
+      //   path: PATH_DASHBOARD.blog.root,
+      //   icon: ICONS.blog,
+      //   children: [
+      //     { title: 'posts', path: PATH_DASHBOARD.blog.posts },
+      //     { title: 'post', path: PATH_DASHBOARD.blog.demoView },
+      //     { title: 'create', path: PATH_DASHBOARD.blog.new },
+      //   ],
+      // },
     ],
   },
 
   // APP
   // ----------------------------------------------------------------------
-  {
-    subheader: 'app',
-    items: [
-      {
-        title: 'mail',
-        path: PATH_DASHBOARD.mail.root,
-        icon: ICONS.mail,
-        info: <Label color="error">+32</Label>,
-      },
-      { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
-      { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
-      { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
-    ],
-  },
+  // {
+  //   subheader: 'app',
+  //   items: [
+  //     {
+  //       title: 'mail',
+  //       path: PATH_DASHBOARD.mail.root,
+  //       icon: ICONS.mail,
+  //       info: <Label color="error">+32</Label>,
+  //     },
+  //     { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
+  //     { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
+  //     { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
+  //   ],
+  // },
 
-  // DEMO MENU STATES
-  {
-    subheader: 'Other cases',
-    items: [
-      {
-        // default roles : All roles can see this entry.
-        // roles: ['user'] Only users can see this item.
-        // roles: ['admin'] Only admin can see this item.
-        // roles: ['admin', 'manager'] Only admin/manager can see this item.
-        // Reference from 'src/guards/RoleBasedGuard'.
-        title: 'item_by_roles',
-        path: PATH_DASHBOARD.permissionDenied,
-        icon: ICONS.menuItem,
-        roles: ['admin'],
-        caption: 'only_admin_can_see_this_item',
-      },
-      {
-        title: 'menu_level_1',
-        path: '#1',
-        icon: ICONS.menuItem,
-        children: [
-          { title: 'menu_level_2', path: '#2', disabled: true },
-          {
-            title: 'menu_level_2',
-            path: '#3',
-            children: [
-              { title: 'menu_level_3', path: '#4' },
-              { title: 'menu_level_3', path: '#5' },
-            ],
-          },
-        ],
-      },
-      { title: 'item_disabled', path: '#disabled', icon: ICONS.menuItem, disabled: true },
-      {
-        title: 'item_label',
-        path: '#label',
-        icon: ICONS.menuItem,
-        info: (
-          <Label color="info" startIcon={<Iconify icon="eva:email-fill" />}>
-            NEW
-          </Label>
-        ),
-      },
-      { title: 'item_caption', path: '#caption', icon: ICONS.menuItem, caption: 'description' },
-    ],
-  },
+  
 ];
 
 export default navConfig;

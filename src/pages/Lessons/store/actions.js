@@ -41,11 +41,11 @@ export const hasError=(payload) =>({
 })
 
 
-export function getLesson() {
+export function getLesson(id) {
     return async () => {
       dispatch(startLoading(true));
       try {
-        const response = await axios.get('/lesson');
+        const response = await axios.get(`/lesson/lessonofCourse/${id}`);
         dispatch(getLessonSuccess(response.data.results));
       } catch (error) {
         dispatch(hasError(error));

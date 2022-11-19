@@ -95,7 +95,7 @@ export default function Lesson() {
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
-    dispatch(getLesson());
+    dispatch(getLesson(CourseId));
   }, [dispatch]);
 
   useEffect(() => {

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { Checkmark } from 'react-checkmark'
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
@@ -50,17 +51,14 @@ export default function CompanyTableRow({ row, selected, onEditRow,onViewRow, on
       </TableCell>
 
       <TableCell align="left">{description}</TableCell>
-      <TableCell align="left">{courses}</TableCell>
-       <TableCell align="left">
+      <TableCell align="left">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={(active === true && 'success') || 'error'}
           sx={{ textTransform: 'capitalize' }}
         >
-          {active}
+          {active===true?<Checkmark size='small'/>:<span style={{color:"red"}}>x</span>}
         </Label>
       </TableCell>
-
       <TableCell align="right">
         <TableMoreMenu
           open={openMenu}

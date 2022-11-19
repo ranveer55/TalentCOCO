@@ -87,14 +87,12 @@ export default function LessonNewEditForm({ isEdit }) {
 
   const cb = () => {
     reset();
-    navigate(PATH_DASHBOARD.lesson(paramCase(CourseId)))
+    navigate(PATH_DASHBOARD.course.lesson(paramCase(CourseId)))
   }
 
   const onSubmit = async () => {
-    console.log('aaa');
-    try {
-
-      if (lesson) {
+      try {
+      if (lesson.id) {
         dispatch(updateLesson(lesson.id, defaultValues, cb))
       } else {
 

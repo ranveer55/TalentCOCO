@@ -16,6 +16,12 @@ import {
   TablePagination,
   FormControlLabel,
 } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import LinearProgress from '@mui/material/LinearProgress';
+
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCompanies,deleteCompany } from './store/actions';
@@ -44,7 +50,6 @@ import { CompanyTableRow, CompanyTableToolbar } from '../../sections/@dashboard/
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'description',label: 'Description', align: 'left' },
-  { id: 'courses', label: 'Total Courses', align: 'left' },
   { id: 'active', label: 'Active', align: 'left' },
   {id:''},
   ];
@@ -81,7 +86,10 @@ export default function List() {
 
   const { companies, isLoading } = useSelector((state) => state.company);
   const [tableData, setTableData] = useState([]);
-
+  const [open, setDeleteOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [selectDeleteId, setselectDeleteId] = useState(null);
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
@@ -101,19 +109,36 @@ export default function List() {
   };
 
   const handleDeleteRow = (id) => {
-    dispatch(deleteCompany(id));
-    const deleteRow = tableData.filter((row) => row.id !== id);
+    setDeleteOpen(true)
+    setDeleteId(id)
+  };
+  const handleDeleteRows = (selected) => {
+    setDeleteOpen(true)
+    setselectDeleteId(selected)
+  };
+
+  const handleClose = () => {
+    setDeleteOpen(false)
+    setLoading(false)
+  };
+ 
+ 
+  const RemoveRow = () => {
+    let deleteRow = '';
+    setLoading(true)
+    setDeleteOpen(false)
+    if (deleteId) {
+      dispatch(deleteCompany(deleteId));
+       deleteRow = tableData.filter((row) => row.id !== deleteId);
+    } else if (selectDeleteId) {
+      dispatch(deleteCompany(selectDeleteId));
+       deleteRow = tableData.filter((row) => !selected.includes(row.id));
+    }
     setSelected([]);
     setTableData(deleteRow);
-  };
-
-  const handleDeleteRows = (selected) => {
-    dispatch(deleteCompany(selected));
-    const deleteRows = tableData.filter((row) => !selected.includes(row.id));
-    setSelected([]);
-    setTableData(deleteRows);
-  };
-
+    setLoading(false)
+   };
+  
   const handleEditRow = (id) => {
     navigate(PATH_DASHBOARD.companies.edit(paramCase(id)));
   };
@@ -140,7 +165,6 @@ export default function List() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'companies',
-              href: PATH_DASHBOARD.companies.root,
             },
             
           ]}
@@ -242,6 +266,27 @@ export default function List() {
               sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
             />
           </Box>
+          <div>
+                        <Dialog
+                            open={open}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description" >
+                            {loading === true ? <LinearProgress /> : <></>}
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    Are you sure you want to delete the Company?</DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button variant="contained" onClick={()=>{handleClose()}} style={{ background: "Silver", height: "34px", width: "42px" }}>
+                                    Cancel
+                                </Button>
+                                <Button variant="contained" color="primary" onClick={() => {RemoveRow()}} autoFocus >
+                                    Ok
+                                </Button>
+
+                            </DialogActions>
+                        </Dialog>
+                    </div>
         </Card>
       </Container>
     </Page>

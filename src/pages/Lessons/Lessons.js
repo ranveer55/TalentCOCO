@@ -91,7 +91,7 @@ export default function Lesson() {
   const [open, setDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
-
+  const [selectDeleteId, setselectDeleteId] = useState(null);
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
@@ -113,34 +113,32 @@ export default function Lesson() {
     setDeleteOpen(true)
     setDeleteId(id)
    };
- 
+   const handleDeleteRows = (selected) => {
+    setDeleteOpen(true)
+    setselectDeleteId(selected)
+  };
   const handleClose = () => {
     setDeleteOpen(false)
     setLoading(false)
    };
- 
-   const RemoveSingleRow = () => {
+   
+  const RemoveRow = () => {
+    let deleteRow = '';
     setLoading(true)
-     setDeleteOpen(false)
-     dispatch(deleteLesson(deleteId));
-     setLoading(false)
-    const deleteRow = tableData.filter((row) => row.id !== deleteId);
+    setDeleteOpen(false)
+    if (deleteId) {
+      dispatch(deleteLesson(deleteId));
+       deleteRow = tableData.filter((row) => row.id !== deleteId);
+    } else if (selectDeleteId) {
+      dispatch(deleteLesson(selectDeleteId));
+       deleteRow = tableData.filter((row) => !selected.includes(row.id));
+    }
     setSelected([]);
     setTableData(deleteRow);
-  };
- 
-  const handleDeleteRows = (selected) => {
-     setLoading(true)
-     setDeleteOpen(false)
-    dispatch(deleteLesson(selected));
     setLoading(false)
-    const deleteRows = tableData.filter((row) => !selected.includes(row.id));
-    setSelected([]);
-    setTableData(deleteRows);
-  };
+    };
 
-
-  const handleEditRow = (id) => {
+    const handleEditRow = (id) => {
     navigate(PATH_DASHBOARD.course.editLesson(CourseId,id));
   };
   const handleViewRow = (id) => {
@@ -166,11 +164,10 @@ export default function Lesson() {
             { name: 'Dashboard', href: PATH_DASHBOARD.course.root },
             {
               name: 'Course',
-              href: PATH_DASHBOARD.course.course,
+              href: PATH_DASHBOARD.course.root,
             },
             {
               name: 'Lessons',
-              href: PATH_DASHBOARD.course.lesson(paramCase(CourseId)),
             },
             
           ]}
@@ -281,13 +278,13 @@ export default function Lesson() {
                             {loading === true ? <LinearProgress /> : <></>}
                             <DialogContent>
                                 <DialogContentText id="alert-dialog-description">
-                                    Are you sure you want to delete the Problems?</DialogContentText>
+                                    Are you sure you want to delete the Lesson?</DialogContentText>
                             </DialogContent>
                             <DialogActions>
                                 <Button variant="contained" onClick={()=>{handleClose()}} style={{ background: "Silver", height: "34px", width: "42px" }}>
                                     Cancel
                                 </Button>
-                                <Button variant="contained" color="primary" onClick={() => {RemoveSingleRow()}} autoFocus >
+                                <Button variant="contained" color="primary" onClick={() => {RemoveRow()}} autoFocus >
                                     Ok
                                 </Button>
 

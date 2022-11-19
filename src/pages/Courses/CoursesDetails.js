@@ -61,7 +61,7 @@ export default function CourseDetails() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Course',
-              href: PATH_DASHBOARD.course,
+              href: PATH_DASHBOARD.course.root,
             },
              {
               name: 'Course Detail',

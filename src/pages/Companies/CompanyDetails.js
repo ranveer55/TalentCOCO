@@ -62,7 +62,7 @@ export default function CompanyDetails() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Company',
-              href: PATH_DASHBOARD.companies.company,
+              href: PATH_DASHBOARD.companies.list,
             },
              {
               name: 'Company Detail',

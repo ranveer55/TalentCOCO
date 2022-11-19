@@ -73,6 +73,11 @@ export default function Editor({
     },
   };
 
+  const handleChangeEd =(v, h, editor) =>{
+    const hh =editor.getHTML()
+    onChange(hh)
+  }
+
   return (
     <div>
       <RootStyle
@@ -86,7 +91,8 @@ export default function Editor({
         <EditorToolbar id={id} isSimple={simple} />
         <ReactQuill
           value={value}
-          onChange={onChange}
+          // onChange={handleChangeEd}
+          onBlur={handleChangeEd}
           modules={modules}
           formats={formats}
           placeholder="Write something awesome..."

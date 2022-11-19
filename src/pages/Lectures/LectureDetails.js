@@ -46,7 +46,7 @@ export default function LectureDetails() {
   const navigate = useNavigate();
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
-  const {id } = useParams();
+  const { id,CourseId, lessonId} = useParams();
   const [value, setValue] = useState('2');
   const { lecture} = useSelector((state) => state.lecture);
     useEffect(() => {

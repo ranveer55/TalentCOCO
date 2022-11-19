@@ -47,12 +47,10 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 export default function LectureNewEditForm({ isEdit }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { id,CourseId, lessonId} = useParams();
 
   const { lecture: { lecture, isLoading }, app: { masterdata } } = useSelector((state) => state);
   const LectureTypes = masterdata && masterdata.LectureTypes ? masterdata.LectureTypes: []
-
-  const { CourseId, lessonId,id } = useParams();
-
   useEffect(() => {
     if(id){
       dispatch(getLecture(id));
@@ -67,7 +65,7 @@ export default function LectureNewEditForm({ isEdit }) {
     type: Yup.string(),
     order: Yup.number(),
     active: Yup.boolean(),
-    mcq: Yup.array()
+    mcq: Yup.array(),
   });
 
   const defaultValues = useMemo(

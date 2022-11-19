@@ -5,7 +5,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCourse} from './store/actions';
+import { getCourse,getCourseSuccess} from './store/actions';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -25,6 +25,8 @@ export default function CourseCreate() {
   useEffect(() => {
     if(id){
     dispatch(getCourse(id));
+    } else {
+      dispatch(getCourseSuccess(null))
     }
   }, [dispatch]);
 

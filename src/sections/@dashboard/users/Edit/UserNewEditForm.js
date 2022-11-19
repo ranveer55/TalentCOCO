@@ -90,7 +90,7 @@ export default function UserNewEditForm({ isEdit }) {
 
   const cb =() =>{
     reset();
-    navigate('/dashboard/users/list')
+    navigate('/dashboard/users')
   }
 
   const onSubmit = async () => {

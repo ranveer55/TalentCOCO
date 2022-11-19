@@ -98,7 +98,7 @@ export default function CourseNewEditForm({ isEdit }) {
 
   const cb = () => {
     reset();
-    navigate(PATH_DASHBOARD.course)
+    navigate(PATH_DASHBOARD.course.root)
   }
 
   const onSubmit = async () => {

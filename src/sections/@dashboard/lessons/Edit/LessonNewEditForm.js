@@ -36,6 +36,7 @@ export default function LessonNewEditForm({ isEdit }) {
   const { CourseId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const { lesson: { lesson, loading } } = useSelector((state) => state);
+  
   const NewLessonSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').min(3),
     description: Yup.string().required('Description is required').min(1),
@@ -68,9 +69,10 @@ export default function LessonNewEditForm({ isEdit }) {
     control,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: {errors, isSubmitting },
   } = methods;
 
+  console.log({errors});
   const values = watch();
 
   useEffect(() => {
@@ -89,6 +91,7 @@ export default function LessonNewEditForm({ isEdit }) {
   }
 
   const onSubmit = async () => {
+    console.log('aaa');
     try {
 
       if (lesson) {

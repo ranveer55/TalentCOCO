@@ -84,7 +84,7 @@ export default function CompanyNewEditForm({ isEdit }) {
 
   const cb = () => {
     reset();
-    navigate('/dashboard/companies/list')
+    navigate('/dashboard/companies')
   }
 
   const onSubmit = async () => {

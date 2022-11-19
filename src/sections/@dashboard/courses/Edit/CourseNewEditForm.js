@@ -42,14 +42,13 @@ CourseNewEditForm.propTypes = {
   currentCourse: PropTypes.object,
 };
 
-export default function CourseNewEditForm({ isEdit, currentCourse }) {
+export default function CourseNewEditForm({ isEdit }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const [checked, setChecked] = useState(false);
-  const initialValue = [{role:'',isEmailVerified:false,email:'',name:''}];
-  const [Instructor, setInstructor] = useState(initialValue);
-  const NewCourseSchema = Yup.object().shape({
+
+  const { course: { course, loading } } = useSelector((state) => state);
+   const NewCourseSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').min(8),
     description: Yup.string().required('Description is required').min(1),
     hours: Yup.number().required('Hours is required'),
@@ -60,15 +59,15 @@ export default function CourseNewEditForm({ isEdit, currentCourse }) {
 
   const defaultValues = useMemo(
     () => ({
-      name: currentCourse?.name || '',
-      description: currentCourse?.description || '',
-      hours: currentCourse?.hours || '',
-      poster: currentCourse?.poster ||null,
-      language: currentCourse?.language || '',
-      level: currentCourse?.level || '',
+      name: isEdit ? course?.name || '' : '',
+      description: isEdit ? course?.description || '': '',
+      hours: isEdit ? course?.hours || '': '',
+      poster: isEdit ? course?.poster ||'': '',
+      language: isEdit ? course?.language || '': '',
+      level: isEdit ? course?.level || '': '',
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentCourse]
+    [course]
   );
 
   const methods = useForm({
@@ -88,35 +87,51 @@ export default function CourseNewEditForm({ isEdit, currentCourse }) {
   const values = watch();
 
   useEffect(() => {
-    if (isEdit && currentCourse) {
+    if (isEdit && course) {
       reset(defaultValues);
     }
     if (!isEdit) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentCourse]);
+  }, [isEdit, course]);
+
+  const cb = () => {
+    reset();
+    navigate(PATH_DASHBOARD.course)
+  }
 
   const onSubmit = async () => {
     try {
-      if(currentCourse.id){
-       dispatch(updateCourse(currentCourse.id,defaultValues))
-      }else{
-        dispatch(createCourse(defaultValues));
+
+      if (course) {
+        dispatch(updateCourse(course.id, defaultValues, cb))
+      } else {
+
+        dispatch(createCourse(defaultValues, cb));
       }
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.course);
+
     } catch (error) {
       console.error(error);
     }
   };
-
+  function getBase64(file) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+      defaultValues.poster = reader.result;
+      
+    };
+    reader.onerror = function (error) {
+      console.log('Error: ', error);
+    };
+ }
   const handleDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
 
       if (file) {
+        const b = getBase64(file)
         setValue(
           'poster',
           Object.assign(file, {
@@ -129,15 +144,7 @@ export default function CourseNewEditForm({ isEdit, currentCourse }) {
     [setValue]
   );
 
-  const handleRemoveAll = () => {
-    setValue('poster', []);
-  };
-
-  const handleRemove = (file) => {
-    const filteredItems = values.images?.filter((_file) => _file !== file);
-    setValue('poster', filteredItems);
-  };
-  const handleName = (e) => {
+   const handleName = (e) => {
     const name = e.target.value;
     setValue('name', String(e.target.value))
     defaultValues.name = name;
@@ -168,10 +175,7 @@ export default function CourseNewEditForm({ isEdit, currentCourse }) {
     setValue('language', String(e.target.value))
     defaultValues.language = language;
   };
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
-  };
-  return (
+   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
@@ -186,7 +190,8 @@ export default function CourseNewEditForm({ isEdit, currentCourse }) {
               <RHFTextField name="description" label="Description" multiline rows={5} onChange={(e) => handleDescription(e)}/>
               <div>
                 <LabelStyle>Poster</LabelStyle>
-                <RHFUploadSingleFile name="poster" accept="image/*" maxSize={3145728} onDrop={handleDrop} />
+                <RHFUploadSingleFile 
+                name="poster" accept="image/*" maxSize={3145728} onDrop={handleDrop} />
               </div>  
               </Box>
               </Card>
@@ -207,13 +212,13 @@ export default function CourseNewEditForm({ isEdit, currentCourse }) {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={defaultValues.level}
-                  label="Language"
+                  label="level"
                   onChange={(e) => handleLevel(e)}
                 >
                   <MenuItem value={'Beginner'}>Beginner</MenuItem>
                   <MenuItem value={'Intermediate'}>Intermediate</MenuItem>
                   <MenuItem value={'Expert'}>Expert</MenuItem>
-                  <MenuItem value={'Expert'}>Pro</MenuItem>
+                  <MenuItem value={'Pro'}>Pro</MenuItem>
                     </Select>
               </FormControl>
              <FormControl sx={{ width: "100%" }}>

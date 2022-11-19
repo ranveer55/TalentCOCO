@@ -25,27 +25,14 @@ import {
  } from '../../sections/@dashboard/courses/course-details';
 
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
-import { getCourseDetail } from './store/actions';
+import { getCourse} from './store/actions';
 // ----------------------------------------------------------------------
-
-const COURSE_DESCRIPTION = [
-  {
-    title: '100% Original',
-    description: 'It is made by a chemical process called fermentation that uses sugars and yeast.',
-    icon: 'ic:round-verified',
-  },
-  {
-    title: 'affordable price',
-    description: 'its price is low enough that you (or most people) have enough money to buy it.',
-    icon: 'ic:round-verified-user',
-  }, 
-];
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
   margin: 'auto',
   display: 'flex',
   borderRadius: '50%',
-  alignCourses: 'center',
+  alignItems: 'center',
   width: theme.spacing(8),
   justifyContent: 'center',
   height: theme.spacing(8),
@@ -60,21 +47,12 @@ export default function CourseDetails() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [value, setValue] = useState('2');
-  const { courses, error } = useSelector((state) => state.course);
-   useEffect(() => {
-    dispatch(getCourseDetail(id));
+  const { course: { course, loading }} = useSelector((state) => state);
+    useEffect(() => {
+    dispatch(getCourse(id));
   }, [dispatch]);
   
-  const handleAddCart = (courses) => {
-    dispatch(addCart(courses));
-  };
-
-  const handleGotoStep = (step) => {
-    dispatch(onGotoStep(step));
-  };
-
-  return (
+   return (
     <Page title="Course:Details">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
@@ -93,50 +71,19 @@ export default function CourseDetails() {
           ]}
         />
 
-        <CartWidget />
-
-        {courses && (
-          <>
-            <Card>
-              <Grid container>
-                <Grid item xs={12} >
-                  <CourseDetailsSummary
-                    course={courses}
-                    onAddCart={handleAddCart}
-                    onGotoStep={handleGotoStep}
-                  />
-                </Grid>
-                 </Grid>
+          {course && (
+              <>
+            <Card sx={{p:2}}>
+            <Typography variant="subtitle1" gutterBottom>
+                      {course.name}
+                </Typography>
+                <Typography variant="p" gutterBottom>
+                      {course.description}
+                </Typography>
             </Card>
-
-            <Grid container sx={{ my: 8 }}>
-              {COURSE_DESCRIPTION.map((course) => (
-                <Grid item xs={12} md={4} key={course.name}>
-                  <Box sx={{ my: 2, mx: 'auto', maxWidth: 280, textAlign: 'center' }}>
-                    <Typography variant="subtitle1" gutterBottom>
-                      {course.level}
-                    </Typography>
-                   </Box>
-                </Grid>
-              ))}
-            </Grid>
-
-            <Card>
-              <TabContext value={value}>
-               
-                <Divider />
-               <TabPanel value="2">
-                  <CourseDetailsReview course={courses} />
-                </TabPanel>
-              </TabContext>
-            </Card>
-          </>
-        )}
-
-        {!courses && <SkeletonProduct />}
-
-        {error && <Typography variant="h6">404 Product not found</Typography>}
-      </Container>
+          </>   
+          )}
+           </Container>
     </Page>
   );
 }

@@ -6,102 +6,71 @@ import * as ActionTypes from './Types';
 import axios from '../../../utils/axios';
 //
 import { dispatch } from '../../../redux/store';
-
+import {  setToast } from '../../app/store/actions';
 
 export const startLoading = (payload) => ({
     type: ActionTypes.FETCH_COURSE_LOADING,
     payload
 })
-
-
+export const getCoursesSuccess = (payload) => ({
+    type: ActionTypes.FETCH_COURSES_SUCCESS,
+    payload
+})
 export const getCourseSuccess = (payload) => ({
     type: ActionTypes.FETCH_COURSE_SUCCESS,
-    payload
-})
-export const getCoursedetailSuccess = (payload) => ({
-    type: ActionTypes.FETCH_COURSEDETAIL_SUCCESS,
-    payload
-})
-export const addCourseSuccess = (payload) => ({
-    type: ActionTypes.ADD_COURSE_SUCCESS,
-    payload
-})
-export const updateCourseSuccess = (payload) => ({
-    type: ActionTypes.UPDATE_COURSE_SUCCESS,
     payload
 })
 export const deleteCourses = (payload) => ({
     type: ActionTypes.DELETE_COURSE_SUCCESS,
     payload
 })
-export const hasError=(payload) =>({
-    type: ActionTypes.FETCH_COURSE_ERROR,
-    payload
-
-})
 
 
-export function getCourse() {
+export function getCourses() {
     return async () => {
       dispatch(startLoading(true));
       try {
         const response = await axios.get('/course');
-        if (response){
-        dispatch(getCourseSuccess(response.data.results));
-        }
-        else{
-          dispatch(hasError(response.data));
-        }
-      } catch (error) {
-        dispatch(hasError(error));
+         dispatch(getCoursesSuccess(response.data.results));
+        } catch (error) {
+        dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
       }
     };
   }
-export function getCourseDetail(id) {
+export function getCourse(id) {
     return async () => {
       dispatch(startLoading(true));
       try {
         const response = await axios.get(`/course/${id}`);
-        if (response){
-        dispatch(getCoursedetailSuccess(response.data));
-        }
-        else{
-          dispatch(hasError(response.data));
-        }
-      } catch (error) {
-        dispatch(hasError(error));
+        dispatch(getCourseSuccess(response.data));
+        } catch (error) {
+          dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
       }
     };
   }
-  export function createCourse(data) {
+  export function createCourse(data,cb) {
     return async () => {
       dispatch(startLoading());
       try {
-        const response = await axios.post('/course', data);
-         if (response){
-        dispatch(addCourseSuccess(response.data));
-        }
-        else{
-          dispatch(hasError(response.data));
-        }
-      } catch (error) {
-        dispatch(hasError(error));
+        const {status} = await axios.post('/course', data);
+        dispatch(setToast({severity:'success', message:'Course created', open:true}))
+          cb();
+          dispatch(getCourseSuccess(null));
+         } catch (error) {
+          dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
       }
     };
   }
-  export function updateCourse(id,payload) {
+  export function updateCourse(id,payload,cb) {
     return async () => {
       dispatch(startLoading());
       try {
-        const response = await axios.patch(`/course/${id}`, payload);
-        if (response && response.status==='304'){
-        dispatch(updateCourseSuccess(response.data));
-        }
-        else{
-          dispatch(hasError(response.data));
-        }
-      } catch (error) {
-        dispatch(hasError(error));
+        const {data, status} = await axios.patch(`/course/${id}`, payload);
+        dispatch(setToast({severity:'success', message:'Course created', open:true}))
+        cb();
+        dispatch(getCourseSuccess(null));
+       } catch (error) {
+        dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
       }
     };
   }
@@ -111,8 +80,9 @@ export function getCourseDetail(id) {
       try {
         const response = await axios.delete(`/course/${id}`);
         dispatch(deleteCourses(response.data));
+        dispatch(setToast({severity:'success', message:'Course Deleted', open:true}))
       } catch (error) {
-        dispatch(hasError(error));
+        dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
       }
     };
   }

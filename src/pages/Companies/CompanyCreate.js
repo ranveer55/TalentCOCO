@@ -39,7 +39,7 @@ export default function CompanyCreate() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Companies',
-              href: PATH_DASHBOARD.companies.root,
+              href: PATH_DASHBOARD.companies.list,
             },
             { id: !isEdit ? 'New Company' : id },
           ]}

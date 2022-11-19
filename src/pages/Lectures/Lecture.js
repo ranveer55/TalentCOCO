@@ -92,6 +92,7 @@ export default function Lecture() {
   const [open, setDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [selectDeleteId, setselectDeleteId] = useState(null);
 
   const [filterName, setFilterName] = useState('');
 
@@ -114,31 +115,31 @@ export default function Lecture() {
     setDeleteOpen(true)
     setDeleteId(id)
   };
+  const handleDeleteRows = (selected) => {
+    setDeleteOpen(true)
+    setselectDeleteId(selected)
+  };
 
   const handleClose = () => {
     setDeleteOpen(false)
     setLoading(false)
   };
 
-  const RemoveSingleRow = () => {
+  const RemoveRow = () => {
+    let deleteRow = '';
     setLoading(true)
     setDeleteOpen(false)
-    dispatch(deleteLecture(deleteId));
-    setLoading(false)
-    const deleteRow = tableData.filter((row) => row.id !== deleteId);
+    if (deleteId) {
+      dispatch(deleteLecture(deleteId));
+       deleteRow = tableData.filter((row) => row.id !== deleteId);
+    } else if (selectDeleteId) {
+      dispatch(deleteLecture(selectDeleteId));
+       deleteRow = tableData.filter((row) => !selected.includes(row.id));
+    }
     setSelected([]);
     setTableData(deleteRow);
-  };
-
-  const handleDeleteRows = (selected) => {
-    setLoading(true)
-    setDeleteOpen(false)
-    dispatch(deleteLecture(selected));
     setLoading(false)
-    const deleteRows = tableData.filter((row) => !selected.includes(row.id));
-    setSelected([]);
-    setTableData(deleteRows);
-  };
+   };
 
   const handleEditRow = (id) => {
     navigate(PATH_DASHBOARD.course.editLecture(CourseId, lessonId, id));
@@ -166,7 +167,7 @@ export default function Lecture() {
             { name: 'Dashboard', href: PATH_DASHBOARD.course.root },
             {
               name: 'Course',
-              href: PATH_DASHBOARD.course.course,
+              href: PATH_DASHBOARD.course.root,
             },
             {
               name: 'Lessons',
@@ -174,7 +175,6 @@ export default function Lecture() {
             },
             {
               name: 'Lectures',
-              href: PATH_DASHBOARD.course.lectures.root,
             },
 
           ]}
@@ -193,7 +193,7 @@ export default function Lecture() {
         <Card>
           <LectureTableToolbar filterName={filterName} onFilterName={handleFilterName} />
 
-          {lectures ?<Scrollbar>
+          {lectures ? <Scrollbar>
             <TableContainer sx={{ minWidth: 960, position: 'relative' }}>
               {selected.length > 0 && (
                 <TableSelectedActions
@@ -257,7 +257,7 @@ export default function Lecture() {
                 </TableBody>
               </Table>
             </TableContainer>
-          </Scrollbar>: <Typography variant="h6">{error}</Typography>}
+          </Scrollbar> : <Typography variant="h6">{error}</Typography>}
 
           <Box sx={{ position: 'relative' }}>
             <TablePagination
@@ -277,26 +277,26 @@ export default function Lecture() {
             />
           </Box>
           <div>
-                        <Dialog
-                            open={open}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description" >
-                            {loading === true ? <LinearProgress /> : <></>}
-                            <DialogContent>
-                                <DialogContentText id="alert-dialog-description">
-                                    Are you sure you want to delete the Problems?</DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button variant="contained" onClick={()=>{handleClose()}} style={{ background: "Silver", height: "34px", width: "42px" }}>
-                                    Cancel
-                                </Button>
-                                <Button variant="contained" color="primary" onClick={() => {RemoveSingleRow()}} autoFocus >
-                                    Ok
-                                </Button>
+            <Dialog
+              open={open}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description" >
+              {loading === true ? <LinearProgress /> : <></>}
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Are you sure you want to delete the Lecture?</DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button variant="contained" onClick={() => { handleClose() }} style={{ background: "Silver", height: "34px", width: "42px" }}>
+                  Cancel
+                </Button>
+                <Button variant="contained" color="primary" onClick={() => { RemoveRow() }} autoFocus >
+                  Ok
+                </Button>
 
-                            </DialogActions>
-                        </Dialog>
-                    </div>
+              </DialogActions>
+            </Dialog>
+          </div>
         </Card>
       </Container>
     </Page>

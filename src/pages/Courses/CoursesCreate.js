@@ -38,8 +38,8 @@ export default function CourseCreate() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Courses',
-              href: PATH_DASHBOARD.course,
+              name: 'Course',
+              href: PATH_DASHBOARD.course.root,
             },
             { id: !isEdit ? 'New Course' : id },
           ]}

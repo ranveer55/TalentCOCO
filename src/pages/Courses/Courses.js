@@ -94,6 +94,7 @@ export default function Course() {
   const [open, setDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [selectDeleteId, setselectDeleteId] = useState([]);
 
   useEffect(() => {
     dispatch(getCourses());
@@ -115,32 +116,32 @@ export default function Course() {
     setDeleteOpen(true)
     setDeleteId(id)
    };
- 
+   const handleDeleteRows = (selected) => {
+    setDeleteOpen(true)
+    setselectDeleteId(selected)
+  };
   const handleClose = () => {
     setDeleteOpen(false)
     setLoading(false)
    };
- 
-  const RemoveSingleRow = () => {
+   
+  const RemoveRow = () => {
+    let deleteRow = '';
     setLoading(true)
-     setDeleteOpen(false)
-     dispatch(deleteCourse(deleteId));
-     setLoading(false)
-    const deleteRow = tableData.filter((row) => row.id !== deleteId);
+    setDeleteOpen(false)
+    if (deleteId) {
+      dispatch(deleteCourse(deleteId));
+       deleteRow = tableData.filter((row) => row.id !== deleteId);
+    } else if (selectDeleteId) {
+      dispatch(deleteCourse(selectDeleteId));
+       deleteRow = tableData.filter((row) => !selected.includes(row.id));
+    }
     setSelected([]);
     setTableData(deleteRow);
-  };
- 
-  const handleDeleteRows = (selected) => {
-     setLoading(true)
-     setDeleteOpen(false)
-    dispatch(deleteCourse(selected));
     setLoading(false)
-    const deleteRows = tableData.filter((row) => !selected.includes(row.id));
-    setSelected([]);
-    setTableData(deleteRows);
-  };
+    };
 
+  
   const handleEditRow = (id) => {
     navigate(PATH_DASHBOARD.course.edit(paramCase(id)));
   };
@@ -167,8 +168,7 @@ export default function Course() {
             { name: 'Dashboard', href: PATH_DASHBOARD.course.root },
             {
               name: 'courses',
-              href: PATH_DASHBOARD.course.root,
-            },
+             },
             
           ]}
           action={
@@ -277,13 +277,13 @@ export default function Course() {
                             {loading === true ? <LinearProgress /> : <></>}
                             <DialogContent>
                                 <DialogContentText id="alert-dialog-description">
-                                    Are you sure you want to delete the Problems?</DialogContentText>
+                                    Are you sure you want to delete the Course?</DialogContentText>
                             </DialogContent>
                             <DialogActions>
                                 <Button variant="contained" onClick={()=>{handleClose()}} style={{ background: "Silver", height: "34px", width: "42px" }}>
                                     Cancel
                                 </Button>
-                                <Button variant="contained" color="primary" onClick={() => {RemoveSingleRow()}} autoFocus >
+                                <Button variant="contained" color="primary" onClick={() => {RemoveRow()}} autoFocus >
                                     Ok
                                 </Button>
 

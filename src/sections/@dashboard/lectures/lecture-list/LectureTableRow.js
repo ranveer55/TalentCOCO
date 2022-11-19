@@ -49,7 +49,7 @@ export default function LectureTableRow({ row, selected, onEditRow,onViewRow, on
 
       <TableCell align="left">{description}</TableCell>
       <TableCell align="left">{type}</TableCell>
-      <TableCell align="left">{order}</TableCell>
+      <TableCell align="center">{order}</TableCell>
        <TableCell align="left">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}

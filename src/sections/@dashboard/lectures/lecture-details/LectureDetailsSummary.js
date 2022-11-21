@@ -125,7 +125,7 @@ export default function LectureDetailsSummary({lessonId,CourseId, lecture, onAdd
             fullWidth
             size="large"
              variant="contained"
-            onClick={()=>navigate(PATH_DASHBOARD.lecture(CourseId, lessonId))}
+            onClick={()=>navigate(`/dashboard/course/${CourseId}/lesson/${lessonId}`)}
             sx={{ whiteSpace: 'nowrap' }}
           >
           Back

@@ -81,6 +81,8 @@ export default function LectureDetails() {
                 <Grid item xs={12} >
                   <LectureDetailsSummary
                     lecture={lecture}
+                    CourseId={CourseId}
+                    lessonId={lessonId}
                   />
                 </Grid>
                  </Grid>

@@ -36,8 +36,8 @@ const navConfig = [
         path: PATH_DASHBOARD.companies.root,
         icon: ICONS.cart,
         children: [
-          { title: 'list', path: PATH_DASHBOARD.companies.list },
-          { title: 'create', path: PATH_DASHBOARD.companies.new },
+          { title: 'list Companies ', path: PATH_DASHBOARD.companies.list },
+          { title: 'create Companies', path: PATH_DASHBOARD.companies.new },
           ],
       },
       // USERS
@@ -46,8 +46,8 @@ const navConfig = [
         path: PATH_DASHBOARD.users.root,
         icon: ICONS.user,
         children: [
-          { title: 'list', path: PATH_DASHBOARD.users.root },
-          { title: 'create', path: PATH_DASHBOARD.users.new },
+          { title: 'list Users', path: PATH_DASHBOARD.users.root },
+          { title: 'create Users', path: PATH_DASHBOARD.users.new },
           ],
       },
 
@@ -57,8 +57,8 @@ const navConfig = [
         path: PATH_DASHBOARD.course.root,
         icon: ICONS.cart,
         children: [
-          { title: 'list', path: PATH_DASHBOARD.course.root },
-          { title: 'create', path: PATH_DASHBOARD.course.new },
+          { title: 'list Courses', path: PATH_DASHBOARD.course.root },
+          { title: 'create Courses', path: PATH_DASHBOARD.course.new },
           ],
       },
      

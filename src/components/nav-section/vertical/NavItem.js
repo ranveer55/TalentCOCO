@@ -157,7 +157,7 @@ export function NavItemSub({ item, open = false, active = false, onOpen }) {
       {renderContent}
     </ListItem>
   ) : (
-    <ListItem component={RouterLink} to={path} activeSub={active} subItem disabled={disabled} roles={roles}>
+    <ListItem component={RouterLink} to={path} activeSub={active} subItem disabled={disabled} roles={roles} sx={{marginLeft:'30px'}}>
       {renderContent}
     </ListItem>
   );

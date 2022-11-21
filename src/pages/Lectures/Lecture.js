@@ -126,14 +126,16 @@ export default function Lecture() {
   };
 
   const RemoveRow = () => {
+    const Id=JSON.stringify(selectDeleteId);
+    const selectedId = JSON.parse(Id)
     let deleteRow = '';
     setLoading(true)
     setDeleteOpen(false)
     if (deleteId) {
       dispatch(deleteLecture(deleteId));
        deleteRow = tableData.filter((row) => row.id !== deleteId);
-    } else if (selectDeleteId) {
-      dispatch(deleteLecture(selectDeleteId));
+    } else if (selectedId) {
+      dispatch(deleteLecture(selectedId));
        deleteRow = tableData.filter((row) => !selected.includes(row.id));
     }
     setSelected([]);

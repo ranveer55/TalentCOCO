@@ -42,7 +42,7 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
   backgroundColor: `${alpha(theme.palette.primary.main, 0.08)}`,
 }));
 
-// ----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 
 export default function LessonDetails() {
   const { themeStretch } = useSettings();
@@ -61,13 +61,16 @@ export default function LessonDetails() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Lesson',
+              name: 'Course',
+              href: PATH_DASHBOARD.course.root,
+            },
+            {
+              name: 'Lessons',
               href: PATH_DASHBOARD.course.lesson(paramCase(CourseId)),
             },
-            //  {
-            //   name: 'Lesson Detail',
-            //   href: PATH_DASHBOARD.course.lessons.root,
-            // },
+              {
+               name: 'Lesson Detail',
+               },
             
           ]}
         />

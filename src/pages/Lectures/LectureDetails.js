@@ -62,6 +62,14 @@ export default function LectureDetails() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.course.root },
             {
+              name: 'Course',
+              href: PATH_DASHBOARD.course.root,
+            },
+            {
+              name: 'Lessons',
+              href: PATH_DASHBOARD.course.lesson(paramCase(CourseId)),
+            },
+            {
               name: 'Lecture',
               href:PATH_DASHBOARD.course.lectures(CourseId,lessonId),
             },
@@ -81,6 +89,8 @@ export default function LectureDetails() {
                 <Grid item xs={12} >
                   <LectureDetailsSummary
                     lecture={lecture}
+                    CourseId={CourseId}
+                    lessonId={lessonId}
                   />
                 </Grid>
                  </Grid>

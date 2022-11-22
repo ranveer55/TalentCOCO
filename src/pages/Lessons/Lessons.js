@@ -1,6 +1,6 @@
 import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
-import { useNavigate,useParams, Link as RouterLink } from 'react-router-dom';
+import { useNavigate, useParams, Link as RouterLink } from 'react-router-dom';
 // @mui
 import {
   Box,
@@ -24,7 +24,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getLessons,deleteLesson } from './store/actions';
+import { getLessons, deleteLesson } from './store/actions';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -49,12 +49,12 @@ import { LessonTableRow, LessonTableToolbar } from '../../sections/@dashboard/le
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'description',label: 'Description', align: 'left' },
+  { id: 'description', label: 'Description', align: 'left' },
   { id: 'order', label: 'Order', align: 'center' },
   { id: 'active', label: 'Active', align: 'left' },
   { id: 'btn', label: 'View Lecture', align: 'left' },
-  {id:''},
-  ];
+  { id: '' },
+];
 
 // ----------------------------------------------------------------------
 
@@ -79,7 +79,7 @@ export default function Lesson() {
   } = useTable({
     defaultOrderBy: 'createdAt',
   });
-  
+
   const { themeStretch } = useSettings();
 
   const navigate = useNavigate();
@@ -97,10 +97,10 @@ export default function Lesson() {
   useEffect(() => {
     dispatch(getLessons(CourseId));
   }, [dispatch]);
-  
+
 
   useEffect(() => {
-      setTableData(lessons);
+    setTableData(lessons);
   }, [lessons]);
 
 
@@ -112,16 +112,16 @@ export default function Lesson() {
   const handleDeleteRow = (id) => {
     setDeleteOpen(true)
     setDeleteId(id)
-   };
-   const handleDeleteRows = (selected) => {
+  };
+  const handleDeleteRows = (selected) => {
     setDeleteOpen(true)
     setselectDeleteId(selected)
   };
   const handleClose = () => {
     setDeleteOpen(false)
     setLoading(false)
-   };
-   
+  };
+
   const RemoveRow = () => {
     let deleteRow = '';
     setLoading(true)
@@ -131,19 +131,19 @@ export default function Lesson() {
        deleteRow = tableData.filter((row) => row.id !== deleteId);
     } else if (selectDeleteId) {
       dispatch(deleteLesson(selectDeleteId));
-       deleteRow = tableData.filter((row) => !selected.includes(row.id));
+      deleteRow = tableData.filter((row) => !selected.includes(row.id));
     }
     setSelected([]);
     setTableData(deleteRow);
     setLoading(false)
-    };
+  };
 
-    const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.course.editLesson(CourseId,id));
+  const handleEditRow = (id) => {
+    navigate(PATH_DASHBOARD.course.editLesson(CourseId, id));
   };
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.course.viewLesson(CourseId,id));
- };
+    navigate(PATH_DASHBOARD.course.viewLesson(CourseId, id));
+  };
 
   const dataFiltered = applySortFilter({
     tableData,
@@ -169,7 +169,7 @@ export default function Lesson() {
             {
               name: 'Lessons',
             },
-            
+
           ]}
           action={
             <Button
@@ -271,26 +271,26 @@ export default function Lesson() {
             />
           </Box>
           <div>
-                        <Dialog
-                            open={open}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description" >
-                            {loading === true ? <LinearProgress /> : <></>}
-                            <DialogContent>
-                                <DialogContentText id="alert-dialog-description">
-                                    Are you sure you want to delete the Lesson?</DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button variant="contained" onClick={()=>{handleClose()}} style={{ background: "Silver", height: "34px", width: "42px" }}>
-                                    Cancel
-                                </Button>
-                                <Button variant="contained" color="primary" onClick={() => {RemoveRow()}} autoFocus >
-                                    Ok
-                                </Button>
+            <Dialog
+              open={open}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description" >
+              {loading === true ? <LinearProgress /> : <></>}
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Are you sure you want to delete the Lesson?</DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button variant="contained" onClick={() => { handleClose() }} style={{ background: "Silver", height: "34px", width: "42px" }}>
+                  Cancel
+                </Button>
+                <Button variant="contained" color="primary" onClick={() => { RemoveRow() }} autoFocus >
+                  Ok
+                </Button>
 
-                            </DialogActions>
-                        </Dialog>
-                    </div>
+              </DialogActions>
+            </Dialog>
+          </div>
         </Card>
       </Container>
     </Page>

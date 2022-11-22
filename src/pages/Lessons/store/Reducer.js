@@ -15,7 +15,7 @@ const Reducer = (state = initialState, { type, payload } = {}) => {
         case ActionTypes.FETCH_LESSON_SUCCESS:
             return { ...state, isLoading: false, lesson: payload }
         case ActionTypes.DELETE_LESSON_SUCCESS:
-            return { ...state, isLoading: false, lessons: payload }
+            return { ...state, isLoading: false, lessons: state.lessons.filter((item)=>item.id!==payload) }
         default:
             return state;
     }

@@ -31,10 +31,18 @@ export default function LectureCreate() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.course.root },
             {
+              name: 'Course',
+              href: PATH_DASHBOARD.course.root,
+            },
+            {
+              name: 'Lessons',
+              href: PATH_DASHBOARD.course.lesson(paramCase(CourseId)),
+            },
+            {
               name: 'Lectures',
               href: PATH_DASHBOARD.course.lectures(CourseId,lessonId),
             },
-            { id: !isEdit ? 'New Lecture' : id },
+            { name: !isEdit ? 'New Lecture' : id },
           ]}
         />
 

@@ -78,7 +78,7 @@ export function deleteLesson(id) {
     dispatch(startLoading());
     try {
       const response = await axios.delete(`/lesson/${id}`);
-      dispatch(deleteLessons(response.data));
+      dispatch(deleteLessons(id));
       dispatch(setToast({ severity: 'success', message: 'Lesson Deleted', open: true }))
     } catch (error) {
       dispatch(setToast({ severity: 'error', message: error.message ? error.message : 'Something went wrong', open: true }))

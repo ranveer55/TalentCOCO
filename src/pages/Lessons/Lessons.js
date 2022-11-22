@@ -128,12 +128,12 @@ export default function Lesson() {
     setDeleteOpen(false)
     if (deleteId) {
       dispatch(deleteLesson(deleteId));
-      const deleteRow = tableData.filter((row) => row.id !== deleteId);
+       deleteRow = tableData.filter((row) => row.id !== deleteId);
     } else if (selectDeleteId) {
       dispatch(deleteLesson(selectDeleteId));
       deleteRow = tableData.filter((row) => !selected.includes(row.id));
     }
-    setSelected([]);
+    // setSelected([]);
     setTableData(deleteRow);
     setLoading(false)
   };

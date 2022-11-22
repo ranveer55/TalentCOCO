@@ -10,7 +10,7 @@ import type { Quote as QuoteType } from "../types";
 import Image from '../../components/Image';
 import useToggle from '../../hooks/useToggle';
 import Iconify from '../../components/Iconify';
-import {createMcq} from './store/actions'
+import { createMcq } from './store/actions'
 
 
 
@@ -33,7 +33,7 @@ function Quote({ option, setOption, index }) {
     <Draggable draggableId={option.id} index={index}>
       {provided => (
         <div
-          
+
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
@@ -79,7 +79,7 @@ function Quote({ option, setOption, index }) {
                 onChange={(e) => setOption(option.id, 'value', e.target.value)}
                 inputRef={renameRef}
                 sx={{
-                  m:0,
+                  m: 0,
                   typography: 'p',
                   fontWeight: 'fontWeightBold',
                   '& .MuiOutlinedInput-notchedOutline': {
@@ -106,7 +106,7 @@ function QuoteLists({ options, setOption }) {
         '&:hover': {
           boxShadow: (theme) => theme.customShadows.z16,
         },
-       
+
       }}
     >
       <Quote option={option} index={index} key={option.id} setOption={setOption} />
@@ -132,13 +132,13 @@ const initial = ['A', 'B', 'C', 'D'].map(k => {
   return custom;
 });
 
-function McqQuestion({lectureId, mcq = defaultmcq,cb }) {
+function McqQuestion({ lectureId, mcq = defaultmcq, cb }) {
   const [state, setState] = useState({ options: initial });
   const [question, setQuestion] = useState(mcq.question);
   const [answer, setAnswer] = useState(mcq.answer);
 
-  const {isLoading}=useSelector((s)=>s.mcq)
-  const dispatch =useDispatch()
+  const { isLoading } = useSelector((s) => s.mcq)
+  const dispatch = useDispatch()
 
   const onDragEnd = (result) => {
     if (!result.destination) {
@@ -167,16 +167,19 @@ function McqQuestion({lectureId, mcq = defaultmcq,cb }) {
     });
     setState({ options: op })
   }
- 
 
+  const onSave = () => {
+    setState({ options: [] })
+    cb()
+  }
   const save = () => {
-    const op =state.options.filter((item)=>item.correct).map(item=>item.id)
-    const options =state.options.map((item)=>{
+    const op = state.options.filter((item) => item.correct).map(item => item.id)
+    const options = state.options.map((item) => {
       delete item.correct;
       return item;
     })
-    const payload={question, answer:op,options, lectureId}
-    dispatch(createMcq(payload, cb))
+    const payload = { question, answer: op, options, lectureId }
+    dispatch(createMcq(payload, onSave))
   }
   return (
     <Paper
@@ -206,7 +209,7 @@ function McqQuestion({lectureId, mcq = defaultmcq,cb }) {
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="list">
             {provided => (
-              <div ref={provided.innerRef} {...provided.droppableProps} style={{width:'100%'}}>
+              <div ref={provided.innerRef} {...provided.droppableProps} style={{ width: '100%' }}>
                 <QuoteList options={state.options} setOption={setOption} />
                 {provided.placeholder}
               </div>
@@ -214,7 +217,7 @@ function McqQuestion({lectureId, mcq = defaultmcq,cb }) {
           </Droppable>
         </DragDropContext>
 
-        <LoadingButton size="medium"  variant="contained" loading={false} onClick={save}>
+        <LoadingButton size="medium" variant="contained" loading={false} onClick={save}>
           Save
         </LoadingButton>
 

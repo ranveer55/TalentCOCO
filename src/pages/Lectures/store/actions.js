@@ -40,6 +40,7 @@ export function getLectures(lessonId) {
 }
 
 export function getLecture(id) {
+  if(!id) return;
   return async () => {
     dispatch(startLoading(true));
     try {

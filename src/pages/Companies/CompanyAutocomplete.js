@@ -62,7 +62,7 @@ export default function CompanyAutoComplete({  value, onAddCompanies }) {
                     onChange={(event, val) => handleAddCompanies(val)}
                     onInputChange={(event, value) => setQuery(value)}
                     options={companies}
-                    getOptionLabel={(company) => company.name}
+                    getOptionLabel={(company) => company ? company.name :""}
                     renderOption={(props, company, { inputValue, selected }) => {
                         const { name, poster } = company;
                         const matches = match(name, inputValue);

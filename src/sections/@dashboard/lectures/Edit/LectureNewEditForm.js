@@ -47,6 +47,7 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 export default function LectureNewEditForm({ isEdit }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [t, setT] = useState();
   const { id,CourseId, lessonId} = useParams();
 
   const { lecture: { lecture, isLoading }, app: { masterdata } } = useSelector((state) => state);
@@ -136,8 +137,10 @@ export default function LectureNewEditForm({ isEdit }) {
   };
   const handleType = (e) => {
     const type = e.target.value;
-    setValue('type', String(e.target.value))
+
+    setValue('type', String(type))
     defaultValues.type = type;
+    // setT(type)
   };
   const handleOrder = (e) => {
     const order = e.target.value;
@@ -178,9 +181,8 @@ export default function LectureNewEditForm({ isEdit }) {
                 <LabelStyle>Body</LabelStyle>
                 <RHFEditor simple name="body" onChange={(e) => handleBody(e)} />
               </div> }
-              { defaultValues.type === 'MCQ' && isEdit && <McqList isLoading={isLoading} lecture={isEdit ? lecture: defaultValues } setMCQOrder={setMCQOrder} />}
-              {/* { defaultValues.type === 'MCQ' && isEdit && <LectureMcq lecture={isEdit ? lecture: defaultValues } setMCQOrder={setMCQOrder} />} */}
-
+              { defaultValues.type === 'MCQ'  && <McqList isLoading={isLoading} lecture={isEdit ? lecture: defaultValues } setMCQOrder={setMCQOrder} />}
+             
 
             </Box>
           </Card>

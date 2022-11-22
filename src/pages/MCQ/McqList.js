@@ -118,6 +118,7 @@ export default function McqList({ lecture, isLoading, setMCQOrder }) {
     openModal(true);
   };
   const cb = () => {
+    console.log('heeeeeeeeeeeeeeee');
     openModal(false);
   }
   const dataFiltered = tableData

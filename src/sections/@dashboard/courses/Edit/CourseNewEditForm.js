@@ -226,7 +226,7 @@ export default function CourseNewEditForm({ isEdit }) {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={defaultValues.language}
+                  value={defaultValues.language ? defaultValues.language :'react'}
                   label="Language"
                   onChange={(e) => handleLanguage(e)}
                 >

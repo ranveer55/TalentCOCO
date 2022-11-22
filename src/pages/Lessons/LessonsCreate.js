@@ -37,6 +37,10 @@ export default function LessonCreate() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
+              name: 'Course',
+              href: PATH_DASHBOARD.course.root,
+            },
+            {
               name: 'Lessons',
               href: PATH_DASHBOARD.course.lesson(paramCase(CourseId)),
             },

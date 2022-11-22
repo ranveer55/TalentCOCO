@@ -18,7 +18,7 @@ import { fData } from '../../../../utils/formatNumber';
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // _mock
 import { countries } from '../../../../_mock';
-import { createLesson, updateLesson } from '../../../../pages/Lessons/store/actions'
+import { createLesson, updateLesson, getLessons } from '../../../../pages/Lessons/store/actions'
 // components
 import Label from '../../../../components/Label';
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../../components/hook-form';
@@ -34,9 +34,10 @@ export default function LessonNewEditForm({ isEdit }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { CourseId } = useParams();
+  const [checked, setChecked] = useState(true);
   const { enqueueSnackbar } = useSnackbar();
-  const { lesson: { lesson, loading } } = useSelector((state) => state);
-  
+  const { lesson: { lesson,lessons ,loading } } = useSelector((state) => state);
+  const Order = lessons && lessons.length > 0 ? Math.max(...lessons.map(item => item?.order + 1)) : 1;
   const NewLessonSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').min(3),
     description: Yup.string().required('Description is required').min(1),
@@ -45,13 +46,18 @@ export default function LessonNewEditForm({ isEdit }) {
     courseId: Yup.string(),
 
   });
+  useEffect(() => {
+    if (!isEdit) {
+      dispatch(getLessons(CourseId));
+    }
+  }, [dispatch]);
 
   const defaultValues = useMemo(
     () => ({
       name: isEdit ? lesson?.name || '' : '',
       description: isEdit ? lesson?.description || '' : '',
-      order: isEdit ? lesson?.order || '' : '',
-      active: isEdit ? lesson?.active || '' : '',
+      order: isEdit ? lesson?.order || '' : Order,
+      active:lesson?.active || checked,
       courseId: CourseId,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -69,10 +75,10 @@ export default function LessonNewEditForm({ isEdit }) {
     control,
     setValue,
     handleSubmit,
-    formState: {errors, isSubmitting },
+    formState: { errors, isSubmitting },
   } = methods;
 
-  console.log({errors});
+  console.log({ errors });
   const values = watch();
 
   useEffect(() => {
@@ -91,7 +97,7 @@ export default function LessonNewEditForm({ isEdit }) {
   }
 
   const onSubmit = async () => {
-      try {
+    try {
       if (lesson.id) {
         dispatch(updateLesson(lesson.id, defaultValues, cb))
       } else {
@@ -118,16 +124,12 @@ export default function LessonNewEditForm({ isEdit }) {
     setValue('lectures', String(e.target.value))
     defaultValues.lectures = lectures;
   };
-  const handleOrder = (e) => {
-    const order = e.target.value;
-    setValue('order', Number(e.target.value))
-    defaultValues.order = order;
-  };
 
   const handleChange = (e) => {
     const active = e.target.checked;
     setValue('active', Boolean(e.target.checked))
     defaultValues.active = active;
+    setChecked(active)
   };
 
   return (
@@ -143,10 +145,9 @@ export default function LessonNewEditForm({ isEdit }) {
             >
               <RHFTextField name="name" label="Lesson Name" onChange={(e) => handleName(e)} />
               <RHFTextField name="description" label="Description" multiline rows={5} onChange={(e) => handleDescription(e)} />
-              <RHFTextField name="order" label="Order" onChange={(e) => handleOrder(e)} />
               <FormGroup sx={{ marginLeft: '10px' }}>
                 <FormControlLabel
-                  control={<Switch name='active' size="large" onChange={handleChange} />}
+                  control={<Switch name='active' checked={checked} size="large" onChange={handleChange} />}
                   label="Active"
 
                 />

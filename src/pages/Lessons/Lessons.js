@@ -133,7 +133,7 @@ export default function Lesson() {
       dispatch(deleteLesson(selectDeleteId));
       deleteRow = tableData.filter((row) => !selected.includes(row.id));
     }
-    // setSelected([]);
+    setSelected([]);
     setTableData(deleteRow);
     setLoading(false)
   };

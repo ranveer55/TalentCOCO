@@ -20,7 +20,7 @@ import { fData } from '../../../../utils/formatNumber';
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // _mock
 import { countries } from '../../../../_mock';
-import { createLecture, getLecture, updateLecture } from '../../../../pages/Lectures/store/actions'
+import { createLecture, getLecture,getLectures ,updateLecture } from '../../../../pages/Lectures/store/actions'
 // components
 import Label from '../../../../components/Label';
 // import LectureMcq from '../../../../pages/MCQ/LectureMcq'
@@ -48,11 +48,16 @@ export default function LectureNewEditForm({ isEdit }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id,CourseId, lessonId} = useParams();
-  const { lecture: { lecture, isLoading }, app: { masterdata } } = useSelector((state) => state);
+  const [checked, setChecked] = useState(true);
+  const { lecture: { lecture,lectures ,isLoading }, app: { masterdata } } = useSelector((state) => state);
+  const Order = lectures && lectures.length > 0 ? Math.max(...lectures.map(item => item?.order + 1)) : 1;
   const LectureTypes = masterdata && masterdata.LectureTypes ? masterdata.LectureTypes: []
   useEffect(() => {
     if(id){
       dispatch(getLecture(id));
+    }
+    if(lessonId){
+      dispatch(getLectures(lessonId));
     }
     
   }, [dispatch]);
@@ -70,11 +75,11 @@ export default function LectureNewEditForm({ isEdit }) {
   const defaultValues = useMemo(
     () => ({
       name: lecture?.name || '',
-      type: lecture?.type || '',
-      order: lecture?.order || '',
+      type: lecture?.type || 'text',
+      order: lecture?.order || Order,
       body: lecture?.body || '',
       lessonId: lessonId || '',
-      active: lecture?.active || '',
+      active: lecture?.active || checked,
       mcq: lecture?.mcq || [],
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -138,11 +143,7 @@ export default function LectureNewEditForm({ isEdit }) {
     setValue('type', String(e.target.value))
     defaultValues.type = type;
   };
-  const handleOrder = (e) => {
-    const order = e.target.value;
-    setValue('order', Number(e.target.value))
-    defaultValues.order = order;
-  };
+  
   const handleBody = (e) => {
     setValue('body', String(e))
     defaultValues.body = e;
@@ -153,6 +154,7 @@ export default function LectureNewEditForm({ isEdit }) {
     const active = e.target.checked;
     setValue('active', Boolean(e.target.checked))
     defaultValues.active = active;
+    setChecked(active)
   };
   const setMCQOrder = (val) => {
   
@@ -208,10 +210,9 @@ export default function LectureNewEditForm({ isEdit }) {
                   }
                   </Select>
                 </FormControl>
-                <RHFTextField name="order" label="Order" onChange={(e) => handleOrder(e)} />
-                <FormGroup sx={{ marginLeft: '10px' }}>
+                 <FormGroup sx={{ marginLeft: '10px' }}>
                   <FormControlLabel
-                    control={<Switch size="large" name='active' onChange={handleChange} />}
+                    control={<Switch size="large" name='active' checked={checked} onChange={handleChange} />}
                     label="Active"
                     labelPlacement="start"
                     sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }}

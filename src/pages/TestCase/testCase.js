@@ -25,7 +25,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getLectures, deleteLecture } from './store/actions';
+import { getTestCases, deleteTestCase } from './store/actions';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -44,24 +44,22 @@ import {
   TableSelectedActions,
 } from '../../components/table';
 // sections
-import { LectureTableRow, LectureTableToolbar } from '../../sections/@dashboard/lectures/lecture-list';
+import { TestcaseTableRow, TestcaseTableToolbar } from '../../sections/@dashboard/testcase/testcase-list';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'description', label: 'Description', align: 'left' },
-  { id: 'type', label: 'Type', align: 'left' },
-  { id: 'subtype', label: 'SubType', align: 'left' },
-  { id: 'order', label: 'Order', align: 'left' },
-  { id: 'active', label: 'Active', align: 'center' },
-  { id: 'btn', label: 'View Test Case ', align: 'center' },
+  { id: 'input', label: 'Input', align: 'left' },
+  { id: 'output', label: 'Output', align: 'left' },
+  { id: 'order', label: 'Order', align: 'center' },
+  { id: 'active', label: 'Active', align: 'left' },
   { id: '' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function Lecture() {
+export default function TestCase() {
   const {
     dense,
     page,
@@ -88,8 +86,8 @@ export default function Lecture() {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const { CourseId, lessonId } = useParams();
-  const { lectures, error, isLoading } = useSelector((state) => state.lecture);
+  const { CourseId, lessonId ,lectureId} = useParams();
+  const { testcases, error, isLoading } = useSelector((state) => state.testcase);
   const [tableData, setTableData] = useState([]);
   const [open, setDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -99,14 +97,14 @@ export default function Lecture() {
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
-    dispatch(getLectures(lessonId));
+    dispatch(getTestCases(lectureId));
   }, [dispatch]);
 
   useEffect(() => {
-    if (lectures.length) {
-      setTableData(lectures);
+    if (testcases.length) {
+      setTableData(testcases);
     }
-  }, [lectures]);
+  }, [testcases]);
 
 
   const handleFilterName = (filterName) => {
@@ -132,10 +130,10 @@ export default function Lecture() {
     setLoading(true)
     setDeleteOpen(false)
     if (deleteId) {
-      dispatch(deleteLecture(deleteId));
+      dispatch(deleteTestCase(deleteId));
        deleteRow = tableData.filter((row) => row.id !== deleteId);
     } else if (selectDeleteId) {
-      dispatch(deleteLecture(selectDeleteId));
+      dispatch(deleteTestCase(selectDeleteId));
        deleteRow = tableData.filter((row) => !selected.includes(row.id));
     }
     setSelected([]);
@@ -144,10 +142,10 @@ export default function Lecture() {
    };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.course.editLecture(CourseId, lessonId, id));
+     navigate(PATH_DASHBOARD.course.editTestcase(CourseId, lessonId,lectureId, id));
   };
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.course.viewLecture(CourseId, lessonId, id));
+      navigate(PATH_DASHBOARD.course.viewTestcase(CourseId, lessonId,lectureId, id));
   };
 
   const dataFiltered = applySortFilter({
@@ -161,10 +159,10 @@ export default function Lecture() {
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   return (
-    <Page title="lectures: Lecture List">
+    <Page title="testcases: Test Case List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Lecture List"
+          heading="Test Case List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.course.root },
             {
@@ -176,7 +174,11 @@ export default function Lecture() {
               href: PATH_DASHBOARD.course.lesson(paramCase(CourseId)),
             },
             {
-              name: 'Lectures',
+              name: 'Lecture',
+              href: PATH_DASHBOARD.course.lectures(CourseId,lessonId),
+            },
+            {
+              name: 'Test Case',
             },
 
           ]}
@@ -185,17 +187,17 @@ export default function Lecture() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
               component={RouterLink}
-              to={PATH_DASHBOARD.course.newLecture(CourseId, lessonId)}
+              to={PATH_DASHBOARD.course.newTestcase(CourseId, lessonId,lectureId)}
             >
-              New Lecture
+              New TestCase
             </Button>
           }
         />
 
         <Card>
-          <LectureTableToolbar filterName={filterName} onFilterName={handleFilterName} />
+          <TestcaseTableToolbar filterName={filterName} onFilterName={handleFilterName} />
 
-          {lectures ? <Scrollbar>
+          {testcases ? <Scrollbar>
             <TableContainer sx={{ minWidth: 960, position: 'relative' }}>
               {selected.length > 0 && (
                 <TableSelectedActions
@@ -239,7 +241,7 @@ export default function Lecture() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <LectureTableRow
+                        <TestcaseTableRow
                           key={row.id}
                           row={row}
                           CourseId={CourseId}
@@ -288,7 +290,7 @@ export default function Lecture() {
               {loading === true ? <LinearProgress /> : <></>}
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  Are you sure you want to delete the Lecture?</DialogContentText>
+                  Are you sure you want to delete the Test Case?</DialogContentText>
               </DialogContent>
               <DialogActions>
                 <Button variant="contained" onClick={() => { handleClose() }} style={{ background: "Silver", height: "34px", width: "42px" }}>
@@ -321,7 +323,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
   tableData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    tableData = tableData.filter((lecture) => lecture.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+    tableData = tableData.filter((testcase) => testcase.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
   }
 
   return tableData;

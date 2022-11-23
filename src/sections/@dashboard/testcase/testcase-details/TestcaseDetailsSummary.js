@@ -23,10 +23,10 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-LectureDetailsSummary.propTypes = {
+TestcaseDetailsSummary.propTypes = {
   onAddCart: PropTypes.func,
   onGotoStep: PropTypes.func,
-  lecture: PropTypes.shape({
+  testcase: PropTypes.shape({
     id: PropTypes.string,
     title: PropTypes.string,
     price: PropTypes.number,
@@ -34,8 +34,8 @@ LectureDetailsSummary.propTypes = {
   }),
 };
 
-export default function LectureDetailsSummary({lessonId,CourseId, lecture, onAddCart, onGotoStep, ...other }) {
-  const navigate = useNavigate();
+export default function TestcaseDetailsSummary({lectureId,lessonId,CourseId, testcase, onAddCart, onGotoStep, ...other }) {
+   const navigate = useNavigate();
   return (
     <RootStyle {...other} sx={{ marginTop: "2px" }}>
          <Grid container xs={12}>
@@ -46,43 +46,31 @@ export default function LectureDetailsSummary({lessonId,CourseId, lecture, onAdd
           </Grid>
           <Grid item xs={6}>
             <Typography >
-              {lecture.name}
+              {testcase.name}
             </Typography>
           </Grid>
         </Grid>
         <Grid container xs={12}>
           <Grid item xs={6}>
             <Typography variant="h5" >
-              Description:
+              Input:
             </Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography >
-              {lecture.description}
+              {testcase.input}
             </Typography>
           </Grid>
         </Grid>
         <Grid container xs={12}>
           <Grid item xs={6}>
             <Typography variant="h5" >
-              Type:
+              Output:
             </Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography >
-              {lecture.type}
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid container xs={12}>
-          <Grid item xs={6}>
-            <Typography variant="h5" >
-            SubType:
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography >
-              {lecture.subtype}
+              {testcase.output}
             </Typography>
           </Grid>
         </Grid>
@@ -94,26 +82,11 @@ export default function LectureDetailsSummary({lessonId,CourseId, lecture, onAdd
           </Grid>
           <Grid item xs={6}>
             <Typography>
-              {lecture.order}
+              {testcase.order}
             </Typography>
           </Grid>
         </Grid>
-
-
-        <Grid container xs={12}>
-          <Grid item xs={6}>
-            <Typography variant="h5" >
-              Lesson Id:
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography>
-              {lecture.lessonId}
-            </Typography>
-          </Grid>
-        </Grid>
-
-        <Grid container xs={12}>
+         <Grid container xs={12}>
           <Grid item xs={6}>
             <Typography variant="h5" >
               Active:
@@ -121,7 +94,7 @@ export default function LectureDetailsSummary({lessonId,CourseId, lecture, onAdd
           </Grid>
           <Grid item xs={6}>
             <Typography>
-              {lecture.active}
+              {testcase.active}
             </Typography>
           </Grid>
         </Grid>
@@ -137,7 +110,7 @@ export default function LectureDetailsSummary({lessonId,CourseId, lecture, onAdd
             fullWidth
             size="large"
              variant="contained"
-            onClick={()=>navigate(`/dashboard/course/${CourseId}/lesson/${lessonId}`)}
+            onClick={()=>navigate(`/dashboard/course/${CourseId}/lesson/${lessonId}/lecture/${lectureId}`)}
             sx={{ whiteSpace: 'nowrap' }}
           >
           Back

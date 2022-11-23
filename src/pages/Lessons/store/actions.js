@@ -29,7 +29,7 @@ export function getLessons(id) {
     try {
       const response = await axios.get(`/lesson/lessonofCourse/${id}`);
       dispatch(getLessonsSuccess(response.data.results));
-    } catch (error) {
+      } catch (error) {
       dispatch(setToast({ severity: 'error', message: error.message ? error.message : 'Something went wrong', open: true }))
     }
   };

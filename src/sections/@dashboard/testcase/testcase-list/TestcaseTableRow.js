@@ -1,19 +1,20 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useNavigate} from 'react-router-dom';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem,Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import { Checkmark } from 'react-checkmark'
 // components
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
+// routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
-LectureTableRow.propTypes = {
+TestcaseTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -22,12 +23,12 @@ LectureTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function LectureTableRow({ CourseId, lessonId, row, selected, onEditRow, onViewRow, onSelectRow, onDeleteRow }) {
+export default function TestcaseTableRow({ CourseId, lessonId, row, selected, onEditRow, onViewRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { id, name,subtype, avatarUrl, description, type, isVerified, order, level, active } = row;
+  const { id, name, avatarUrl, input, output, isVerified, order, level, active } = row;
   const [openMenu, setOpenMenuActions] = useState(null);
-  const lectureId = id
+  const testcaseId = id
   const handleOpenMenu = (event) => {
     setOpenMenuActions(event.currentTarget);
   };
@@ -36,7 +37,7 @@ export default function LectureTableRow({ CourseId, lessonId, row, selected, onE
     setOpenMenuActions(null);
   };
   const onShowRow = () => {
-    navigate(PATH_DASHBOARD.course.testcases(CourseId, lessonId, lectureId));
+    navigate(PATH_DASHBOARD.course.testcases(CourseId, lessonId, testcaseId));
   };
   return (
     <TableRow hover selected={selected}>
@@ -50,11 +51,10 @@ export default function LectureTableRow({ CourseId, lessonId, row, selected, onE
         </Typography>
       </TableCell>
 
-      <TableCell align="left">{description}</TableCell>
-      <TableCell align="left">{type}</TableCell>
-      <TableCell align="left">{subtype}</TableCell>
-      <TableCell align="left">{order}</TableCell>
-      <TableCell align="center">
+      <TableCell align="left">{input}</TableCell>
+      <TableCell align="left">{output}</TableCell>
+      <TableCell align="center">{order}</TableCell>
+      <TableCell align="left">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
           sx={{ textTransform: 'capitalize' }}
@@ -62,11 +62,7 @@ export default function LectureTableRow({ CourseId, lessonId, row, selected, onE
           {active === true ? <Checkmark size='small' /> : <span style={{ color: "red" }}>x</span>}
         </Label>
       </TableCell>
-      {type === 'exercise' ?<TableCell align="center"><Button variant="contained"
-        onClick={() => {
-          onShowRow();
-        }}>Detail</Button></TableCell>:<TableCell >{}</TableCell >}
-      <TableCell align="center">
+      <TableCell align="right">
         <TableMoreMenu
           open={openMenu}
           onOpen={handleOpenMenu}

@@ -33,6 +33,7 @@ export function getLectures(lessonId) {
     try {
       const response = await axios.get(`/lectures/lecturesofLesson/${lessonId}`);
       dispatch(getLecturesSuccess(response.data.results));
+      dispatch(getLectureSuccess(null));
     } catch (error) {
       dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }

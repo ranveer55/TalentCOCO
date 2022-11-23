@@ -6,18 +6,18 @@ import Iconify from '../../../../components/Iconify';
 
 // ----------------------------------------------------------------------
 
-LectureTableToolbar.propTypes = {
+TestcaseTableToolbar.propTypes = {
     filterName: PropTypes.string,
     onFilterName: PropTypes.func,
 };
 
-export default function LectureTableToolbar({ filterName, onFilterName }) {
+export default function TestcaseTableToolbar({ filterName, onFilterName }) {
     return (
         <Stack direction="row" alignCourses="center" justifyContent="space-between" sx={{ py: 2.5, px: 3 }}>
             <TextField
                 value={filterName}
                 onChange={(event) => onFilterName(event.target.value)}
-                placeholder="Search Lecture..."
+                placeholder="Search Test Case..."
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">

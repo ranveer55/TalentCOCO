@@ -68,6 +68,7 @@ export default function LectureNewEditForm({ isEdit }) {
     body: Yup.string().required('Body is required').min(1),
     lessonId: Yup.string().required('Lesson is required').min(1),
     type: Yup.string(),
+    subtype: Yup.string(),
     order: Yup.number(),
     active: Yup.boolean(),
     mcq: Yup.array(),
@@ -77,6 +78,7 @@ export default function LectureNewEditForm({ isEdit }) {
     () => ({
       name: lecture?.name || '',
       type: lecture?.type || 'text',
+      subtype: lecture?.subtype || 'react',
       order: lecture?.order || Order,
       body: lecture?.body || '',
       lessonId: lessonId || '',
@@ -141,10 +143,14 @@ export default function LectureNewEditForm({ isEdit }) {
   };
   const handleType = (e) => {
     const type = e.target.value;
-
     setValue('type', String(type))
     defaultValues.type = type;
     // setT(type)
+  };
+  const handleSubType = (e) => {
+    const subtype = e.target.value;
+    setValue('subtype', String(subtype))
+    defaultValues.subtype = subtype;
   };
   
   const handleBody = (e) => {
@@ -212,6 +218,24 @@ export default function LectureNewEditForm({ isEdit }) {
                   }
                   </Select>
                 </FormControl>
+                <FormControl sx={{ width: "100%" }}>
+                <InputLabel id="demo-simple-select-label">Sub Type</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={defaultValues.subtype}
+                  label="SubType"
+                  onChange={(e) => handleSubType(e)}
+                >
+                  <MenuItem value={'html'}>Html</MenuItem>
+                  <MenuItem value={'css'}>Css</MenuItem>
+                  <MenuItem value={'javascript'}>Javascript</MenuItem>
+                  <MenuItem value={'python'}>Python</MenuItem>
+                  <MenuItem value={'react'}>React</MenuItem>
+                  <MenuItem value={'express'}>Express</MenuItem>
+                  <MenuItem value={'mongodb'}>Mongodb</MenuItem>
+                </Select>
+              </FormControl>
                  <FormGroup sx={{ marginLeft: '10px' }}>
                   <FormControlLabel
                     control={<Switch size="large" name='active' checked={checked} onChange={handleChange} />}

@@ -111,6 +111,10 @@ export default function Router() {
             { path: 'course/:CourseId/lesson/:lessonId/lecture/new', element: <LectureCreate /> },
             { path: 'course/:CourseId/lesson/:lessonId/lecture/:id/edit', element: <LectureCreate /> },
             { path: 'course/:CourseId/lesson/:lessonId/lecture/view/:id', element: <LectureDetails /> },
+            { path: 'course/:CourseId/lesson/:lessonId/lecture/:lectureId', element: <Testcase /> },
+            { path: 'course/:CourseId/lesson/:lessonId/lecture/:lectureId/testcase/new', element: <TestcaseCreate /> },
+            { path: 'course/:CourseId/lesson/:lessonId/lecture/:lectureId/testcase/:id/edit', element: <TestcaseCreate /> },
+            { path: 'course/:CourseId/lesson/:lessonId/lecture/:lectureId/testcase/view/:id', element: <TestcaseDetails /> },
             { path: 'course/new', element: <CourseCreate /> },
             { path: 'course/:id/edit', element: <CourseCreate /> },
             { path: 'course/view/:id', element: <CourseDetails /> },
@@ -271,6 +275,10 @@ const CourseDetails = Loadable(lazy(() => import('../pages/Courses/CoursesDetail
 const Lecture = Loadable(lazy(() => import('../pages/Lectures/Lecture')));
 const LectureCreate = Loadable(lazy(() => import('../pages/Lectures/LectureCreate')));
 const LectureDetails = Loadable(lazy(() => import('../pages/Lectures/LectureDetails')));
+// TESTCASE
+const Testcase = Loadable(lazy(() => import('../pages/TestCase/testCase')));
+const TestcaseCreate = Loadable(lazy(() => import('../pages/TestCase/TestcaseCreate')));
+const TestcaseDetails = Loadable(lazy(() => import('../pages/TestCase/TestcaseDetails')));
 // LESSONS
 const Lesson = Loadable(lazy(() => import('../pages/Lessons/Lessons')));
 const LessonCreate = Loadable(lazy(() => import('../pages/Lessons/LessonsCreate')));

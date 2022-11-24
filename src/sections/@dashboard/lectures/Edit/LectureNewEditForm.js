@@ -20,7 +20,7 @@ import { fData } from '../../../../utils/formatNumber';
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // _mock
 import { countries } from '../../../../_mock';
-import { createLecture, getLecture,getLectures ,updateLecture } from '../../../../pages/Lectures/store/actions'
+import { createLecture, getLecture, getLectures, updateLecture } from '../../../../pages/Lectures/store/actions'
 // components
 import Label from '../../../../components/Label';
 // import LectureMcq from '../../../../pages/MCQ/LectureMcq'
@@ -48,19 +48,20 @@ export default function LectureNewEditForm({ isEdit }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [t, setT] = useState();
-  const { id,CourseId, lessonId} = useParams();
+  const { id, CourseId, lessonId } = useParams();
   const [checked, setChecked] = useState(true);
-  const { lecture: { lecture,lectures ,isLoading }, app: { masterdata } } = useSelector((state) => state);
+  const { lecture: { lecture, lectures, isLoading }, app: { masterdata } } = useSelector((state) => state);
   const Order = lectures && lectures.length > 0 ? Math.max(...lectures.map(item => item?.order + 1)) : 1;
-  const LectureTypes = masterdata && masterdata.LectureTypes ? masterdata.LectureTypes: []
-  useEffect(() => {
-    if(id){
+  const LectureTypes = masterdata && masterdata.LectureTypes ? masterdata.LectureTypes : [];
+  const LectureSubTypes = masterdata && masterdata.LectureSubTypes ? masterdata.LectureSubTypes : [];
+   useEffect(() => {
+    if (id) {
       dispatch(getLecture(id));
     }
-    if(lessonId){
+    if (lessonId) {
       dispatch(getLectures(lessonId));
     }
-    
+
   }, [dispatch]);
 
   const NewLectureSchema = Yup.object().shape({
@@ -88,7 +89,7 @@ export default function LectureNewEditForm({ isEdit }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [lecture]
   );
-  
+
 
   const methods = useForm({
     resolver: yupResolver(NewLectureSchema),
@@ -115,21 +116,21 @@ export default function LectureNewEditForm({ isEdit }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, lecture]);
 
-  const cb =() =>{
+  const cb = () => {
     reset();
     navigate(`/dashboard/course/${CourseId}/lesson/${lessonId}`)
   }
 
   const onSubmit = async () => {
     try {
-      const payload =defaultValues;
+      const payload = defaultValues;
       if (lecture) {
-        dispatch(updateLecture(lecture.id, payload,cb))
+        dispatch(updateLecture(lecture.id, payload, cb))
       } else {
-       
-        dispatch(createLecture(payload,cb));
-      } 
-      
+
+        dispatch(createLecture(payload, cb));
+      }
+
     } catch (error) {
       console.error(error);
     }
@@ -152,7 +153,7 @@ export default function LectureNewEditForm({ isEdit }) {
     setValue('subtype', String(subtype))
     defaultValues.subtype = subtype;
   };
-  
+
   const handleBody = (e) => {
     setValue('body', String(e))
     defaultValues.body = e;
@@ -166,7 +167,7 @@ export default function LectureNewEditForm({ isEdit }) {
     setChecked(active)
   };
   const setMCQOrder = (val) => {
-  
+
     setValue('mcq', val)
     defaultValues.mcq = val;
   };
@@ -183,18 +184,18 @@ export default function LectureNewEditForm({ isEdit }) {
               }}
             >
               <RHFTextField name="name" label="Lecture Name" onChange={(e) => handleName(e)} />
-             
+
               {defaultValues.type !== 'mcq' && <div>
                 <LabelStyle>Body</LabelStyle>
                 <RHFEditor simple name="body" onChange={(e) => handleBody(e)} />
-              </div> }
-              { defaultValues.type === 'MCQ'  && <McqList isLoading={isLoading} lecture={isEdit ? lecture: defaultValues } setMCQOrder={setMCQOrder} />}
-             
+              </div>}
+              {defaultValues.type === 'MCQ' && <McqList isLoading={isLoading} lecture={isEdit ? lecture : defaultValues} setMCQOrder={setMCQOrder} />}
+
 
             </Box>
           </Card>
         </Grid>
-      
+
 
         <Grid item xs={12} md={4}>
           <Card sx={{ p: 3 }}>
@@ -214,29 +215,25 @@ export default function LectureNewEditForm({ isEdit }) {
                     label="Type"
                     onChange={(e) => handleType(e)}
                   >{
-                    LectureTypes.map((item)=> <MenuItem key={item} value={item}>{capitalize(item)}</MenuItem>)
-                  }
+                      LectureTypes.map((item) => <MenuItem key={item} value={item}>{capitalize(item)}</MenuItem>)
+                    }
                   </Select>
                 </FormControl>
                 <FormControl sx={{ width: "100%" }}>
-                <InputLabel id="demo-simple-select-label">Sub Type</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={defaultValues.subtype}
-                  label="SubType"
-                  onChange={(e) => handleSubType(e)}
-                >
-                  <MenuItem value={'html'}>Html</MenuItem>
-                  <MenuItem value={'css'}>Css</MenuItem>
-                  <MenuItem value={'javascript'}>Javascript</MenuItem>
-                  <MenuItem value={'python'}>Python</MenuItem>
-                  <MenuItem value={'react'}>React</MenuItem>
-                  <MenuItem value={'express'}>Express</MenuItem>
-                  <MenuItem value={'mongodb'}>Mongodb</MenuItem>
-                </Select>
-              </FormControl>
-                 <FormGroup sx={{ marginLeft: '10px' }}>
+                  <InputLabel id="demo-simple-select-label">Sub Type</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={defaultValues.subtype}
+                    label="SubType"
+                    onChange={(e) => handleSubType(e)}
+                  >
+                    {
+                     LectureSubTypes.map((item) => <MenuItem key={item} value={item}>{capitalize(item)}</MenuItem>)
+                    }
+                    </Select>
+                </FormControl>
+                <FormGroup sx={{ marginLeft: '10px' }}>
                   <FormControlLabel
                     control={<Switch size="large" name='active' checked={checked} onChange={handleChange} />}
                     label="Active"
@@ -255,7 +252,7 @@ export default function LectureNewEditForm({ isEdit }) {
           </Card>
         </Grid>
       </Grid>
-     
+
     </FormProvider>
   );
 }

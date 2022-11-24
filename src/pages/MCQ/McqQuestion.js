@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "@emotion/styled";
 import PropTypes from 'prop-types';
-import { Paper, Typography, Box, Checkbox, Stack, OutlinedInput, MenuItem, IconButton, Button ,Alert} from '@mui/material';
+import { Paper, Typography, Box, Checkbox, Stack, OutlinedInput, MenuItem, IconButton, Button, Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from '../../redux/store';
@@ -90,7 +90,7 @@ function Quote({ option, setOption, index, error }) {
               />
 
             </Stack>
-            {error && <span style={{ color: "red" ,marginLeft:'60px' }}>{option.massage}</span>}
+            {error && <span style={{ color: "red", marginLeft: '60px' }}>{option.massage}</span>}
           </Paper>
         </div>
       )}
@@ -131,7 +131,7 @@ const initial = ['A', 'B', 'C', 'D'].map(k => {
     value: '',
     error: false,
     massage: '',
-    optionChecked:true,
+    optionChecked: true,
   };
 
   return custom;
@@ -168,12 +168,12 @@ function McqQuestion({ lectureId, mcq = defaultmcq, cb }) {
         item[att] = val;
         item.massage = '';
       } else if (att === 'value' && item.value === '') {
-        Error=false;
+        Error = false;
         item.massage = `${item.id} field is Required`
-         }
-      if (att === 'correct' ) {
-        Error=false;
-        item.optionChecked=false;
+      }
+      if (att === 'correct') {
+        Error = false;
+        item.optionChecked = false;
       }
       return item;
     });
@@ -181,14 +181,14 @@ function McqQuestion({ lectureId, mcq = defaultmcq, cb }) {
   }
 
   const onSave = () => {
-     setState({ options: [] })
+    setState({ options: [] })
     cb()
   }
   const save = () => {
     const op = state.options.filter((item) => item.correct).map(item => item.id)
     const options = state.options.map((item) => {
-      Error = item.value === '' ? true :item.optionChecked
-      Massage = item.value === '' && item.massage === '' ?'Please fill in all your choices':((item.optionChecked )&& (item.massage === '')) && 'please correct at least one option'||'';
+      Error = item.value === '' || question === '' ? true : item.optionChecked
+      Massage = item.value === '' && item.massage === '' ? 'Please fill in all your choices' : ((item.optionChecked) && (item.massage === '')) && 'please correct at least one option' || '';
       delete item.correct;
       return item;
     })
@@ -224,7 +224,7 @@ function McqQuestion({ lectureId, mcq = defaultmcq, cb }) {
             color: 'primary.dark'
           }}
         />
-         {Error && Massage !== '' ? <Alert severity="error">{Massage}</Alert>:question==='' &&<Alert severity="error">Question is required</Alert>||''}
+        {Error && Massage !== '' ? <Alert severity="error">{Massage}</Alert> : ((Error) && (question === '')) && <Alert severity="error">Question is required</Alert> || ''}
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="list">
             {provided => (
@@ -235,7 +235,7 @@ function McqQuestion({ lectureId, mcq = defaultmcq, cb }) {
             )}
           </Droppable>
         </DragDropContext>
-         <LoadingButton size="medium" variant="contained" loading={false} onClick={save}>
+        <LoadingButton size="medium" variant="contained" loading={false} onClick={save}>
           Save
         </LoadingButton>
 

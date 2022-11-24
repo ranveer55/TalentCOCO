@@ -51,8 +51,7 @@ export default function TestcaseTableRow({ CourseId, lessonId, row, selected, on
         </Typography>
       </TableCell>
 
-      <TableCell align="left">{input}</TableCell>
-      <TableCell align="left">{output}</TableCell>
+     
       <TableCell align="center">{order}</TableCell>
       <TableCell align="left">
         <Label

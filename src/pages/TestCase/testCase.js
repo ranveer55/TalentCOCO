@@ -1,6 +1,6 @@
 import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams, Link as RouterLink } from 'react-router-dom';
+import { useNavigate, useParams, Link as RouterLink, useLocation } from 'react-router-dom';
 // @mui
 import {
   Box,
@@ -23,6 +23,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import LinearProgress from '@mui/material/LinearProgress';
 
+
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getTestCases, deleteTestCase } from './store/actions';
@@ -36,6 +37,7 @@ import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import TestCaseNewEditForm from '../../sections/@dashboard/testcase/Edit/TestCaseNewEditForm';
 import {
   TableNoData,
   TableSkeleton,
@@ -46,40 +48,8 @@ import {
 // sections
 import { TestcaseTableRow, TestcaseTableToolbar } from '../../sections/@dashboard/testcase/testcase-list';
 
-// ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'input', label: 'Input', align: 'left' },
-  { id: 'output', label: 'Output', align: 'left' },
-  { id: 'order', label: 'Order', align: 'center' },
-  { id: 'active', label: 'Active', align: 'left' },
-  { id: '' },
-];
-
-// ----------------------------------------------------------------------
-
 export default function TestCase() {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable({
-    defaultOrderBy: 'createdAt',
-  });
+
 
   const { themeStretch } = useSettings();
 
@@ -95,6 +65,8 @@ export default function TestCase() {
   const [selectDeleteId, setselectDeleteId] = useState(null);
 
   const [filterName, setFilterName] = useState('');
+  const { pathname } = useLocation();
+  const isEdit = pathname.includes('edit');
 
   useEffect(() => {
     dispatch(getTestCases(lectureId));
@@ -107,62 +79,12 @@ export default function TestCase() {
   }, [testcases]);
 
 
-  const handleFilterName = (filterName) => {
-    setFilterName(filterName);
-    setPage(0);
-  };
-  const handleDeleteRow = (id) => {
-    setDeleteOpen(true)
-    setDeleteId(id)
-  };
-  const handleDeleteRows = (selected) => {
-    setDeleteOpen(true)
-    setselectDeleteId(selected)
-  };
-
-  const handleClose = () => {
-    setDeleteOpen(false)
-    setLoading(false)
-  };
-
-  const RemoveRow = () => {
-    let deleteRow = '';
-    setLoading(true)
-    setDeleteOpen(false)
-    if (deleteId) {
-      dispatch(deleteTestCase(deleteId));
-       deleteRow = tableData.filter((row) => row.id !== deleteId);
-    } else if (selectDeleteId) {
-      dispatch(deleteTestCase(selectDeleteId));
-       deleteRow = tableData.filter((row) => !selected.includes(row.id));
-    }
-    setSelected([]);
-    setTableData(deleteRow);
-    setLoading(false)
-   };
-
-  const handleEditRow = (id) => {
-     navigate(PATH_DASHBOARD.course.editTestcase(CourseId, lessonId,lectureId, id));
-  };
-  const handleViewRow = (id) => {
-      navigate(PATH_DASHBOARD.course.viewTestcase(CourseId, lessonId,lectureId, id));
-  };
-
-  const dataFiltered = applySortFilter({
-    tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-  });
-
-  const denseHeight = dense ? 60 : 80;
-
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   return (
-    <Page title="testcases: Test Case List">
+    <Page title="testcases: Test Case">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Test Case List"
+          heading="Test Case"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.course.root },
             {
@@ -182,149 +104,14 @@ export default function TestCase() {
             },
 
           ]}
-          action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              component={RouterLink}
-              to={PATH_DASHBOARD.course.newTestcase(CourseId, lessonId,lectureId)}
-            >
-              New TestCase
-            </Button>
-          }
+          
         />
 
         <Card>
-          <TestcaseTableToolbar filterName={filterName} onFilterName={handleFilterName} />
-
-          {testcases ? <Scrollbar>
-            <TableContainer sx={{ minWidth: 960, position: 'relative' }}>
-              {selected.length > 0 && (
-                <TableSelectedActions
-                  dense={dense}
-                  numSelected={selected.length}
-                  rowCount={tableData.length}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
-                  actions={
-                    <Tooltip title="Delete">
-                      <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                        <Iconify icon={'eva:trash-2-outline'} />
-                      </IconButton>
-                    </Tooltip>
-                  }
-                />
-              )}
-
-              <Table size={dense ? 'small' : 'medium'}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={selected.length}
-                  onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
-                />
-
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <TestcaseTableRow
-                          key={row.id}
-                          row={row}
-                          CourseId={CourseId}
-                          lessonId={lessonId}
-                          selected={selected.includes(row.id)}
-                          onSelectRow={() => onSelectRow(row.id)}
-                          onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={() => handleEditRow(row.id)}
-                          onViewRow={() => handleViewRow(row.id)}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-
-                  <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, tableData.length)} />
-
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Scrollbar> : <Typography variant="h6">{error}</Typography>}
-
-          <Box sx={{ position: 'relative' }}>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={dataFiltered.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={onChangePage}
-              onRowsPerPageChange={onChangeRowsPerPage}
-            />
-
-            <FormControlLabel
-              control={<Switch checked={dense} onChange={onChangeDense} />}
-              label="Dense"
-              sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
-            />
-          </Box>
-          <div>
-            <Dialog
-              open={open}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description" >
-              {loading === true ? <LinearProgress /> : <></>}
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  Are you sure you want to delete the Test Case?</DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button variant="contained" onClick={() => { handleClose() }} style={{ background: "Silver", height: "34px", width: "42px" }}>
-                  Cancel
-                </Button>
-                <Button variant="contained" color="primary" onClick={() => { RemoveRow() }} autoFocus >
-                  Ok
-                </Button>
-
-              </DialogActions>
-            </Dialog>
-          </div>
+        <TestCaseNewEditForm isEdit={isEdit}/>
+          
         </Card>
       </Container>
     </Page>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applySortFilter({ tableData, comparator, filterName }) {
-  const stabilizedThis = tableData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  tableData = stabilizedThis.map((el) => el[0]);
-
-  if (filterName) {
-    tableData = tableData.filter((testcase) => testcase.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
-  }
-
-  return tableData;
 }

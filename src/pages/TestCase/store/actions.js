@@ -28,12 +28,11 @@ export const deleteTestcases = (payload) => ({
 
 export function getTestCases(lectureId) {
    return async () => {
-    dispatch(getTestcasesSuccess([]));
+    dispatch(getTestcaseSuccess(null));
     dispatch(startLoading(true));
     try {
-      const response = await axios.get(`/test-cases/testcasesofLecture/${lectureId}`);
-      dispatch(getTestcasesSuccess(response.data.results));
-      dispatch(getTestcaseSuccess(null));
+      const {status, data} = await axios.get(`/test-cases/testcasesofLecture/${lectureId}`);
+      dispatch(getTestcaseSuccess(data));
     } catch (error) {
       dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }
@@ -69,12 +68,12 @@ export function createTestCase(payload,cb) {
 
 export function updateTestCase(id, payload,cb) {
   return async () => {
-    dispatch(startLoading());
+    dispatch(startLoading(true));
     try {
       const {data, status} = await axios.patch(`/test-cases/${id}`, payload);
       dispatch(setToast({severity:'success', message:'Test Case Updated', open:true}))
       cb();
-      dispatch(getTestcaseSuccess(null));
+      dispatch(startLoading(false));
     } catch (error) {
       dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import Editor from "@monaco-editor/react";
 import { useSnackbar } from 'notistack';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -47,8 +48,7 @@ export default function TestCaseNewEditForm({ isEdit }) {
   const [t, setT] = useState();
   const { id, CourseId, lessonId, lectureId } = useParams();
   const [checked, setChecked] = useState(true);
-  const { testcase: { testcase, testcases, isLoading }, app: { masterdata } } = useSelector((state) => state);
-  const Order = testcases && testcases.length > 0 ? Math.max(...testcases.map(item => item?.order + 1)) : 1;
+  const { testcase: { testcase,  isLoading }, app: { masterdata } } = useSelector((state) => state);
   useEffect(() => {
     if (id) {
       dispatch(getTestCase(id));
@@ -61,19 +61,17 @@ export default function TestCaseNewEditForm({ isEdit }) {
 
   const NewTestcaseSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').min(3),
-    input: Yup.string().required('Input is required'),
     lecture: Yup.string().required('Lecture is required'),
-    output: Yup.string().required('Output is required'),
-    order: Yup.number(),
+    test: Yup.string().required('Test Script is required'),
+    index: Yup.string().required('Index Script is required'),
     active: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
     () => ({
       name: testcase?.name || '',
-      input: testcase?.input || '',
-      order: testcase?.order || Order,
-      output: testcase?.output || '',
+      test: testcase?.test || '//write you test case here',
+      index: testcase?.index || '//write candidate index file',
       lecture: lectureId,
       active: testcase?.active || checked,
     }),
@@ -153,41 +151,80 @@ export default function TestCaseNewEditForm({ isEdit }) {
     setChecked(active)
   };
 
+  const handleEditorChange = (value, event) => {
+    setValue('index', value)
+    defaultValues.index = value;
+  }
+
+  const handleEditorChangeTest = (value, event) => {
+    setValue('test', value)
+    defaultValues.test = value;
+  }
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
           <Card sx={{ p: 3 }}>
-            <Box
-              sx={{
-                display: 'grid',
-                rowGap: 3,
-              }}
-            >
-              <RHFTextField name="name" label="TestCase Name" onChange={(e) => handleName(e)} />
-              <RHFTextField name="input" label="Input" onChange={(e) => handleInput(e)} />
-              <RHFTextField name="output" label="Output" onChange={(e) => handleOutput(e)} />
-              <FormGroup sx={{ marginLeft: '10px' }}>
-                <FormControlLabel
-                  control={<Switch size="large" name='active' checked={checked} onChange={handleChange} />}
-                  label="Active"
-                  labelPlacement="start"
-                  sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }}
+            <RHFTextField name="name" label="TestCase Name" onChange={(e) => handleName(e)} />
+           {!isLoading ?  <Grid container direction="row" spacing={3} sx={{mt:2}}>
+              <Grid item xs={12}>
+                <Typography variant='p'>Write your test case script</Typography>
+              </Grid>
+              <Grid item xs={12}>
+
+                <Editor
+                  height="300px"
+                  theme='vs-dark'
+                  defaultLanguage={defaultValues.language ?? 'javascript'}
+                  defaultValue={defaultValues.test}
+                  onChange={handleEditorChangeTest}
                 />
-              </FormGroup>
-              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  {!isEdit ? 'Create Test Case' : 'Save Changes'}
-                </LoadingButton>
-              </Stack>
-            </Box>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography>Write your index file for candidate </Typography>
+
+              </Grid>
+              <Grid item xs={12}>
+                <Editor
+                  height="300px"
+                  theme='vs-dark'
+                  defaultLanguage={defaultValues.language ?? 'javascript'}
+                  defaultValue={defaultValues.index}
+                  onChange={handleEditorChange}
+                />
+              </Grid>
+            </Grid>: null}
           </Card>
         </Grid>
 
 
-        <Grid item xs={12} md={5}> {}    </Grid>
+        <Grid item xs={12} md={5}>
+          <Box
+            sx={{
+              display: 'grid',
+              rowGap: 3,
+            }}
+          >
+
+            <FormGroup sx={{ marginLeft: '10px' }}>
+              <FormControlLabel
+                control={<Switch size="large" name='active' checked={checked} onChange={handleChange} />}
+                label="Active"
+                labelPlacement="start"
+                sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }}
+              />
+            </FormGroup>
+            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                {!isEdit ? 'Create Test Case' : 'Save Changes'}
+              </LoadingButton>
+            </Stack>
+          </Box>
+
+        </Grid>
       </Grid>
 
-    </FormProvider>
+    </FormProvider >
   );
 }

@@ -52,14 +52,14 @@ export function getMcq(id) {
   };
 }
 
-export function createMcq(payload,cb) {
+export function createMcq(payload,onSave) {
   return async () => {
     dispatch(startLoading());
     try {
       const {data, status} = await axios.post('/mcqs', payload);
       dispatch(setToast({severity:'success', message:'Mcq created', open:true}))
+      onSave();
       dispatch(getLecture(payload.lectureId))
-      cb();
       dispatch(getMcqSuccess(null));
     } catch (error) {
       dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))

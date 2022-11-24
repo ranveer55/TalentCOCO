@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "@emotion/styled";
 import PropTypes from 'prop-types';
-import { Paper, Typography, Box, Checkbox, Stack, OutlinedInput, MenuItem, IconButton, Button } from '@mui/material';
+import { Paper, Typography, Box, Checkbox, Stack, OutlinedInput, MenuItem, IconButton, Button, Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from '../../redux/store';
@@ -14,7 +14,7 @@ import { createMcq } from './store/actions'
 
 
 
-
+let Massage = '';
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
@@ -24,7 +24,7 @@ const reorder = (list, startIndex, endIndex) => {
 
 
 
-function Quote({ option, setOption, index }) {
+function Quote({ option, setOption, index, error }) {
   const renameRef = React.useRef(null);
   const { toggle: openConfirm, onOpen: onOpenConfirm, onClose: onCloseConfirm } = useToggle();
 
@@ -89,13 +89,14 @@ function Quote({ option, setOption, index }) {
               />
 
             </Stack>
+            {error && <span style={{ color: "red", marginLeft: '60px' }}>{option.massage}</span>}
           </Paper>
         </div>
       )}
     </Draggable>
   );
 }
-function QuoteLists({ options, setOption }) {
+function QuoteLists({ options, setOption, error }) {
   return options.map((option: QuoteType, index: number) => (
     <Paper
       sx={{
@@ -109,7 +110,7 @@ function QuoteLists({ options, setOption }) {
 
       }}
     >
-      <Quote option={option} index={index} key={option.id} setOption={setOption} />
+      <Quote option={option} index={index} key={option.id} setOption={setOption} error={error} />
     </Paper>
   ));
 }
@@ -126,7 +127,10 @@ const initial = ['A', 'B', 'C', 'D'].map(k => {
   const custom = {
     id: k,
     correct: false,
-    value: ''
+    value: '',
+    error: false,
+    massage: '',
+    optionChecked: true,
   };
 
   return custom;
@@ -135,8 +139,8 @@ const initial = ['A', 'B', 'C', 'D'].map(k => {
 function McqQuestion({ lectureId, mcq = defaultmcq, cb }) {
   const [state, setState] = useState({ options: initial });
   const [question, setQuestion] = useState(mcq.question);
+  const [error, setError] = useState(false);
   const [answer, setAnswer] = useState(mcq.answer);
-
   const { isLoading } = useSelector((s) => s.mcq)
   const dispatch = useDispatch()
 
@@ -162,6 +166,14 @@ function McqQuestion({ lectureId, mcq = defaultmcq, cb }) {
     const op = state.options.map((item) => {
       if (item.id === id) {
         item[att] = val;
+        item.massage = '';
+      } else if (att === 'value' && item.value === '') {
+        setError(false);
+        item.massage = `${item.id} field is Required`
+      }
+      if (att === 'correct') {
+        setError(false);
+        item.optionChecked = false;
       }
       return item;
     });
@@ -173,13 +185,26 @@ function McqQuestion({ lectureId, mcq = defaultmcq, cb }) {
     cb()
   }
   const save = () => {
+    let Error=false;
     const op = state.options.filter((item) => item.correct).map(item => item.id)
-    const options = state.options.map((item) => {
+    let options = state.options.map((item) => {
+      Error = item.value === '' || question === '' ? true : item.optionChecked
+      Massage = item.value === '' && item.massage === '' ? 'Please fill in all your choices' : ((item.optionChecked) && (item.massage === '')) && 'please correct at least one option' || '';
+      return item;
+    })
+    if (Error) {
+      setError(Error)
+    } else {
+      const payload = { question, answer: op, options, lectureId }
+      dispatch(createMcq(payload, onSave))
+     }
+     if(!Error){
+     options = state.options.map((item) => {
+      delete item.value
       delete item.correct;
       return item;
     })
-    const payload = { question, answer: op, options, lectureId }
-    dispatch(createMcq(payload, onSave))
+  }
   }
   return (
     <Paper
@@ -206,17 +231,17 @@ function McqQuestion({ lectureId, mcq = defaultmcq, cb }) {
             color: 'primary.dark'
           }}
         />
+        {error && Massage !== '' ? <Alert severity="error">{Massage}</Alert> : ((error) && (question === '')) && <Alert severity="error">Question is required</Alert> || ''}
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="list">
             {provided => (
               <div ref={provided.innerRef} {...provided.droppableProps} style={{ width: '100%' }}>
-                <QuoteList options={state.options} setOption={setOption} />
+                <QuoteList options={state.options} setOption={setOption} error={error} />
                 {provided.placeholder}
               </div>
             )}
           </Droppable>
         </DragDropContext>
-
         <LoadingButton size="medium" variant="contained" loading={false} onClick={save}>
           Save
         </LoadingButton>

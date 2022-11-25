@@ -13,7 +13,13 @@ import { styled } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
 import Paper from '@mui/material/Paper';
 import { Box, MobileStepper, Button, Snackbar, Card, Grid, Stack, Switch, Typography, FormControlLabel, FormGroup, InputLabel, Select, MenuItem, FormControl } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import LinearProgress from '@mui/material/LinearProgress';
 import { useDispatch, useSelector } from '../../../../redux/store';
+
 // utils
 import { fData } from '../../../../utils/formatNumber';
 // routes
@@ -26,8 +32,6 @@ import Label from '../../../../components/Label';
 // import LectureMcq from '../../../../pages/MCQ/LectureMcq'
 import McqList from '../../../../pages/MCQ/McqList'
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar, RHFEditor } from '../../../../components/hook-form';
-
-
 
 // ----------------------------------------------------------------------
 
@@ -50,6 +54,9 @@ export default function LectureNewEditForm({ isEdit }) {
   const [t, setT] = useState();
   const { id,CourseId, lessonId} = useParams();
   const [checked, setChecked] = useState(true);
+  const [type, setTypeChange] = useState('');
+  const [open, setTypeChangeOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { lecture: { lecture,lectures ,isLoading }, app: { masterdata } } = useSelector((state) => state);
   const Order = lectures && lectures.length > 0 ? Math.max(...lectures.map(item => item?.order + 1)) : 1;
   const LectureTypes = masterdata && masterdata.LectureTypes ? masterdata.LectureTypes: []
@@ -141,12 +148,23 @@ export default function LectureNewEditForm({ isEdit }) {
     setValue('name', String(e.target.value))
     defaultValues.name = name;
   };
+  const handleTypeChange = (e) => {
+    const typeChange = e.target.value;
+    setTypeChangeOpen(true)
+    setTypeChange(typeChange)
+      };
   const handleType = (e) => {
-    const type = e.target.value;
+    setLoading(true);
+    setTypeChangeOpen(false)
     setValue('type', String(type))
     defaultValues.type = type;
-    // setT(type)
+    setLoading(false);
+    };
+  const handleClose = () => {
+    setTypeChangeOpen(false)
+    setLoading(false)
   };
+
   const handleSubType = (e) => {
     const subtype = e.target.value;
     setValue('subtype', String(subtype))
@@ -212,7 +230,7 @@ export default function LectureNewEditForm({ isEdit }) {
                     id="demo-simple-select"
                     value={defaultValues.type}
                     label="Type"
-                    onChange={(e) => handleType(e)}
+                    onChange={(e) => handleTypeChange(e)}
                   >{
                     LectureTypes.map((item)=> <MenuItem key={item} value={item}>{capitalize(item)}</MenuItem>)
                   }
@@ -255,7 +273,27 @@ export default function LectureNewEditForm({ isEdit }) {
           </Card>
         </Grid>
       </Grid>
-     
+      <div>
+            <Dialog
+              open={open}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description" >
+              {loading === true ? <LinearProgress /> : <></>}
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Are you sure you want to Change Type?</DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button variant="contained" onClick={() => { handleClose() }} style={{ background: "Silver", height: "34px", width: "42px" }}>
+                  Cancel
+                </Button>
+                <Button variant="contained" color="primary" onClick={() => { handleType() }} autoFocus >
+                  Ok
+                </Button>
+
+              </DialogActions>
+            </Dialog>
+          </div>
     </FormProvider>
   );
 }

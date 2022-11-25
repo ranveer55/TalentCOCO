@@ -65,7 +65,7 @@ export default function LectureTableRow({ CourseId, lessonId, row, selected, onE
       {type === 'exercise' ?<TableCell align="center"><Button variant="contained"
         onClick={() => {
           onShowRow();
-        }}>Detail</Button></TableCell>:<TableCell >{}</TableCell >}
+        }}>View</Button></TableCell>:<TableCell >{}</TableCell >}
       <TableCell align="center">
         <TableMoreMenu
           open={openMenu}

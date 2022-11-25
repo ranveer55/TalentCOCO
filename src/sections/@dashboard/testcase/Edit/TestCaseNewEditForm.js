@@ -166,12 +166,18 @@ export default function TestCaseNewEditForm({ isEdit }) {
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
           <Card sx={{ p: 3 }}>
+          <Box
+              sx={{
+                display: 'grid',
+                rowGap: 3,
+              }}
+            >
             <RHFTextField name="name" label="TestCase Name" onChange={(e) => handleName(e)} />
            {!isLoading ?  <Grid container direction="row" spacing={3} sx={{mt:2}}>
               <Grid item xs={12}>
                 <Typography variant='p'>Write your test case script</Typography>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} >
 
                 <Editor
                   height="300px"
@@ -195,19 +201,20 @@ export default function TestCaseNewEditForm({ isEdit }) {
                 />
               </Grid>
             </Grid>: null}
+            </Box>
           </Card>
         </Grid>
 
 
         <Grid item xs={12} md={5}>
+        <Card sx={{ p: 3 }}>
           <Box
             sx={{
               display: 'grid',
               rowGap: 3,
             }}
           >
-
-            <FormGroup sx={{ marginLeft: '10px' }}>
+        <FormGroup sx={{ marginLeft: '10px' }}>
               <FormControlLabel
                 control={<Switch size="large" name='active' checked={checked} onChange={handleChange} />}
                 label="Active"
@@ -217,11 +224,11 @@ export default function TestCaseNewEditForm({ isEdit }) {
             </FormGroup>
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                {!isEdit ? 'Create Test Case' : 'Save Changes'}
+                Save Changes
               </LoadingButton>
             </Stack>
           </Box>
-
+          </Card>
         </Grid>
       </Grid>
 

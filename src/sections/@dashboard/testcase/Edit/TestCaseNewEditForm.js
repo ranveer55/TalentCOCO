@@ -63,6 +63,7 @@ export default function TestCaseNewEditForm({ isEdit }) {
     name: Yup.string().required('Name is required').min(3),
     lecture: Yup.string().required('Lecture is required'),
     test: Yup.string().required('Test Script is required'),
+    body: Yup.string().required('Task Description is required'),
     index: Yup.string().required('Index Script is required'),
     active: Yup.boolean(),
   });
@@ -72,6 +73,7 @@ export default function TestCaseNewEditForm({ isEdit }) {
       name: testcase?.name || '',
       test: testcase?.test || '//write you test case here',
       index: testcase?.index || '//write candidate index file',
+      body: testcase?.body || 'Task Description',
       lecture: lectureId,
       active: testcase?.active || checked,
     }),
@@ -160,6 +162,11 @@ export default function TestCaseNewEditForm({ isEdit }) {
     setValue('test', value)
     defaultValues.test = value;
   }
+  const handleBody = (e) => {
+    setValue('body', String(e))
+    defaultValues.body = e;
+
+  };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -173,6 +180,9 @@ export default function TestCaseNewEditForm({ isEdit }) {
               }}
             >
             <RHFTextField name="name" label="TestCase Name" onChange={(e) => handleName(e)} />
+                <LabelStyle>Task Description</LabelStyle>
+                <RHFEditor simple name="body" onChange={(e) => handleBody(e)} />
+             
            {!isLoading ?  <Grid container direction="row" spacing={3} sx={{mt:2}}>
               <Grid item xs={12}>
                 <Typography variant='p'>Write your test case script</Typography>

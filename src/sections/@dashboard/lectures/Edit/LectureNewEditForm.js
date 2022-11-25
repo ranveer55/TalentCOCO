@@ -58,6 +58,7 @@ export default function LectureNewEditForm({ isEdit }) {
   const [open, setTypeChangeOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { lecture: { lecture,lectures ,isLoading }, app: { masterdata } } = useSelector((state) => state);
+  const Order = lectures && lectures.length > 0 ? Math.max(...lectures.map(item => item?.order + 1)) : 1;
   const LectureTypes = masterdata && masterdata.LectureTypes ? masterdata.LectureTypes : [];
   const LectureSubTypes = masterdata && masterdata.LectureSubTypes ? masterdata.LectureSubTypes : [];
    useEffect(() => {

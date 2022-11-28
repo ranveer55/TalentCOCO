@@ -31,7 +31,7 @@ export function getCompanies() {
     dispatch(startLoading(true));
     try {
       const response = await axios.get('/companies');
-      dispatch(getCompaniesSuccess(response.data.results));
+      dispatch(getCompaniesSuccess(response.data));
     } catch (error) {
       dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }

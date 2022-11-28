@@ -53,6 +53,7 @@ const TABLE_HEAD = [
   { id: 'email', label: 'Email', align: 'left' },
   { id: 'role', label: 'Role', align: 'left' },
   { id: 'isEmailVerified', label: 'Verified', align: 'center' },
+  { id: 'btn', label: 'Report View', align: 'center' },
   { id: 'action', label: 'Action', align: 'right' },
 ];
 
@@ -93,14 +94,13 @@ export default function List() {
   const [deleteId, setDeleteId] = useState(null);
   const [selectDeleteId, setselectDeleteId] = useState(null);
   const [filterName, setFilterName] = useState('');
-
   useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
 
   useEffect(() => {
-    if (users.length) {
-      setTableData(users);
+    if (users.length !== 0 ) {
+      setTableData(users?.results);
     }
   }, [users]);
 

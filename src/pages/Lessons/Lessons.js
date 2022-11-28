@@ -52,7 +52,8 @@ const TABLE_HEAD = [
   { id: 'description', label: 'Description', align: 'left' },
   { id: 'order', label: 'Order', align: 'center' },
   { id: 'active', label: 'Active', align: 'left' },
-  { id: 'btn', label: 'View Lecture', align: 'left' },
+  { id: 'btn', label: 'Lecture View', align: 'left' },
+  { id: 'btn1', label: 'Report View', align: 'left' },
   { id: '' },
 ];
 
@@ -100,7 +101,9 @@ export default function Lesson() {
 
 
   useEffect(() => {
-    setTableData(lessons);
+    if (lessons.length !== 0 ) {
+      setTableData(lessons?.results);
+    }
   }, [lessons]);
 
 

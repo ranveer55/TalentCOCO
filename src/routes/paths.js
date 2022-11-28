@@ -72,6 +72,10 @@ export const PATH_DASHBOARD = {
     view: (id) => path(ROOTS_DASHBOARD, `/users/${id}`),
     edit: (id) => path(ROOTS_DASHBOARD, `/users/${id}/edit`),
   },
+  report: {
+    root: path(ROOTS_DASHBOARD, '/report'),
+    list:path(ROOTS_DASHBOARD, `/report`),
+    },
   companies: {
     root: path(ROOTS_DASHBOARD, '/companies'),
     list: path(ROOTS_DASHBOARD, '/companies'),

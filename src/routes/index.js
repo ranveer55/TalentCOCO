@@ -83,9 +83,7 @@ export default function Router() {
           ],
         },
         {
-       
           children: [
-            
             { path: 'users', element: <User /> },
             { path: 'users/new', element: <UserCreate /> },
             { path: 'users/:id/edit', element: <UserCreate /> },
@@ -119,6 +117,11 @@ export default function Router() {
             { path: 'course/:id/edit', element: <CourseCreate /> },
             { path: 'course/view/:id', element: <CourseDetails /> },
           ],
+        },
+        {
+          children: [
+            { path: `report`, element: <Report /> },
+           ],
         },
         {
           path: 'lectures',
@@ -267,6 +270,8 @@ const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/Ecommer
 const User = Loadable(lazy(() => import('../pages/Users/List')));
 const UserCreate = Loadable(lazy(() => import('../pages/Users/UsersCreate')));
 const UserDetails = Loadable(lazy(() => import('../pages/Users/UsersDetails')));
+// REPORT
+const Report = Loadable(lazy(() => import('../pages/Report/Report')));
 // COURSE
 const Course = Loadable(lazy(() => import('../pages/Courses/Courses')));
 const CourseCreate = Loadable(lazy(() => import('../pages/Courses/CoursesCreate')));

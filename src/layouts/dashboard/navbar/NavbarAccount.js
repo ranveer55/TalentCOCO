@@ -33,7 +33,7 @@ export default function NavbarAccount({ isCollapse }) {
   const { user } = useAuth();
 
   return (
-    <Link underline="none" color="inherit" component={RouterLink} to={PATH_DASHBOARD.user.account}>
+    <Link underline="none" color="inherit" component={RouterLink} to={PATH_DASHBOARD.root}>
       <RootStyle
         sx={{
           ...(isCollapse && {
@@ -57,12 +57,9 @@ export default function NavbarAccount({ isCollapse }) {
           }}
         >
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {user?.name}
           </Typography>
-          <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
-            {user?.role}
-          </Typography>
-        </Box>
+           </Box>
       </RootStyle>
     </Link>
   );

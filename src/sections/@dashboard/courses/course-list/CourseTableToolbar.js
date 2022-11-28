@@ -13,7 +13,7 @@ CourseTableToolbar.propTypes = {
 
 export default function CourseTableToolbar({ filterName, onFilterName }) {
       return (
-        <Stack direction="row" alignCourses="center" justifyContent="space-between" sx={{ py: 2.5, px: 3 }}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ py: 2.5, px: 3 }}>
             <TextField
                 value={filterName}
                 onChange={(event) => onFilterName(event.target.value)}

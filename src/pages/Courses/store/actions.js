@@ -31,7 +31,7 @@ export function getCourses() {
       dispatch(startLoading(true));
       try {
         const response = await axios.get('/course');
-         dispatch(getCoursesSuccess(response.data.results));
+         dispatch(getCoursesSuccess(response.data));
         } catch (error) {
         dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
       }

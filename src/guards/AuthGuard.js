@@ -15,12 +15,13 @@ AuthGuard.propTypes = {
 };
 
 export default function AuthGuard({ children }) {
-  const {isInitialized } = useAuth();
-  const  isAuthenticated=true
+  const { isAuthenticated, isInitialized } = useAuth();
+
   const { pathname } = useLocation();
 
   const [requestedLocation, setRequestedLocation] = useState(null);
-   if (!isInitialized) {
+
+  if (!isInitialized) {
     return <LoadingScreen />;
   }
 

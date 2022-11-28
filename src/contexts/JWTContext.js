@@ -7,8 +7,8 @@ import { isValidToken, setSession } from '../utils/jwt';
 // ----------------------------------------------------------------------
 
 const initialState = {
-  isAuthenticated: true,
-  isInitialized: true,
+  isAuthenticated: false,
+  isInitialized: false,
   user: null,
 };
 
@@ -24,7 +24,8 @@ const handlers = {
   },
   LOGIN: (state, action) => {
     const { user } = action.payload;
-     return {
+
+    return {
       ...state,
       isAuthenticated: true,
       user,
@@ -71,10 +72,10 @@ function AuthProvider({ children }) {
         const accessToken = localStorage.getItem('accessToken');
 
         if (accessToken && isValidToken(accessToken)) {
-             setSession(accessToken);
+          setSession(accessToken);
 
-          const response = await axios.get('/users/my-account');
-            const user  = response.data;
+          const response = await axios.get('/account/my-account');
+          const user  = response.data;
 
           dispatch({
             type: 'INITIALIZE',
@@ -105,16 +106,16 @@ function AuthProvider({ children }) {
     };
 
     initialize();
-  }, []);  
+  }, []);
 
   const login = async (email, password) => {
-    const response = await axios.post('/auth/login', {
+    const response = await axios.post('auth/login', {
       email,
       password,
     });
-    const { tokens, user } = response.data;
-  
-    setSession(tokens.access.token);
+    const { tokens:{access:{token}}, user } = response.data;
+
+    setSession(token);
 
     dispatch({
       type: 'LOGIN',
@@ -124,15 +125,17 @@ function AuthProvider({ children }) {
     });
   };
 
-  const register = async (email, password, name) => {
+  const register = async (email, password, firstName, lastName) => {
     const response = await axios.post('/auth/register', {
       email,
       password,
-      name,
-     });
-     const { tokens, user } = response.data;
-  
-    localStorage.setItem('accessToken', tokens.access.token);
+      firstName,
+      lastName,
+    });
+    const { tokens:{access:{token}}, user } = response.data;
+
+
+    localStorage.setItem('accessToken', token);
 
     dispatch({
       type: 'REGISTER',
@@ -144,6 +147,7 @@ function AuthProvider({ children }) {
 
   const logout = async () => {
     setSession(null);
+    localStorage.clear();
     dispatch({ type: 'LOGOUT' });
   };
 

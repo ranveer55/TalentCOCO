@@ -31,7 +31,7 @@ export function getUsers() {
     dispatch(startLoading(true));
     try {
       const response = await axios.get('/users');
-      dispatch(getUsersSuccess(response.data.results));
+       dispatch(getUsersSuccess(response.data));
     } catch (error) {
       dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }

@@ -31,6 +31,17 @@ const navConfig = [
   {
     subheader: 'management',
     items: [
+       {
+        title: 'users',
+        path: PATH_DASHBOARD.users.root,
+        icon: ICONS.user,
+        children: [
+          { title: 'list Users', path: PATH_DASHBOARD.users.root },
+          { title: 'create Users', path: PATH_DASHBOARD.users.new },
+          ],
+      },
+     // COPMANIES
+
       {
         title: 'companies',
         path: PATH_DASHBOARD.companies.root,
@@ -40,17 +51,6 @@ const navConfig = [
           { title: 'create Companies', path: PATH_DASHBOARD.companies.new },
           ],
       },
-      // USERS
-      {
-        title: 'users',
-        path: PATH_DASHBOARD.users.root,
-        icon: ICONS.user,
-        children: [
-          { title: 'list Users', path: PATH_DASHBOARD.users.root },
-          { title: 'create Users', path: PATH_DASHBOARD.users.new },
-          ],
-      },
-
       // COURSES
       {
         title: 'courses',
@@ -61,7 +61,16 @@ const navConfig = [
           { title: 'create Courses', path: PATH_DASHBOARD.course.new },
           ],
       },
-     
+      // REPORT
+      {
+        title: 'report',
+        path: PATH_DASHBOARD.report.root,
+        icon: ICONS.cart,
+        children: [
+          { title: 'Report', path: PATH_DASHBOARD.report.root },
+           ],
+      },
+
     ],
   },
 

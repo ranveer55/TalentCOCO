@@ -28,7 +28,7 @@ export function getLessons(id) {
     dispatch(startLoading(true));
     try {
       const response = await axios.get(`/lesson/lessonofCourse/${id}`);
-      dispatch(getLessonsSuccess(response.data.results));
+      dispatch(getLessonsSuccess(response.data));
       } catch (error) {
       dispatch(setToast({ severity: 'error', message: error.message ? error.message : 'Something went wrong', open: true }))
     }

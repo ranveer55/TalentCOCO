@@ -18,7 +18,7 @@ const RatingStyle = styled(Rating)(({ theme }) => ({
 const GridStyle = styled(Grid)(({ theme }) => ({
   padding: theme.spacing(3),
   display: 'flex',
-  alignCourses: 'center',
+  alignItems: 'center',
   flexDirection: 'column',
   justifyContent: 'center',
   '&:nth-of-type(2)': {

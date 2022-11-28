@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Checkmark } from 'react-checkmark'
+import { useNavigate } from 'react-router-dom';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
+import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem,Button } from '@mui/material';
 // components
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
@@ -21,9 +22,9 @@ CompanyTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function CompanyTableRow({ row, selected, onEditRow,onViewRow, onSelectRow, onDeleteRow }) {
+export default function CompanyTableRow({ row,selected, onEditRow,onViewRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
-
+  const navigate = useNavigate();
   const { name, poster, description,courses ,active} = row;
   const avatarUrl =IMAGE_PATH+poster;
 
@@ -36,6 +37,9 @@ export default function CompanyTableRow({ row, selected, onEditRow,onViewRow, on
   const handleCloseMenu = () => {
     setOpenMenuActions(null);
   };
+  const Reports = (id) => {
+    navigate(`/dashboard/report?company=${id}`)
+ };
 
   return (
     <TableRow hover selected={selected}>
@@ -59,6 +63,15 @@ export default function CompanyTableRow({ row, selected, onEditRow,onViewRow, on
           {active===true?<Checkmark size='small'/>:<span style={{color:"red"}}>x</span>}
         </Label>
       </TableCell>
+      <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+      <Button
+            variant="contained"
+            onClick={()=>{Reports(row.id)}}
+           >
+          Report View
+          </Button>
+      </TableCell>
+
       <TableCell align="right">
         <TableMoreMenu
           open={openMenu}

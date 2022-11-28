@@ -51,6 +51,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'description',label: 'Description', align: 'left' },
   { id: 'active', label: 'Active', align: 'left' },
+  { id: 'btn', label: 'Report View', align: 'center' },
   {id:''},
   ];
 
@@ -97,8 +98,8 @@ export default function List() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (companies.length) {
-      setTableData(companies);
+    if (companies.length !== 0 ) {
+      setTableData(companies?.results);
     }
   }, [companies]);
 
@@ -254,7 +255,7 @@ export default function List() {
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
               count={dataFiltered.length}
-              rowsPerPage={rowsPerPage}
+              rowsPerPage={companies.limit}
               page={page}
               onPageChange={onChangePage}
               onRowsPerPageChange={onChangeRowsPerPage}

@@ -22,7 +22,7 @@ LectureTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function LectureTableRow({ CourseId, lessonId, row, selected, onEditRow, onViewRow, onSelectRow, onDeleteRow }) {
+export default function LectureTableRow({ CourseId,lessonId, row, selected, onEditRow, onViewRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
   const navigate = useNavigate();
   const { id, name,subtype, avatarUrl, description, type, isVerified, order, level, active } = row;
@@ -38,6 +38,10 @@ export default function LectureTableRow({ CourseId, lessonId, row, selected, onE
   const onShowRow = () => {
     navigate(PATH_DASHBOARD.course.testcases(CourseId, lessonId, lectureId));
   };
+  const Reports = (id) => {
+     navigate(`/dashboard/report?lecture=${id}`)
+ };
+
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
@@ -65,7 +69,16 @@ export default function LectureTableRow({ CourseId, lessonId, row, selected, onE
       {type === 'exercise' ?<TableCell align="center"><Button variant="contained"
         onClick={() => {
           onShowRow();
-        }}>View</Button></TableCell>:<TableCell >{}</TableCell >}
+        }}>TestCase View </Button></TableCell>:<TableCell >{}</TableCell >}
+         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+      <Button
+            variant="contained"
+            onClick={()=>{Reports(row.id)}}
+            >
+          Report View
+          </Button>
+      </TableCell>
+
       <TableCell align="center">
         <TableMoreMenu
           open={openMenu}

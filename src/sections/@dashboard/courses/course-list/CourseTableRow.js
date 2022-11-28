@@ -26,10 +26,10 @@ CourseTableRow.propTypes = {
   onShowRow: PropTypes.func,
 };
 
-export default function CourseTableRow({ row, selected, onEditRow, onViewRow, onSelectRow, onDeleteRow }) {
+export default function CourseTableRow({ row,selected, onEditRow, onViewRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { id, name,description, hours, poster, totalLessons,language, level, active } = row;
+  const { id, name, description, hours, poster, totalLessons, language, level, active } = row;
   const [openMenu, setOpenMenuActions] = useState(null);
   const CourseId = id
   const handleOpenMenu = (event) => {
@@ -41,6 +41,9 @@ export default function CourseTableRow({ row, selected, onEditRow, onViewRow, on
   };
   const onShowRow = (CourseId) => {
     navigate(PATH_DASHBOARD.course.lesson(paramCase(CourseId)));
+  };
+  const Reports = (id) => {
+     navigate(`/dashboard/report?course=${id}`)
   };
 
   return (
@@ -70,7 +73,16 @@ export default function CourseTableRow({ row, selected, onEditRow, onViewRow, on
       <TableCell align="left"><Button variant="contained"
         onClick={() => {
           onShowRow(id);
-        }}>Detail</Button></TableCell>
+        }}>Lesson View</Button></TableCell>
+      <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        <Button
+          variant="contained"
+          onClick={() => { Reports(row.id) }}
+        >
+          Report View
+        </Button>
+      </TableCell>
+
       <TableCell align="right">
         <TableMoreMenu
           open={openMenu}

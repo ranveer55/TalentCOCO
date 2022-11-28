@@ -85,7 +85,7 @@ export default function LectureNewEditForm({ isEdit }) {
   const defaultValues = useMemo(
     () => ({
       name: lecture?.name || '',
-      type: lecture?.type || 'text',
+      type: isEdit ? lecture?.type ||'' : 'text',
       subtype: lecture?.subtype || 'react',
       order: lecture?.order || Order,
       body: lecture?.body || '',
@@ -208,13 +208,9 @@ export default function LectureNewEditForm({ isEdit }) {
                 <RHFEditor simple name="body" onChange={(e) => handleBody(e)} />
               </div>}
               {defaultValues.type === 'MCQ' && <McqList isLoading={isLoading} lecture={isEdit ? lecture : defaultValues} setMCQOrder={setMCQOrder} />}
-
-
             </Box>
           </Card>
         </Grid>
-
-
         <Grid item xs={12} md={4}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
@@ -270,6 +266,27 @@ export default function LectureNewEditForm({ isEdit }) {
           </Card>
         </Grid>
       </Grid>
+      <div>
+            <Dialog
+              open={open}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description" >
+              {loading === true ? <LinearProgress /> : <></>}
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Are you sure you want to Change MCQ?</DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button variant="contained" onClick={() => { handleClose() }} style={{ background: "Silver", height: "34px", width: "42px" }}>
+                  Cancel
+                </Button>
+                <Button variant="contained" color="primary" onClick={() => { handleType() }} autoFocus >
+                  Ok
+                </Button>
+
+              </DialogActions>
+            </Dialog>
+          </div>
     </FormProvider>
   );
 }

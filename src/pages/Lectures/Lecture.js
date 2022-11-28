@@ -55,7 +55,8 @@ const TABLE_HEAD = [
   { id: 'subtype', label: 'SubType', align: 'left' },
   { id: 'order', label: 'Order', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
-  { id: 'btn', label: 'View Test Case ', align: 'center' },
+  { id: 'btn', label: 'Test Case View', align: 'center' },
+  { id: 'btn1', label: 'Report View', align: 'center' },
   { id: '' },
 ];
 
@@ -103,8 +104,8 @@ export default function Lecture() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (lectures.length) {
-      setTableData(lectures);
+    if (lectures.length !== 0 ) {
+      setTableData(lectures?.results);
     }
   }, [lectures]);
 
@@ -166,7 +167,7 @@ export default function Lecture() {
         <HeaderBreadcrumbs
           heading="Lecture List"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.course.root },
+            { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Course',
               href: PATH_DASHBOARD.course.root,

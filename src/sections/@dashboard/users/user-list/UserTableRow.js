@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
+import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem,Button } from '@mui/material';
+// routes
+import { PATH_DASHBOARD } from '../../../../routes/paths';
 // components
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
@@ -19,9 +22,9 @@ UserTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function UserTableRow({ row, selected, onEditRow,onViewRow, onSelectRow, onDeleteRow }) {
+export default function UserTableRow({ row,selected, onEditRow,onViewRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
-
+  const navigate = useNavigate();
   const { name, avatarUrl, company, role, isVerified, status,email } = row;
 
   const [openMenu, setOpenMenuActions] = useState(null);
@@ -32,6 +35,9 @@ export default function UserTableRow({ row, selected, onEditRow,onViewRow, onSel
 
   const handleCloseMenu = () => {
     setOpenMenuActions(null);
+  };
+  const Reports = (id) => {
+    navigate(`/dashboard/report?user=${id}`)
   };
 
   return (
@@ -53,7 +59,6 @@ export default function UserTableRow({ row, selected, onEditRow,onViewRow, onSel
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
         {role}
       </TableCell>
-
       <TableCell align="center">
         <Iconify
           icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
@@ -65,8 +70,14 @@ export default function UserTableRow({ row, selected, onEditRow,onViewRow, onSel
           }}
         />
       </TableCell>
-
-      
+      <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+      <Button
+           variant="contained"
+            onClick={()=>{Reports(row.id)}}
+          >
+          Report View
+          </Button>
+      </TableCell>
       <TableCell align="right">
         <TableMoreMenu
           open={openMenu}

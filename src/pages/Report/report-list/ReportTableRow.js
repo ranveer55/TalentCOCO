@@ -4,13 +4,15 @@ import { Checkmark } from 'react-checkmark'
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem,Button } from '@mui/material';
+import {  Checkbox, TableRow, TableCell, Typography, MenuItem,Button } from '@mui/material';
 // components
 import { fDateTimeSuffix } from '../../../utils/formatTime';
 import Label from '../../../components/Label';
 import Iconify from '../../../components/Iconify';
 import { TableMoreMenu } from '../../../components/table';
+import Avatar from '../../../components/Avatar';
 import {IMAGE_PATH} from '../../../config'
+
 
 // ----------------------------------------------------------------------
 
@@ -35,10 +37,9 @@ export default function ReportTableRow({ row,selected, onEditRow,onViewRow, onSe
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
-
       <TableCell >
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={row?.company?.name} src={row?.company?.poster} sx={{ mr: 2 }} />
+        <Avatar alt={row?.company?.name} src={IMAGE_PATH+row?.company?.poster} sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>                    
           {row?.company?.name}
         </Typography>
@@ -46,7 +47,7 @@ export default function ReportTableRow({ row,selected, onEditRow,onViewRow, onSe
       </TableCell>
       <TableCell>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={row?.user?.name} src={row?.user?.poster} sx={{ mr: 2 }} />
+        <Avatar alt={row?.user?.name} src={IMAGE_PATH+row?.user?.poster} sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>                    
           {row?.user?.name}
         </Typography>
@@ -54,7 +55,7 @@ export default function ReportTableRow({ row,selected, onEditRow,onViewRow, onSe
       </TableCell>
       <TableCell>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={row?.course?.name} src={row?.course?.poster} sx={{ mr: 2 }} />
+        <Avatar alt={row?.course?.name} src={IMAGE_PATH+row?.course?.poster} sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>                    
           {row?.course?.name}
         </Typography>

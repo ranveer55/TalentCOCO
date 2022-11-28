@@ -5,9 +5,8 @@ import { Avatar as MUIAvatar } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-const Avatar = forwardRef(({ color = 'default', children, sx, ...other }, ref) => {
+const Avatar = forwardRef(({ color = 'default', children, sx,src, ...other }, ref) => {
   const theme = useTheme();
-
   if (color === 'default') {
     return (
       <MUIAvatar ref={ref} sx={sx} {...other}>
@@ -26,6 +25,7 @@ const Avatar = forwardRef(({ color = 'default', children, sx, ...other }, ref) =
         ...sx,
       }}
       {...other}
+      src={src}
     >
       {children}
     </MUIAvatar>

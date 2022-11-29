@@ -70,7 +70,7 @@ export default function LectureTableRow({ CourseId,lessonId, row, selected, onEd
         onClick={() => {
           onShowRow();
         }}>TestCase View </Button></TableCell>:<TableCell >{}</TableCell >}
-         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+         <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
       <Button
             variant="contained"
             onClick={()=>{Reports(row.id)}}

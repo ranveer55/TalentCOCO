@@ -131,7 +131,7 @@ useEffect(() => {
         <HeaderBreadcrumbs
           heading="Report List"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.course.root },
+            { name: 'Dashboard', href: PATH_DASHBOARD.root },
           {
               name: 'Report',
             },
@@ -236,7 +236,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
   tableData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    tableData = tableData.filter((lesson) => lesson.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+    tableData = tableData.filter((data) => data?.company?.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
   }
 
   return tableData;

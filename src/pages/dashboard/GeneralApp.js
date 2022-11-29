@@ -28,7 +28,6 @@ import { SeoIllustration } from '../../assets';
 
 export default function GeneralApp() {
   const { user } = useAuth();
-  console.log("user",user)
   const theme = useTheme();
 
   const { themeStretch } = useSettings();

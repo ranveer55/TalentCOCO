@@ -26,7 +26,7 @@ import { createTestCase, getTestCase, getTestCases, updateTestCase } from '../..
 import Label from '../../../../components/Label';
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar, RHFEditor } from '../../../../components/hook-form';
 
-
+import TestCaseFiles from './TestCaseFiles'
 
 // ----------------------------------------------------------------------
 
@@ -39,16 +39,40 @@ TestCaseNewEditForm.propTypes = {
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
   color: theme.palette.text.secondary,
-  marginBottom: theme.spacing(1),
+  marginBottom: theme.spacing(0),
 }));
+const newFile = { name: 'index.js', 'code': '//your code' };
 
 export default function TestCaseNewEditForm({ isEdit }) {
+  const [files, setFile] = useState({
+    Student: [newFile],
+    Solution: [newFile],
+    Evaluation: [newFile],
+    currentFileIndex: 0,
+    currentFileType: 'Student',
+    index: 1
+  })
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [t, setT] = useState();
   const { id, CourseId, lessonId, lectureId } = useParams();
   const [checked, setChecked] = useState(true);
-  const { testcase: { testcase,  isLoading }, app: { masterdata } } = useSelector((state) => state);
+  const { testcase: { testcase, isLoading }, app: { masterdata } } = useSelector((state) => state);
+  
+  useEffect(() =>{
+    setFile(
+      {
+        Student: testcase?.index ?? [newFile],
+        Solution: testcase?.solution ?? [newFile],
+        Evaluation: testcase?.test ?? [newFile],
+        currentFileIndex: 0,
+        currentFileType: 'Student',
+        index: 1
+      }
+    )
+
+  },[testcase])
+
   useEffect(() => {
     if (id) {
       dispatch(getTestCase(id));
@@ -62,17 +86,15 @@ export default function TestCaseNewEditForm({ isEdit }) {
   const NewTestcaseSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').min(3),
     lecture: Yup.string().required('Lecture is required'),
-    test: Yup.string().required('Test Script is required'),
-    body: Yup.string().required('Task Description is required'),
-    index: Yup.string().required('Index Script is required'),
     active: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
     () => ({
       name: testcase?.name || '',
-      test: testcase?.test || '//write you test case here',
-      index: testcase?.index || '//write candidate index file',
+      test: testcase?.test || [],
+      index: testcase?.index || [],
+      solution: testcase?.solution || [],
       body: testcase?.body || 'Task Description',
       lecture: lectureId,
       active: testcase?.active || checked,
@@ -80,6 +102,8 @@ export default function TestCaseNewEditForm({ isEdit }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [testcase]
   );
+
+  
 
 
   const methods = useForm({
@@ -115,6 +139,9 @@ export default function TestCaseNewEditForm({ isEdit }) {
   const onSubmit = async () => {
     try {
       const payload = defaultValues;
+      payload.index =files.Student
+      payload.solution =files.Solution
+      payload.test =files.Evaluation
       if (testcase) {
         dispatch(updateTestCase(testcase.id, payload, cb))
       } else {
@@ -134,18 +161,6 @@ export default function TestCaseNewEditForm({ isEdit }) {
     defaultValues.name = name;
   };
 
-  const handleInput = (e) => {
-    const name = e.target.value;
-    setValue('input', String(e.target.value))
-    defaultValues.input = name;
-  };
-
-  const handleOutput = (e) => {
-    const name = e.target.value;
-    setValue('output', String(e.target.value))
-    defaultValues.output = name;
-  };
-
   const handleChange = (e) => {
     const active = e.target.checked;
     setValue('active', Boolean(e.target.checked))
@@ -153,15 +168,7 @@ export default function TestCaseNewEditForm({ isEdit }) {
     setChecked(active)
   };
 
-  const handleEditorChange = (value, event) => {
-    setValue('index', value)
-    defaultValues.index = value;
-  }
-
-  const handleEditorChangeTest = (value, event) => {
-    setValue('test', value)
-    defaultValues.test = value;
-  }
+  
   const handleBody = (e) => {
     setValue('body', String(e))
     defaultValues.body = e;
@@ -170,74 +177,52 @@ export default function TestCaseNewEditForm({ isEdit }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={7}>
-          <Card sx={{ p: 3 }}>
-          <Box
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={9}>
+       
+          <Card sx={{ p: 2 }}>
+            <Box
               sx={{
                 display: 'grid',
                 rowGap: 3,
               }}
             >
-            <RHFTextField name="name" label="TestCase Name" onChange={(e) => handleName(e)} />
-                <LabelStyle>Task Description</LabelStyle>
-                <RHFEditor simple name="body" onChange={(e) => handleBody(e)} />
-             
-           {!isLoading ?  <Grid container direction="row" spacing={3} sx={{mt:2}}>
-              <Grid item xs={12}>
-                <Typography variant='p'>Write your test case script</Typography>
-              </Grid>
-              <Grid item xs={12} >
+              <RHFTextField name="name" label="TestCase Name" onChange={(e) => handleName(e)} />
+              <Typography variant='h6'>Problem statement</Typography>
+              <Typography variant='p'>
+                This is the problem that your students will try to solve. Be as descriptive as you can. Remember your students won’t necessarily be able to ask clarifying questions.
 
-                <Editor
-                  height="300px"
-                  theme='vs-dark'
-                  defaultLanguage={defaultValues.language ?? 'javascript'}
-                  defaultValue={defaultValues.test}
-                  onChange={handleEditorChangeTest}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Typography>Write your index file for candidate </Typography>
-
-              </Grid>
-              <Grid item xs={12}>
-                <Editor
-                  height="300px"
-                  theme='vs-dark'
-                  defaultLanguage={defaultValues.language ?? 'javascript'}
-                  defaultValue={defaultValues.index}
-                  onChange={handleEditorChange}
-                />
-              </Grid>
-            </Grid>: null}
+              </Typography>
+              <RHFEditor simple name="body" onChange={(e) => handleBody(e)} />
+              <TestCaseFiles  files={files} setFile={setFile} />
+              
             </Box>
           </Card>
         </Grid>
 
 
-        <Grid item xs={12} md={5}>
-        <Card sx={{ p: 3 }}>
-          <Box
-            sx={{
-              display: 'grid',
-              rowGap: 3,
-            }}
-          >
-        <FormGroup sx={{ marginLeft: '10px' }}>
-              <FormControlLabel
-                control={<Switch size="large" name='active' checked={checked} onChange={handleChange} />}
-                label="Active"
-                labelPlacement="start"
-                sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }}
-              />
-            </FormGroup>
-            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                Save Changes
-              </LoadingButton>
-            </Stack>
-          </Box>
+        <Grid item xs={12} md={2}>
+          <Card sx={{ p: 3 }}>
+            <Box
+              sx={{
+                display: 'grid',
+                rowGap: 3,
+              }}
+            >
+              <FormGroup sx={{ marginLeft: '10px' }}>
+                <FormControlLabel
+                  control={<Switch size="large" name='active' checked={checked} onChange={handleChange} />}
+                  label="Active"
+                  labelPlacement="start"
+                  sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }}
+                />
+              </FormGroup>
+              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                  Save Changes
+                </LoadingButton>
+              </Stack>
+            </Box>
           </Card>
         </Grid>
       </Grid>

@@ -25,7 +25,7 @@ const getLanguage = (name) => {
 
 
 export default function TestCaseFiles({ files, setFile }) {
- 
+
 
   const deleteFile = (index) => {
     const f = files;
@@ -35,8 +35,8 @@ export default function TestCaseFiles({ files, setFile }) {
   }
   const addFile = () => {
     const f = files;
-    f.Student.push({ name: `file${f.index}.txt`, code: '//' })
-    f.Solution.push({ name: `file${f.index}.txt`, code: '//' })
+    f.Student.push({ name: `file${f.index}.txt`, code: '//Student' })
+    f.Solution.push({ name: `file${f.index}.txt`, code: '//Solution' })
     f.index += 1;
     setFile({ ...f })
   }

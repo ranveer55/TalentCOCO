@@ -25,6 +25,10 @@ export const deleteTestcases = (payload) => ({
   payload
 })
 
+export const clearTestCase = () => ({
+  type: ActionTypes.CLEAR_TESTCASE
+})
+
 
 export function getTestCases(lectureId) {
    return async () => {
@@ -75,6 +79,31 @@ export function updateTestCase(id, payload,cb) {
       cb();
       dispatch(startLoading(false));
     } catch (error) {
+      dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
+    }
+  };
+}
+export function evaluateSolution(payload,cb) {
+  return async () => {
+    dispatch(startLoading(true));
+    try {
+
+      const {data, status} = await axios.post(`/test-cases/evaluateTestCaseJs`, payload);
+      dispatch(startLoading(false));
+      if(data && data.status) {
+        console.log(data);
+        dispatch(setToast({severity:'success', message:'Test Case evaluated Successfully', open:true}))
+        cb(false);
+      } else {
+        cb(true);
+        dispatch(setToast({severity:'error', message:'Test Case failed to evaluate', open:true}))
+       
+      }
+     
+     
+    } catch (error) {
+      dispatch(startLoading(false));
+      cb(true);
       dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))
     }
   };

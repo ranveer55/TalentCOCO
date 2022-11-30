@@ -21,7 +21,7 @@ import { fData } from '../../../../utils/formatNumber';
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // _mock
 import { countries } from '../../../../_mock';
-import { createTestCase, getTestCase, getTestCases, updateTestCase } from '../../../../pages/TestCase/store/actions'
+import { createTestCase, getTestCase, getTestCases, updateTestCase, evaluateSolution,clearTestCase } from '../../../../pages/TestCase/store/actions'
 // components
 import Label from '../../../../components/Label';
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar, RHFEditor } from '../../../../components/hook-form';
@@ -41,13 +41,15 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
   marginBottom: theme.spacing(0),
 }));
-const newFile = { name: 'index.js', 'code': '//your code' };
+const newFileStudent = { name: 'index.js', 'code': '//your Student code' };
+const newFileSolution = { name: 'index.js', 'code': '//your solution code' };
+const newFileEvalution = { name: 'index.js', 'code': '//your evaluation code' };
 
 export default function TestCaseNewEditForm({ isEdit }) {
   const [files, setFile] = useState({
-    Student: [newFile],
-    Solution: [newFile],
-    Evaluation: [newFile],
+    Student: [newFileStudent],
+    Solution: [newFileSolution],
+    Evaluation: [newFileEvalution],
     currentFileIndex: 0,
     currentFileType: 'Student',
     index: 1
@@ -55,23 +57,24 @@ export default function TestCaseNewEditForm({ isEdit }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [t, setT] = useState();
+  const [disabled, setDisabled] = useState(true);
   const { id, CourseId, lessonId, lectureId } = useParams();
   const [checked, setChecked] = useState(true);
   const { testcase: { testcase, isLoading }, app: { masterdata } } = useSelector((state) => state);
-  
-  useEffect(() =>{
+
+  useEffect(() => {
     setFile(
       {
-        Student: testcase?.index ?? [newFile],
-        Solution: testcase?.solution ?? [newFile],
-        Evaluation: testcase?.test ?? [newFile],
+        Student: testcase?.index ?? [newFileStudent],
+        Solution: testcase?.solution ?? [newFileSolution],
+        Evaluation: testcase?.test ?? [newFileEvalution],
         currentFileIndex: 0,
         currentFileType: 'Student',
         index: 1
       }
     )
 
-  },[testcase])
+  }, [testcase])
 
   useEffect(() => {
     if (id) {
@@ -82,6 +85,12 @@ export default function TestCaseNewEditForm({ isEdit }) {
     }
 
   }, [dispatch]);
+
+
+  useEffect(()=>{
+    console.log(';;')
+    return ()=>dispatch(clearTestCase())
+  },[])
 
   const NewTestcaseSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').min(3),
@@ -103,7 +112,7 @@ export default function TestCaseNewEditForm({ isEdit }) {
     [testcase]
   );
 
-  
+
 
 
   const methods = useForm({
@@ -139,9 +148,9 @@ export default function TestCaseNewEditForm({ isEdit }) {
   const onSubmit = async () => {
     try {
       const payload = defaultValues;
-      payload.index =files.Student
-      payload.solution =files.Solution
-      payload.test =files.Evaluation
+      payload.index = files.Student
+      payload.solution = files.Solution
+      payload.test = files.Evaluation
       if (testcase) {
         dispatch(updateTestCase(testcase.id, payload, cb))
       } else {
@@ -153,6 +162,11 @@ export default function TestCaseNewEditForm({ isEdit }) {
       console.error(error);
     }
   };
+ 
+  
+  const evaluate = () => {
+    dispatch(evaluateSolution(files, setDisabled));
+  }
 
 
   const handleName = (e) => {
@@ -168,7 +182,7 @@ export default function TestCaseNewEditForm({ isEdit }) {
     setChecked(active)
   };
 
-  
+
   const handleBody = (e) => {
     setValue('body', String(e))
     defaultValues.body = e;
@@ -178,8 +192,8 @@ export default function TestCaseNewEditForm({ isEdit }) {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={9}>
-       
+        <Grid item xs={12} md={8}>
+
           <Card sx={{ p: 2 }}>
             <Box
               sx={{
@@ -194,14 +208,14 @@ export default function TestCaseNewEditForm({ isEdit }) {
 
               </Typography>
               <RHFEditor simple name="body" onChange={(e) => handleBody(e)} />
-              <TestCaseFiles  files={files} setFile={setFile} />
-              
+              <TestCaseFiles files={files} setFile={setFile}  key={testcase?.id}/>
+
             </Box>
           </Card>
         </Grid>
 
 
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} md={4}>
           <Card sx={{ p: 3 }}>
             <Box
               sx={{
@@ -218,8 +232,15 @@ export default function TestCaseNewEditForm({ isEdit }) {
                 />
               </FormGroup>
               <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                <LoadingButton disabled={disabled} type="submit" variant="contained" loading={isSubmitting}>
                   Save Changes
+                </LoadingButton>
+
+              </Stack>
+              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+
+                <LoadingButton onClick={evaluate} type="button" variant="contained" loading={isLoading}>
+                  Check Solution
                 </LoadingButton>
               </Stack>
             </Box>

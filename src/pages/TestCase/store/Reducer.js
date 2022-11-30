@@ -9,7 +9,10 @@ const Reducer = (state = initialState, {type, payload} = {}) => {
        switch (type) {
       
         case ActionTypes.FETCH_TESTCASE_LOADING:
-            return {  ...state,isLoading: true}
+            return {  ...state,isLoading: payload}
+
+        case ActionTypes.CLEAR_TESTCASE:
+            return {  ...state,testcase: null}
 
         case ActionTypes.FETCH_TESTCASES_SUCCESS:
             return { ...state, isLoading: false, testcases: payload}

@@ -21,7 +21,7 @@ import { fData } from '../../../../utils/formatNumber';
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // _mock
 import { countries } from '../../../../_mock';
-import { createTestCase, getTestCase, getTestCases, updateTestCase, evaluateSolution,clearTestCase } from '../../../../pages/TestCase/store/actions'
+import { createTestCase, getTestCase, getTestCases, updateTestCase, evaluateSolution, clearTestCase } from '../../../../pages/TestCase/store/actions'
 // components
 import Label from '../../../../components/Label';
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar, RHFEditor } from '../../../../components/hook-form';
@@ -41,19 +41,33 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
   marginBottom: theme.spacing(0),
 }));
-const newFileStudent = { name: 'index.js', 'code': '//your Student code' };
-const newFileSolution = { name: 'index.js', 'code': '//your solution code' };
-const newFileEvalution = { name: 'index.js', 'code': '//your evaluation code' };
 
-export default function TestCaseNewEditForm({ isEdit }) {
-  const [files, setFile] = useState({
-    Student: [newFileStudent],
-    Solution: [newFileSolution],
-    Evaluation: [newFileEvalution],
-    currentFileIndex: 0,
-    currentFileType: 'Student',
-    index: 1
-  })
+const getExtFromLanguage =(name) =>{
+  let ext ='';
+  switch (name) {
+    case 'vanilla':
+      ext='js'
+      break;
+  case 'javascript':
+      ext='js'
+      break;
+  case 'react':
+      ext='js'
+      break;
+  case 'python':
+      ext='py'
+      break;
+  
+    default:
+      break;
+  }
+  return ext;
+}
+const jsSample ={"Student":[{"name":"index.js","code":"function sum(a, b) {\r\n    return a + b;\r\n  }\r\nmodule.exports = sum;\r\n"}],"Solution":[{"name":"index.js","code":"function sum(a, b) {\r\n    return a + b;\r\n  }\r\nmodule.exports = sum;\r\n"}],"Evaluation":[{"name":"index.js","code":"test('adds 1 + 2 to equal 3', () => {\r\n  expect(sum(1, 2)).toBe(3);\r\n});"}],"currentFileIndex":0,"currentFileType":"Student","index":1}
+const pySample ={"Student":[{"name":"index.py","code":"def add(a,b):\r\n    return a+b"}],"Solution":[{"name":"index.py","code":"def add(a,b):\r\n    return a+b"}],"Evaluation":[{"name":"index.py","code":"import sys\r\n\r\nimport unittest\r\nfrom unittest import TestCase\r\nclass Evaluate(TestCase):\r\n    def test_add(self):\r\n        import index\r\n        # import index  # Imports and runs student's solution\r\n        output = index.add(10,5)  # Returns output since this function started\r\n        self.assertEqual(output,15)\r\n\r\n"}],"currentFileIndex":0,"currentFileType":"Evaluation","index":1,"language":"python"}
+
+export default function TestCaseNewEditForm({ isEdit, language }) {
+  const [files, setFile] = useState(language==='python' ? pySample:jsSample)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [t, setT] = useState();
@@ -63,16 +77,22 @@ export default function TestCaseNewEditForm({ isEdit }) {
   const { testcase: { testcase, isLoading }, app: { masterdata } } = useSelector((state) => state);
 
   useEffect(() => {
-    setFile(
-      {
-        Student: testcase?.index ?? [newFileStudent],
-        Solution: testcase?.solution ?? [newFileSolution],
-        Evaluation: testcase?.test ?? [newFileEvalution],
-        currentFileIndex: 0,
-        currentFileType: 'Student',
-        index: 1
-      }
-    )
+    if(testcase && testcase.index.length >0){
+      setFile(
+        {
+          Student: testcase.index,
+          Solution: testcase.solution,
+          Evaluation: testcase?.test ,
+          currentFileIndex: 0,
+          currentFileType: 'Student',
+          index: 1,
+          language
+        }
+      )
+    } else {
+      setFile(language==='python' ? pySample:jsSample)
+    }
+    
 
   }, [testcase])
 
@@ -87,10 +107,9 @@ export default function TestCaseNewEditForm({ isEdit }) {
   }, [dispatch]);
 
 
-  useEffect(()=>{
-    console.log(';;')
-    return ()=>dispatch(clearTestCase())
-  },[])
+  useEffect(() => {
+    return () => dispatch(clearTestCase())
+  }, [])
 
   const NewTestcaseSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').min(3),
@@ -162,8 +181,8 @@ export default function TestCaseNewEditForm({ isEdit }) {
       console.error(error);
     }
   };
- 
-  
+
+
   const evaluate = () => {
     dispatch(evaluateSolution(files, setDisabled));
   }
@@ -208,7 +227,7 @@ export default function TestCaseNewEditForm({ isEdit }) {
 
               </Typography>
               <RHFEditor simple name="body" onChange={(e) => handleBody(e)} />
-              <TestCaseFiles files={files} setFile={setFile}  key={testcase?.id}/>
+              <TestCaseFiles files={files} setFile={setFile} key={testcase?.id} />
 
             </Box>
           </Card>

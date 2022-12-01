@@ -36,7 +36,7 @@ export default function LectureTableRow({ CourseId,lessonId, row, selected, onEd
     setOpenMenuActions(null);
   };
   const onShowRow = () => {
-    navigate(PATH_DASHBOARD.course.testcases(CourseId, lessonId, lectureId));
+    navigate(PATH_DASHBOARD.course.testcases(CourseId, lessonId, lectureId, row.subtype));
   };
   const Reports = (id) => {
      navigate(`/dashboard/report?lecture=${id}`)

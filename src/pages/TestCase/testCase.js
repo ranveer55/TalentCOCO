@@ -1,6 +1,6 @@
 import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams, Link as RouterLink, useLocation } from 'react-router-dom';
+import { useNavigate, useParams, Link as RouterLink, useLocation,useSearchParams } from 'react-router-dom';
 // @mui
 import {
   Box,
@@ -57,6 +57,7 @@ export default function TestCase() {
 
   const dispatch = useDispatch();
   const { CourseId, lessonId ,lectureId} = useParams();
+  const [searchParams] = useSearchParams();
   const { testcases, error, isLoading } = useSelector((state) => state.testcase);
   const [tableData, setTableData] = useState([]);
   const [open, setDeleteOpen] = useState(false);
@@ -108,7 +109,7 @@ export default function TestCase() {
         />
 
         <Card>
-        <TestCaseNewEditForm isEdit={isEdit}/>
+        <TestCaseNewEditForm isEdit={isEdit} language={searchParams.get('language')}/>
           
         </Card>
       </Container>

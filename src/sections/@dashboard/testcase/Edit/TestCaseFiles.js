@@ -15,6 +15,7 @@ const fileTypes = {
   md: 'markdown',
   mjs: 'javascript',
   ts: 'typescript',
+  py: 'python',
 }
 const getLanguage = (name) => {
   const re = /(?:\.([^.]+))?$/;

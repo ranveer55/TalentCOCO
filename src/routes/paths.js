@@ -93,7 +93,7 @@ export const PATH_DASHBOARD = {
     newLecture: (CourseId, lessonId) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}/lecture/new`),
     editLecture: (CourseId, lessonId, id) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}/lecture/${id}/edit`),
     viewLecture: (CourseId, lessonId, id) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}/lecture/view/${id}`),
-    testcases: (CourseId, lessonId,lectureId) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}/lecture/${lectureId}`),
+    testcases: (CourseId, lessonId,lectureId,subtype) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}/lecture/${lectureId}?language=${subtype}`),
     newTestcase: (CourseId, lessonId,lectureId) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}/lecture/${lectureId}/testcase/new`),
     editTestcase: (CourseId, lessonId,lectureId, id) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}/lecture/${lectureId}/testcase/${id}/edit`),
     viewTestcase: (CourseId, lessonId, lectureId,id) => path(ROOTS_DASHBOARD, `/course/${CourseId}/lesson/${lessonId}/lecture/${lectureId}/testcase/view/${id}`),

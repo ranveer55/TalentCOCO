@@ -12,6 +12,7 @@ import courseReducer from '../pages/Courses/store/Reducer';
 import reportReducer from '../pages/Report/store/Reducer';
 import lectureReducer from '../pages/Lectures/store/Reducer';
 import testcaseReducer from '../pages/TestCase/store/Reducer';
+import coursefigmaReducer from '../pages/CourseFigma/store/Reducer';
 import mcqReducer from '../pages/MCQ/store/Reducer';
 import lessonReducer from '../pages/Lessons/store/Reducer';
 import companyReducer from '../pages/Companies/store/Reducer';
@@ -47,6 +48,12 @@ const testcasePersistConfig = {
 };
 const lecturePersistConfig = {
   key: 'lecture',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['sortBy', 'checkout'],
+};
+const coursefigmaPersistConfig = {
+  key: 'coursefigma',
   storage,
   keyPrefix: 'redux-',
   whitelist: ['sortBy', 'checkout'],
@@ -106,6 +113,7 @@ const rootReducer = combineReducers({
   course: persistReducer(coursePersistConfig, courseReducer),
   lecture: persistReducer(lecturePersistConfig, lectureReducer),
   testcase: persistReducer(testcasePersistConfig, testcaseReducer),
+  coursefigma: persistReducer(coursefigmaPersistConfig, coursefigmaReducer),
   report: persistReducer(reportPersistConfig, reportReducer),
   mcq: persistReducer(mcqPersistConfig, mcqReducer),
   lesson: persistReducer(lessonPersistConfig, lessonReducer),

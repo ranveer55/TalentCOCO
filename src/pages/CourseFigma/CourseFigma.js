@@ -18,13 +18,16 @@ const EmptySectionCard = ({ courseId }) => {
   }
   return (
     <Card sx={{ p: 2, m: 2 }}>
+      
+      {add ? <SectionForm hide={onClick} courseId={courseId} /> : 
       <Tooltip title="Add New Section">
-        <IconButton aria-label="add" size="medium" color="primary" onClick={onClick}>
-          <Iconify icon="eva:plus-circle-outline" />
+      <IconButton aria-label="add" size="medium" color="primary" onClick={onClick}>
+        <Iconify icon="eva:plus-circle-outline" />
 
-        </IconButton>
-      </Tooltip>
-      {add ? <SectionForm hide={onClick} courseId={courseId} /> : null}
+      </IconButton>
+    </Tooltip>
+      
+      }
     </Card>
   )
 }

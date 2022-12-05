@@ -99,8 +99,8 @@ const LectureForm = ({ type, cancel, lessonId, lecture = null,courseId }) => {
                 <RHFTextField name="name" lable="Enter a Title" value={defaultValues.name} size="small" onChange={handleChange} />
             </Stack>
             <Stack direction="row" spacing={2} alignItems="space-between" sx={{ mt: 1 }}>
-                <Button onClick={cancel} variant="outlined">Cancel</Button>
-                <LoadingButton variant="contained" type="submit" loading={isLoading} color="primary">
+                <Button size="small"  onClick={cancel} variant="outlined">Cancel</Button>
+                <LoadingButton size="small"  variant="contained" type="submit" loading={isLoading} color="primary">
                     {!lecture ? `Create ${type}` : `Update  ${type}`}
                 </LoadingButton>
 

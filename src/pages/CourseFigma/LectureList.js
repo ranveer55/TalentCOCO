@@ -31,16 +31,16 @@ const LectureType = ({ title = 'Add New', cancel, lectureId }) => {
                 <LectureForm type={type} lectureId={lectureId} cancel={e => setType(null)}  />
             </> :
                 <Stack direction="row" spacing={2}>
-                    <Button startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('Lecture')} >
+                    <Button size="small"  startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('Lecture')} >
                         Add Lecture
                     </Button>
-                    <Button startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('MCQ')} >
+                    <Button size="small"  startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('MCQ')} >
                         Add MCQ
                     </Button>
-                    <Button startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('Exercise')}  >
+                    <Button size="small" startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('Exercise')}  >
                         Add Coding Exercise
                     </Button>
-                    <Button color="error" startIcon={<Iconify icon="eva:close-circle-outline" />} onClick={cancel}>
+                    <Button size="small"  color="error" startIcon={<Iconify icon="eva:close-circle-outline" />} onClick={cancel}>
                         Cancel
                     </Button>
                 </Stack>
@@ -59,7 +59,7 @@ const EmptyLectureAddCard = ({ lectureId }) => {
         <Card sx={{ p: 2, m: 2 }}>
             {visible ? <LectureType hide={onClick} cancel={() => setVisible(false)} lectureId={lectureId} /> :
                 <Tooltip title='Add Lecture/MCQ/Exercise'>
-                    <IconButton aria-label="add" size="medium" color="primary" onClick={onClick}>
+                    <IconButton size="small"  aria-label="add"  color="primary" onClick={onClick}>
                         <Iconify icon="eva:plus-circle-outline" />
                     </IconButton>
                 </Tooltip>

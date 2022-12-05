@@ -118,8 +118,8 @@ function SectionForm({lesson, courseId,hide}) {
           <RHFTextField name="description" lable="Enter a Learning Objective" value={defaultValues.description} multiline rows={2} size="small" onChange={handleChange} />
         </Stack>
         <Stack direction="row" spacing={2} alignItems="space-between" sx={{ mt: 1 }}>
-          <Button onClick={hide} variant="outlined">Cancel</Button>
-          <LoadingButton variant="contained" type="submit" loading={isLoading} color="primary">
+          <Button size="small"  onClick={hide} variant="outlined">Cancel</Button>
+          <LoadingButton size="small"  variant="contained" type="submit" loading={isLoading} color="primary">
             {!lesson ? 'Create Section' : 'Update Section'}
           </LoadingButton>
 

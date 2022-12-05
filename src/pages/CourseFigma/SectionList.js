@@ -27,21 +27,21 @@ const LectureType = ({ title = 'Add New', cancel, lessonId,courseId }) => {
     const [type, setType] = useState(null)
 
     return (
-        <Card sx={{ p: 2, m: 2, border: '1px dashed' }}>
+        <Card sx={{ p: 1, m: 0, border: '1px dashed' }}>
             {type ? <>
                 <LectureForm type={type} lessonId={lessonId} cancel={e => {setType(null);cancel()}} courseId={courseId} />
             </> :
                 <Stack direction="row" spacing={2}>
-                    <Button startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('Lecture')} >
+                    <Button size="small" startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('Lecture')} >
                         Add Lecture
                     </Button>
-                    <Button startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('MCQ')} >
+                    <Button size="small" startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('MCQ')} >
                         Add MCQ
                     </Button>
-                    <Button startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('Exercise')}  >
+                    <Button size="small" startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('Exercise')}  >
                         Add Coding Exercise
                     </Button>
-                    <Button color="error" startIcon={<Iconify icon="eva:close-circle-outline" />} onClick={cancel}>
+                    <Button size="small" color="error" startIcon={<Iconify icon="eva:close-circle-outline" />} onClick={cancel}>
                         Cancel
                     </Button>
                 </Stack>
@@ -57,10 +57,10 @@ const EmptyLectureAddCard = ({ lessonId,courseId }) => {
         setVisible(!visible)
     }
     return (
-        <Card sx={{ p: 2, m: 2 }}>
+        <Card sx={{ p: 1, m: 2 }}>
             {visible ? <LectureType hide={onClick} cancel={() => setVisible(false)} lessonId={lessonId} courseId={courseId} /> :
                 <Tooltip title='Add Lecture/MCQ/Exercise'>
-                    <IconButton aria-label="add" size="medium" color="primary" onClick={onClick}>
+                    <IconButton aria-label="add" size="small" color="primary" onClick={onClick}>
                         <Iconify icon="eva:plus-circle-outline" />
                     </IconButton>
                 </Tooltip>

@@ -15,15 +15,12 @@ import { useForm, Controller } from 'react-hook-form';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Grid, Card, Chip, Stack, Button, TextField, Switch, Box, Typography, Autocomplete, FormControlLabel, FormGroup, Checkbox, } from '@mui/material';
-import { GridAddIcon } from '@mui/x-data-grid';
+
 import { LoadingButton } from '@mui/lab';
-import Iconify from '../../components/Iconify';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
 import { useDispatch, useSelector } from '../../redux/store';
 
 // components
-import { RHFSwitch, RHFEditor, FormProvider, RHFTextField, RHFUploadSingleFile } from '../../components/hook-form';
+import { FormProvider, RHFTextField } from '../../components/hook-form';
 //
 
 import { createSection, updateSection } from './store/actions'

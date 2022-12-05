@@ -1,31 +1,9 @@
-import * as Yup from 'yup';
+
 import { useCallback, useState, useMemo } from 'react';
-import { useSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import NativeSelect from '@mui/material/NativeSelect';
-import InputBase from '@mui/material/InputBase';
-
-// form
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
-// @mui
 import { styled } from '@mui/material/styles';
-import { IconButton, Tooltip, Grid, Card, Chip, Stack, Button, TextField, Switch, Box, Typography, Autocomplete, FormControlLabel, FormGroup, Checkbox, } from '@mui/material';
-import { GridAddIcon } from '@mui/x-data-grid';
-import { LoadingButton } from '@mui/lab';
+import { IconButton, Tooltip, Card, Stack, Button, Switch, Box, Typography, } from '@mui/material';
 import Iconify from '../../components/Iconify';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
 import { dispatch, useDispatch, useSelector } from '../../redux/store';
-
-// components
-import { RHFSwitch, RHFEditor, FormProvider, RHFTextField, RHFUploadSingleFile } from '../../components/hook-form';
-//
-
 // import LessonList from './LessonList';
 import DeleteAlert from './DeleteAlert';
 import SectionForm from './SectionForm';

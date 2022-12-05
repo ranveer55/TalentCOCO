@@ -1,32 +1,13 @@
 import { useCallback, useState, useMemo } from 'react';
-import { useSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import NativeSelect from '@mui/material/NativeSelect';
-import InputBase from '@mui/material/InputBase';
-
-// form
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
-// @mui
 import { styled } from '@mui/material/styles';
-import { IconButton, Tooltip, Grid, Card, Chip, Stack, Button, TextField, Switch, Box, Typography, Autocomplete, FormControlLabel, FormGroup, Checkbox, } from '@mui/material';
-import { GridAddIcon } from '@mui/x-data-grid';
-import { LoadingButton } from '@mui/lab';
+import { IconButton, Tooltip, Card, Stack, Button, Box, Typography} from '@mui/material';
+
+
 import Iconify from '../../components/Iconify';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
 import { dispatch, useDispatch, useSelector } from '../../redux/store';
-
-// components
-import { RHFSwitch, RHFEditor, FormProvider, RHFTextField, RHFUploadSingleFile } from '../../components/hook-form';
-//
-
-import { createSection, deleteSection, getCourse, updateSection } from './store/actions'
-import NewLecture from './LectureForm';
+import { deleteSection, getCourse } from './store/actions'
+import LectureForm from './LectureForm';
 import LectureList from './LectureList';
 import DeleteAlert from './DeleteAlert';
 import SectionForm from './SectionForm';
@@ -48,7 +29,7 @@ const LectureType = ({ title = 'Add New', cancel, lessonId,courseId }) => {
     return (
         <Card sx={{ p: 2, m: 2, border: '1px dashed' }}>
             {type ? <>
-                <NewLecture type={type} lessonId={lessonId} cancel={e => setType(null)} courseId={courseId} />
+                <LectureForm type={type} lessonId={lessonId} cancel={e => {setType(null);cancel()}} courseId={courseId} />
             </> :
                 <Stack direction="row" spacing={2}>
                     <Button startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('Lecture')} >

@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import SectionForm from './SectionForm';
 import SectionList from './SectionList';
 import { SkeletonProductItem } from '../../components/skeleton';
-import { getCourse, createCourse, updateCourse } from '../Courses/store/actions'
+import { getCourse } from '../Courses/store/actions';
 
 
 const EmptySectionCard = ({ courseId }) => {
@@ -42,7 +42,7 @@ export default function CourseFigma() {
         Curriculum
       </Typography>
       {
-        isLoading ? <SkeletonProductItem /> :
+        // isLoading ? <SkeletonProductItem /> :
           <>
             {
               course ? <>

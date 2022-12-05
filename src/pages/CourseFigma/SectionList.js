@@ -1,4 +1,3 @@
-import * as Yup from 'yup';
 import { useCallback, useState, useMemo } from 'react';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +24,7 @@ import { dispatch, useDispatch, useSelector } from '../../redux/store';
 // components
 import { RHFSwitch, RHFEditor, FormProvider, RHFTextField, RHFUploadSingleFile } from '../../components/hook-form';
 //
-import Curriculum from './Curriculum';
+
 import { createSection, deleteSection, getCourse, updateSection } from './store/actions'
 import NewLecture from './LectureForm';
 import LectureList from './LectureList';

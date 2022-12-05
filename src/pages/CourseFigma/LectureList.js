@@ -25,7 +25,7 @@ import { dispatch, useDispatch, useSelector } from '../../redux/store';
 // components
 import { RHFSwitch, RHFEditor, FormProvider, RHFTextField, RHFUploadSingleFile } from '../../components/hook-form';
 //
-import Curriculum from './Curriculum';
+
 // import LessonList from './LessonList';
 import DeleteAlert from './DeleteAlert';
 import SectionForm from './SectionForm';

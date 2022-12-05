@@ -24,7 +24,7 @@ import { useDispatch, useSelector } from '../../../../redux/store';
 import { RHFSwitch, RHFEditor, FormProvider, RHFTextField, RHFUploadSingleFile } from '../../../../components/hook-form';
 //
 import BlogNewPostPreview from '../../blog/BlogNewPostPreview';
-import Curriculum from './Curriculum';
+
 import { createLecture, updateLecture, getLecture } from '../../../../pages/Lectures/store/actions'
 import { ProfilePostCard } from '../../user/profile';
 import Quiz from './Quiz';

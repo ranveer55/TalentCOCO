@@ -76,6 +76,9 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, '/report'),
     list:path(ROOTS_DASHBOARD, `/report`),
     },
+    coursefigma: {
+    root: path(ROOTS_DASHBOARD, '/coursefigma'),
+     },
   companies: {
     root: path(ROOTS_DASHBOARD, '/companies'),
     list: path(ROOTS_DASHBOARD, '/companies'),

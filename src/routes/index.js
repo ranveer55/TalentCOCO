@@ -124,6 +124,11 @@ export default function Router() {
            ],
         },
         {
+          children: [
+            { path: `coursefigma`, element: <CourseFigma /> },
+           ],
+        },
+        {
           path: 'lectures',
           children: [
             { element: <Navigate to="/dashboard/Lectures/lectures/lecture" replace />, index: true },
@@ -272,6 +277,8 @@ const UserCreate = Loadable(lazy(() => import('../pages/Users/UsersCreate')));
 const UserDetails = Loadable(lazy(() => import('../pages/Users/UsersDetails')));
 // REPORT
 const Report = Loadable(lazy(() => import('../pages/Report/Report')));
+// COURSEFIGMA
+const CourseFigma = Loadable(lazy(() => import('../pages/CourseFigma/CourseFigma')));
 // COURSE
 const Course = Loadable(lazy(() => import('../pages/Courses/Courses')));
 const CourseCreate = Loadable(lazy(() => import('../pages/Courses/CoursesCreate')));

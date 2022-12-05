@@ -274,7 +274,7 @@ export default function LectureNewEditForm({ isEdit }) {
               {loading === true ? <LinearProgress /> : <></>}
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  Are you sure you want to Change MCQ?</DialogContentText>
+                  Are you sure you want to Change Type?</DialogContentText>
               </DialogContent>
               <DialogActions>
                 <Button variant="contained" onClick={() => { handleClose() }} style={{ background: "Silver", height: "34px", width: "42px" }}>

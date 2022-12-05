@@ -70,6 +70,14 @@ const navConfig = [
           { title: 'Report', path: PATH_DASHBOARD.report.root },
            ],
       },
+      {
+        title: 'coursefigma',
+        path: PATH_DASHBOARD.coursefigma.root,
+        icon: ICONS.cart,
+        children: [
+          { title: 'CourseFigma', path: PATH_DASHBOARD.coursefigma.root },
+           ],
+      },
 
     ],
   },

@@ -1,6 +1,7 @@
 
 import { useCallback, useState, useMemo } from 'react';
 import { styled } from '@mui/material/styles';
+import { Navigate, useNavigate } from 'react-router';
 import { IconButton, Tooltip, Card, Stack, Button, Switch, Box, Typography, } from '@mui/material';
 import Iconify from '../../components/Iconify';
 import { dispatch, useDispatch, useSelector } from '../../redux/store';
@@ -8,16 +9,22 @@ import { dispatch, useDispatch, useSelector } from '../../redux/store';
 import DeleteAlert from './DeleteAlert';
 import SectionForm from './SectionForm';
 import LectureForm from './LectureForm';
+import LectureContent from './LectureContent';
 import { deleteLecture } from '../Lectures/store/actions';
 import { getCourse } from '../Courses/store/actions';
+
 
 const EditMenu = ({ editHandler, item }) => {
 
     return (
-        <Stack direction={'row'} justifyContent="space-between" spacing={1}>
+        <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}>
             <Iconify icon="eva:edit-outline" size="16px" onClick={() => editHandler('edit', item)} />
             <Iconify icon="eva:trash-2-outline" onClick={() => editHandler('delete', item)} />
-            <Iconify icon="eva:menu-outline" sx={{ pointer: 'cursor' }} />
+
         </Stack>
     )
 }
@@ -28,19 +35,19 @@ const LectureType = ({ title = 'Add New', cancel, lectureId }) => {
     return (
         <Card sx={{ p: 2, m: 2, border: '1px dashed' }}>
             {type ? <>
-                <LectureForm type={type} lectureId={lectureId} cancel={e => setType(null)}  />
+                <LectureForm type={type} lectureId={lectureId} cancel={e => setType(null)} />
             </> :
                 <Stack direction="row" spacing={2}>
-                    <Button size="small"  startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('Lecture')} >
+                    <Button size="small" startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('Lecture')} >
                         Add Lecture
                     </Button>
-                    <Button size="small"  startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('MCQ')} >
+                    <Button size="small" startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('MCQ')} >
                         Add MCQ
                     </Button>
                     <Button size="small" startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('Exercise')}  >
                         Add Coding Exercise
                     </Button>
-                    <Button size="small"  color="error" startIcon={<Iconify icon="eva:close-circle-outline" />} onClick={cancel}>
+                    <Button size="small" color="error" startIcon={<Iconify icon="eva:close-circle-outline" />} onClick={cancel}>
                         Cancel
                     </Button>
                 </Stack>
@@ -59,7 +66,7 @@ const EmptyLectureAddCard = ({ lectureId }) => {
         <Card sx={{ p: 2, m: 2 }}>
             {visible ? <LectureType hide={onClick} cancel={() => setVisible(false)} lectureId={lectureId} /> :
                 <Tooltip title='Add Lecture/MCQ/Exercise'>
-                    <IconButton size="small"  aria-label="add"  color="primary" onClick={onClick}>
+                    <IconButton size="small" aria-label="add" color="primary" onClick={onClick}>
                         <Iconify icon="eva:plus-circle-outline" />
                     </IconButton>
                 </Tooltip>
@@ -76,6 +83,10 @@ function LectureList({ lesson }) {
     const [edit, setEdit] = useState(null)
     const [deleteMe, setDelete] = useState(null)
     const [targetItem, setItem] = useState(null)
+    const [showContent, setShowContent] = useState(false)
+    const [showContentId, setShowContentId] = useState(null)
+    const navigate= useNavigate()
+
     if (!lesson || !lesson.lectures) {
         return null;
     }
@@ -100,8 +111,22 @@ function LectureList({ lesson }) {
         setItem(null)
     }
     const Iconfirm = () => {
-        console.log({targetItem});
+        console.log({ targetItem });
         dispatch(deleteLecture(targetItem.id, cb))
+    }
+
+    const editLectureContent =(l) =>{
+        if(l.type==='Exercise'){
+          navigate('/testcase')
+        } else {
+            setShowContentId(l.id)
+            setShowContent(true)
+        }
+    }
+    const cancelLectureEdit =() =>{
+            setShowContentId(null)
+            setShowContent(false)
+        
     }
 
 
@@ -113,18 +138,52 @@ function LectureList({ lesson }) {
                     {edit && targetItem.id === lecture.id ?
                         <LectureForm type={lecture.type} lecture={lecture} lessonId={lecture.lessonId} cancel={cancel} courseId={lesson.courseId} />
                         :
-                        <Stack direction={'row'} spacing={1} onMouseEnter={() => setIsShown(lecture)} onMouseLeave={() => setIsShown(null)}>
-                            <Typography variant="p">
-                                <b>{`Lecture ${lectureIndex + 1}.`}</b>
-                            </Typography>
-                            <Typography variant="p" >
-                                {` ${lecture.name}`}
-                            </Typography>
-                            {isShown && isShown.id === lecture.id ? <EditMenu editHandler={editHandler} item={lecture} /> : null}
+                        <Stack
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="center"
+                            spacing={2}
+                            onMouseEnter={() => setIsShown(lecture)} onMouseLeave={() => setIsShown(null)}
+                        >
+                            <Stack
+                                direction="row"
+                                justifyContent="space-between"
+                                alignItems="center"
+                                spacing={1}>
+                                <Typography variant="p">
+                                    <b>{`${lectureIndex + 1}.`}</b>
+                                </Typography>
+                                <Typography variant="p" >
+                                    {` ${lecture.name}`}
+                                </Typography>
+                                {isShown && isShown.id === lecture.id ? <EditMenu editHandler={editHandler} item={lecture} /> : null}
 
+
+                            </Stack>
+                            <Stack
+                                direction="row"
+                                justifyContent="space-between"
+                                alignItems="center"
+                                spacing={2}
+                            >
+                                {isShown && isShown.id === lecture.id ? <>
+                                    <Button size="small" startIcon={<Iconify icon="eva:plus-circle-outline" />}
+                                        onClick={e => editLectureContent(lecture)} 
+                                        variant="outlined"
+                                    >
+                                        {lecture.type === 'Lecture' && 'Add Content'}
+                                        {lecture.type === 'MCQ' && 'Add Question'}
+                                        {lecture.type === 'Exercise' && 'Edit Exercise'}
+                                    </Button>
+
+                                    <Iconify icon="eva:menu-outline" sx={{ pointer: 'cursor' }} />
+                                </> : null}
+                            </Stack>
 
                         </Stack>
+
                     }
+                    {showContent && showContentId===lecture.id ? <LectureContent lecture={lecture} cancel={cancelLectureEdit}  />: null }
                     {/* <LectureList lecture={lecture} /> */}
                     {/* <EmptyLectureAddCard lectureId={lecture.id} /> */}
                 </Card>

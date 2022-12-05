@@ -91,8 +91,8 @@ export default function Editor({
         <EditorToolbar id={id} isSimple={simple} />
         <ReactQuill
           value={value}
-          // onChange={handleChangeEd}
-          onBlur={handleChangeEd}
+          onChange={onChange}
+          // onBlur={handleChangeEd}
           modules={modules}
           formats={formats}
           placeholder="Write something awesome..."

@@ -7,7 +7,7 @@ import { dispatch } from '../../../redux/store';
 import { setToast } from '../../app/store/actions';
 
 export const startLoading = (payload) => ({
-  type: ActionTypes.FETCH_LESSON_SUCCESS,
+  type: ActionTypes.FETCH_LESSON_LOADING,
   payload
 })
 export const getLessonsSuccess = (payload) => ({

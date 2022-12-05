@@ -215,11 +215,12 @@ export function updateSection(id, payload, cb) {
     }
   };
 }
-export function deleteSection(id) {
+export function deleteSection(id, cb) {
   return async () => {
     dispatch(startLoading());
     try {
       const response = await axios.delete(`/lesson/${id}`);
+      cb()
       dispatch(getSectionSuccess(null));
       dispatch(setToast({ severity: 'success', message: 'Lesson Deleted', open: true }))
     } catch (error) {

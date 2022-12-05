@@ -81,11 +81,12 @@ export function updateLecture(id, payload,cb) {
   };
 }
 
-export function deleteLecture(id) {
+export function deleteLecture(id, cb) {
   return async () => {
     dispatch(startLoading());
     try {
       const response = await axios.delete(`/lectures/${id}`);
+      cb()
       dispatch(deleteLectures(id));
       dispatch(setToast({severity:'success', message:'Lecture Deleted', open:true}))
     } catch (error) {

@@ -72,6 +72,21 @@ export const PATH_DASHBOARD = {
     view: (id) => path(ROOTS_DASHBOARD, `/users/${id}`),
     edit: (id) => path(ROOTS_DASHBOARD, `/users/${id}/edit`),
   },
+  student: {
+    root: path(ROOTS_DASHBOARD, '/student'),
+    list: path(ROOTS_DASHBOARD, '/student'),
+    new: path(ROOTS_DASHBOARD, '/student/new'),
+    view: (id) => path(ROOTS_DASHBOARD, `/student/${id}`),
+    edit: (id) => path(ROOTS_DASHBOARD, `/student/${id}/edit`),
+  },
+  cohort: {
+    root: path(ROOTS_DASHBOARD, '/cohort'),
+    list: path(ROOTS_DASHBOARD, '/cohort'),
+    new: path(ROOTS_DASHBOARD, '/cohort/new'),
+    view: (id) => path(ROOTS_DASHBOARD, `/cohort/${id}`),
+    edit: (id) => path(ROOTS_DASHBOARD, `/cohort/${id}/edit`),
+    cohortregisterCSV: (id) => path(ROOTS_DASHBOARD, `/cohort/cohortregisterCSV/${id}`),
+  },
   report: {
     root: path(ROOTS_DASHBOARD, '/report'),
     list:path(ROOTS_DASHBOARD, `/report`),

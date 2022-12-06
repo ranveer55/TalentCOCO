@@ -8,6 +8,8 @@ import productReducer from './slices/product';
 import calendarReducer from './slices/calendar';
 import kanbanReducer from './slices/kanban';
 import userReducer from  '../pages/Users/store/Reducer';
+import studentReducer from  '../pages/Students/store/Reducer';
+import cohortReducer from  '../pages/Cohort/store/Reducer'
 import courseReducer from '../pages/Courses/store/Reducer';
 import reportReducer from '../pages/Report/store/Reducer';
 import lectureReducer from '../pages/Lectures/store/Reducer';
@@ -100,6 +102,18 @@ const userPersistConfig = {
   keyPrefix: 'redux-',
   whitelist: ['sortBy', 'checkout'],
 };
+const studentPersistConfig = {
+  key: 'student',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['sortBy', 'checkout'],
+};
+const cohortPersistConfig = {
+  key: 'cohort',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['sortBy', 'checkout'],
+};
 
 
 const rootReducer = combineReducers({
@@ -109,6 +123,8 @@ const rootReducer = combineReducers({
   calendar: calendarReducer,
   kanban: kanbanReducer,
   user: persistReducer(userPersistConfig, userReducer),
+  student: persistReducer(studentPersistConfig, studentReducer),
+  cohort: persistReducer(cohortPersistConfig, cohortReducer),
   product: persistReducer(productPersistConfig, productReducer),
   course: persistReducer(coursePersistConfig, courseReducer),
   lecture: persistReducer(lecturePersistConfig, lectureReducer),

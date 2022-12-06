@@ -100,6 +100,23 @@ export default function Router() {
         },
         {
           children: [
+            { path: 'student', element: <Student /> },
+            { path: 'student/new', element: <StudentCreate /> },
+            { path: 'student/:id/edit', element: <StudentCreate /> },
+            { path: 'student/:id', element: <StudentDetails /> },
+          ],
+        },
+        {
+          children: [
+            { path: 'cohort', element: <Cohort /> },
+            { path: 'cohort/new', element: <CohortCreate /> },
+            { path: 'cohort/:id/edit', element: <CohortCreate /> },
+            { path: 'cohort/:id', element: <CohortDetails /> },
+            { path: 'cohort/cohortregisterCSV/:id', element: <CohortRegisterCSV /> },
+          ],
+        },
+        {
+          children: [
             { path: 'course', element: <Course /> },
             { path: 'course/:CourseId', element: <Lesson /> },
             { path: 'course/:CourseId/new', element: <LessonCreate /> },
@@ -283,6 +300,15 @@ const CourseFigma = Loadable(lazy(() => import('../pages/CourseFigma/CourseFigma
 const Course = Loadable(lazy(() => import('../pages/Courses/Courses')));
 const CourseCreate = Loadable(lazy(() => import('../pages/Courses/CoursesCreate')));
 const CourseDetails = Loadable(lazy(() => import('../pages/Courses/CoursesDetails')));
+// STUDENT
+const Cohort = Loadable(lazy(() => import('../pages/Cohort/List')));
+const CohortCreate = Loadable(lazy(() => import('../pages/Cohort/CohortCreate')));
+const CohortDetails = Loadable(lazy(() => import('../pages/Cohort/CohortDetails')));
+// COHORT
+const Student = Loadable(lazy(() => import('../pages/Students/List')));
+const StudentCreate = Loadable(lazy(() => import('../pages/Students/StudentCreate')));
+const StudentDetails = Loadable(lazy(() => import('../pages/Students/StudentDetails')));
+const CohortRegisterCSV = Loadable(lazy(() => import('../pages/Cohort/CohortRegisterCSV')));
 // LECTURE
 const Lecture = Loadable(lazy(() => import('../pages/Lectures/Lecture')));
 const LectureCreate = Loadable(lazy(() => import('../pages/Lectures/LectureCreate')));

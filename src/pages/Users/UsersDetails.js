@@ -45,7 +45,7 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
   margin: 'auto',
   display: 'flex',
   borderRadius: '50%',
-  alignUsers: 'center',
+  alignItems: 'center',
   width: theme.spacing(8),
   justifyContent: 'center',
   height: theme.spacing(8),
@@ -100,8 +100,8 @@ export default function UserDetails() {
           <>
             <Card>
               <Grid container>
-                <Grid user xs={12} >
-                  <userDetailsSummary
+                <Grid item xs={12} >
+                  <UserDetailsSummary
                     user={user}
                     onAddCart={handleAddCart}
                     onGotoStep={handleGotoStep}
@@ -112,10 +112,10 @@ export default function UserDetails() {
 
             <Grid container sx={{ my: 8 }}>
               {USER_DESCRIPTION.map((user) => (
-                <Grid user xs={12} md={4} key={user.name}>
+                <Grid item xs={12} md={4} key={user.name}>
                   <Box sx={{ my: 2, mx: 'auto', maxWidth: 280, textAlign: 'center' }}>
                     <Typography variant="subtitle1" gutterBottom>
-                      {user.lession}
+                      {user.name}
                     </Typography>
                    </Box>
                 </Grid>

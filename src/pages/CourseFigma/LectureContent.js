@@ -1,5 +1,5 @@
 
-import { useState, useEffect,useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import * as Yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -22,7 +22,7 @@ import { updateLecture } from '../Lectures/store/actions';
 
 
 export default function LectureContent({ lecture, cancel }) {
-    const {course:{course},lecture:{isLoading}}=useSelector((s)=>s)
+    const { course: { course }, lecture: { isLoading } } = useSelector((s) => s)
     const NewLectureSchema = Yup.object().shape({
         body: Yup.string().required('Content is required').min(1)
     });
@@ -78,24 +78,24 @@ export default function LectureContent({ lecture, cancel }) {
     return (
         <>
             {lecture.type === 'Lecture' ?
-            <Box sx={{m:1}}>
-                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
+                <Box sx={{ m: 1 }}>
+                    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
 
-                    <RHFEditor simple name="body" onChange={(e) => handleBody(e)} defaultValues={defaultValues.body} />
-                    <Stack 
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    spacing={1}
-                    >
-                        <Button size="small" onClick={cancel}>
-                            Cancel
-                        </Button>
-                        <LoadingButton size="small" type="submit" variant="contained" loading={isLoading}>
-                            Update Lecture
-                        </LoadingButton>
-                    </Stack>
-                </FormProvider>
+                        <RHFEditor simple name="body" onChange={(e) => handleBody(e)} defaultValues={defaultValues.body} />
+                        <Stack
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="center"
+                            spacing={1}
+                        >
+                            <Button size="small" onClick={cancel}>
+                                Cancel
+                            </Button>
+                            <LoadingButton size="small" type="submit" variant="contained" loading={isLoading}>
+                                Update Lecture
+                            </LoadingButton>
+                        </Stack>
+                    </FormProvider>
                 </Box>
                 : null}
         </>

@@ -134,7 +134,7 @@ function LectureList({ lesson }) {
     return (
         <>
             {lesson.lectures.map((lecture, lectureIndex) =>
-                <Card key={lecture.id} sx={{ p: 1, m: 3, border: '1px solid' }}>
+                <Card key={lecture.id} sx={{ p: 1, m: 3, border: '1px solid ' }}>
                     {edit && targetItem.id === lecture.id ?
                         <LectureForm type={lecture.type} lecture={lecture} lessonId={lecture.lessonId} cancel={cancel} courseId={lesson.courseId} />
                         :

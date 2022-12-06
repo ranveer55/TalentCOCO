@@ -52,10 +52,10 @@ const TABLE_HEAD = [
   { id: 'hours', label: 'Hours', align: 'left' },
   { id: 'language', label: 'Language', align: 'left' },
   { id: 'level', label: 'Level', align: 'left' },
-  { id: 'totalLessons', label: 'Total Lessons', align: 'left' },
   { id: 'active', label: 'Active', align: 'left' },
-  { id: 'btn', label: 'Lesson View', align: 'left' },
-  { id: 'btn1', label: 'Report View', align: 'center' },
+  { id: 'btn', label: 'Detail', align: 'left' },
+  { id: 'btn', label: 'Edit', align: 'left' },
+  { id: 'btn1', label: 'Report', align: 'center' },
   { id: '' },
 ];
 

@@ -49,22 +49,18 @@ export default function CourseNewEditForm({ isEdit }) {
 
   const { course: { course, loading } } = useSelector((state) => state);
    const NewCourseSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required').min(8),
-    description: Yup.string().required('Description is required').min(1),
-    hours: Yup.number().required('Hours is required'),
-    poster: Yup.string(),
-    language: Yup.string().required('Language is required'),
-    level: Yup.string().required('Level is required'),
+    name: Yup.string().required('Name is required').min(3),
+   
  });
 
   const defaultValues = useMemo(
     () => ({
       name: isEdit ? course?.name || '' : '',
       description: isEdit ? course?.description || '': '',
-      hours: isEdit ? course?.hours || '': '',
+      hours: isEdit ? course?.hours || 1: 1,
       poster: isEdit ? course?.poster ||'': '',
-      language: isEdit ? course?.language || '': '',
-      level: isEdit ? course?.level || '': '',
+      language: isEdit ? course?.language || 'javascript': 'javascript',
+      level: isEdit ? course?.level || 'Pro': 'Pro',
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [course]

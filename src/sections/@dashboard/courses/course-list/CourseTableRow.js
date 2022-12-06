@@ -26,7 +26,7 @@ CourseTableRow.propTypes = {
   onShowRow: PropTypes.func,
 };
 
-export default function CourseTableRow({ row,selected, onEditRow, onViewRow, onSelectRow, onDeleteRow }) {
+export default function CourseTableRow({ row, selected, onEditRow, onViewRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
   const navigate = useNavigate();
   const { id, name, description, hours, poster, totalLessons, language, level, active } = row;
@@ -41,9 +41,12 @@ export default function CourseTableRow({ row,selected, onEditRow, onViewRow, onS
   };
   const onShowRow = (CourseId) => {
     navigate(PATH_DASHBOARD.course.lesson(paramCase(CourseId)));
+  }; 
+  const onEdit = (CourseId) => {
+    navigate(PATH_DASHBOARD.course.edit(paramCase(CourseId)));
   };
   const Reports = (id) => {
-     navigate(`/dashboard/report?course=${id}`)
+    navigate(`/dashboard/report?course=${id}`)
   };
 
   return (
@@ -70,16 +73,25 @@ export default function CourseTableRow({ row,selected, onEditRow, onViewRow, onS
           {active === true ? <Checkmark size='small' /> : <span style={{ color: "red" }}>x</span>}
         </Label>
       </TableCell>
-      <TableCell align="left"><Button variant="contained"
+      <TableCell align="left">
+        <Button variant="contained"
         onClick={() => {
           onShowRow(id);
-        }}>Lesson View</Button></TableCell>
+        }}>Detail</Button>
+        </TableCell>
+       <TableCell align="left">
+        <Button variant="contained"
+        onClick={() => {
+          onEdit(id);
+        }}>Edit</Button>
+        </TableCell>
+        
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
         <Button
           variant="contained"
           onClick={() => { Reports(row.id) }}
         >
-          Report View
+          Report
         </Button>
       </TableCell>
 

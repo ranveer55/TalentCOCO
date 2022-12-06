@@ -40,6 +40,26 @@ const navConfig = [
           { title: 'create Users', path: PATH_DASHBOARD.users.new },
           ],
       },
+
+      // STUDENT
+      {
+        title: 'student',
+        path: PATH_DASHBOARD.student.root,
+        icon: ICONS.user,
+        children: [
+          { title: 'list Student', path: PATH_DASHBOARD.student.root },
+          { title: 'create Student', path: PATH_DASHBOARD.student.new },
+          ],
+      },
+      {
+        title: 'cohort',
+        path: PATH_DASHBOARD.cohort.root,
+        icon: ICONS.cart,
+        children: [
+          { title: 'list Cohort', path: PATH_DASHBOARD.cohort.root },
+          { title: 'create Cohort', path: PATH_DASHBOARD.cohort.new },
+          ],
+      },
      // COPMANIES
 
       {
@@ -70,6 +90,7 @@ const navConfig = [
           { title: 'Report', path: PATH_DASHBOARD.report.root },
            ],
       },
+     // COURSEFIGMA 
       {
         title: 'coursefigma',
         path: PATH_DASHBOARD.coursefigma.root,
@@ -78,7 +99,6 @@ const navConfig = [
           { title: 'CourseFigma', path: PATH_DASHBOARD.coursefigma.root },
            ],
       },
-
     ],
   },
 

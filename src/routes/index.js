@@ -100,6 +100,23 @@ export default function Router() {
         },
         {
           children: [
+            { path: 'student', element: <Student /> },
+            { path: 'student/new', element: <StudentCreate /> },
+            { path: 'student/:id/edit', element: <StudentCreate /> },
+            { path: 'student/:id', element: <StudentDetails /> },
+          ],
+        },
+        {
+          children: [
+            { path: 'cohort', element: <Cohort /> },
+            { path: 'cohort/new', element: <CohortCreate /> },
+            { path: 'cohort/:id/edit', element: <CohortCreate /> },
+            { path: 'cohort/:id', element: <CohortDetails /> },
+            { path: 'cohort/cohortregisterCSV/:id', element: <CohortRegisterCSV /> },
+          ],
+        },
+        {
+          children: [
             { path: 'course', element: <Course /> },
             { path: 'course/:courseId', element: <CourseDetail /> },
             { path: 'course/new', element: <CourseCreate /> },
@@ -234,6 +251,16 @@ const CourseCreate = Loadable(lazy(() => import('../pages/Courses/CoursesCreate'
 const CourseDetail = Loadable(lazy(() => import('../pages/CourseDetail/index')));
 // TESTCASE
 const Testcase = Loadable(lazy(() => import('../pages/TestCase/testCase')));
+
+const Cohort = Loadable(lazy(() => import('../pages/Cohort/List')));
+const CohortCreate = Loadable(lazy(() => import('../pages/Cohort/CohortCreate')));
+const CohortDetails = Loadable(lazy(() => import('../pages/Cohort/CohortDetails')));
+// COHORT
+const Student = Loadable(lazy(() => import('../pages/Students/List')));
+const StudentCreate = Loadable(lazy(() => import('../pages/Students/StudentCreate')));
+const StudentDetails = Loadable(lazy(() => import('../pages/Students/StudentDetails')));
+const CohortRegisterCSV = Loadable(lazy(() => import('../pages/Cohort/CohortRegisterCSV')));
+
 // COMPANY
 const Company = Loadable(lazy(() => import('../pages/Companies/List')));
 const CompanyCreate = Loadable(lazy(() => import('../pages/Companies/CompanyCreate')));

@@ -9,10 +9,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import LinearProgress from '@mui/material/LinearProgress';
 
-// redux
-import { dispatch, useDispatch, useSelector } from '../../redux/store';
-import { getCourses, deleteCourse } from './store/actions';
-
 
 export default function DeleteAlert({ cancel, Iconfirm, open }) {
 

@@ -11,14 +11,11 @@ import userReducer from  '../pages/Users/store/Reducer';
 import courseReducer from '../pages/Courses/store/Reducer';
 import reportReducer from '../pages/Report/store/Reducer';
 import lectureReducer from '../pages/CourseDetail/storeLecture/Reducer';
+import lessonReducer from '../pages/CourseDetail/store/Reducer';
 import testcaseReducer from '../pages/TestCase/store/Reducer';
 import mcqReducer from '../pages/CourseDetail/storeMcq/Reducer';
-import lessonReducer from '../pages/Lessons/store/Reducer';
 import companyReducer from '../pages/Companies/store/Reducer';
 import appReducer from '../pages/app/store/Reducer';
-import tallyReducer from './slices/Tally';
-import teamReducer from './slices/Team';
-// ----------------------------------------------------------------------
 
 const rootPersistConfig = {
   key: 'root',
@@ -51,8 +48,8 @@ const lecturePersistConfig = {
   keyPrefix: 'redux-',
   whitelist: ['sortBy', 'checkout'],
 };
-const coursefigmaPersistConfig = {
-  key: 'coursefigma',
+const lessonPersistConfig = {
+  key: 'lesson',
   storage,
   keyPrefix: 'redux-',
   whitelist: ['sortBy', 'checkout'],
@@ -69,26 +66,8 @@ const mcqPersistConfig = {
   keyPrefix: 'redux-',
   whitelist: ['sortBy', 'checkout'],
 };
-const lessonPersistConfig = {
-  key: 'lesson',
-  storage,
-  keyPrefix: 'redux-',
-  whitelist: ['sortBy', 'checkout'],
-};
 const companyPersistConfig = {
-  key: 'company',
-  storage,
-  keyPrefix: 'redux-',
-  whitelist: ['sortBy', 'checkout'],
-};
-const tallyPersistConfig = {
-  key: 'tally',
-  storage,
-  keyPrefix: 'redux-',
-  whitelist: ['sortBy', 'checkout'],
-};
-const teamPersistConfig = {
-  key: 'team',
+key: 'company',
   storage,
   keyPrefix: 'redux-',
   whitelist: ['sortBy', 'checkout'],
@@ -111,13 +90,11 @@ const rootReducer = combineReducers({
   product: persistReducer(productPersistConfig, productReducer),
   course: persistReducer(coursePersistConfig, courseReducer),
   lecture: persistReducer(lecturePersistConfig, lectureReducer),
+  lesson: persistReducer(lessonPersistConfig, lessonReducer),
   testcase: persistReducer(testcasePersistConfig, testcaseReducer),
   report: persistReducer(reportPersistConfig, reportReducer),
   mcq: persistReducer(mcqPersistConfig, mcqReducer),
-  lesson: persistReducer(lessonPersistConfig, lessonReducer),
   company: persistReducer(companyPersistConfig, companyReducer),
-  tally: persistReducer(tallyPersistConfig, tallyReducer),
-  team: persistReducer(tallyPersistConfig, teamReducer),
   
 });
 

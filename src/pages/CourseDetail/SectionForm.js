@@ -24,7 +24,6 @@ import { FormProvider, RHFTextField } from '../../components/hook-form';
 //
 
 import { createSection, updateSection } from './store/actions'
-import { createLesson, updateLesson } from '../Lessons/store/actions'
 import { getCourse } from '../Courses/store/actions';
 // ----------------------------------------------------------------------
 
@@ -87,9 +86,9 @@ function SectionForm({lesson, courseId,hide}) {
     defaultValues.courseId = courseId ;
     try {
       if (lesson) {
-        dispatch(updateLesson(lesson.id, defaultValues, cb));
+        dispatch(updateSection(lesson.id, defaultValues, cb));
       } else {
-      dispatch(createLesson(defaultValues, cb));
+      dispatch(createSection(defaultValues, cb));
       }
     } catch (error) {
       console.error(error);

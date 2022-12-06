@@ -65,8 +65,8 @@ export default function TestCase() {
       <Container maxWidth={'lg'}>
 
         <Card>
-          {isLoading && <SkeletonProductItem />}
-          {!isLoading && !!testcase  && <TestCaseNewEditForm language={searchParams.get('language')} />}
+          {isLoading ? <SkeletonProductItem />:
+           <TestCaseNewEditForm  />}
 
         </Card>
       </Container>

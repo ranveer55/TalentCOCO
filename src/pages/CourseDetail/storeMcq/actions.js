@@ -81,13 +81,12 @@ export function updateMcq(id, payload,cb) {
   };
 }
 
-export function deleteMcq(id,lectureId) {
+export function deleteMcq(id, cb) {
   return async () => {
     dispatch(startLoading());
     try {
       const response = await axios.delete(`/mcqs/${id}`);
-      dispatch(deleteMcqs(id));
-      dispatch(getLecture(lectureId))
+      cb()
       dispatch(setToast({severity:'success', message:'Mcq Deleted', open:true}))
     } catch (error) {
       dispatch(setToast({severity:'error', message:error.message ? error.message :'Something went wrong', open:true}))

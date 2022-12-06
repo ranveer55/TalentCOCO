@@ -59,14 +59,12 @@ function MCQList({ lecture }) {
     const [targetItem, setItem] = useState(null)
     const [showContent, setShowContent] = useState(false)
     const [showContentId, setShowContentId] = useState(null)
+    const {course:{course}}=useSelector((s)=>s)
     const navigate= useNavigate()
 
     if (!lecture || !lecture.mcq) {
         return null;
     }
-
-    
-
     const editHandler = (editType, item) => {
         if (editType === 'delete') {
             setDelete(true)
@@ -82,29 +80,15 @@ function MCQList({ lecture }) {
         setItem(null)
     }
     const cb = () => {
-        // dispatch(getCourse(lecture.courseId))
+        dispatch(getCourse(course.id))
         cancel()
+        setDelete(false)
         setItem(null)
     }
     const Iconfirm = () => {
         console.log({ targetItem });
         dispatch(deleteMcq(targetItem.id, cb))
     }
-
-    const editMCQContent =(l) =>{
-        if(l.type==='Exercise'){
-          navigate('/testcase')
-        } else {
-            setShowContentId(l.id)
-            setShowContent(true)
-        }
-    }
-    const cancelMCQEdit =() =>{
-            setShowContentId(null)
-            setShowContent(false)
-        
-    }
-
 
 
     return (
@@ -128,7 +112,7 @@ function MCQList({ lecture }) {
                                 alignItems="center"
                                 spacing={1}>
                                 <Typography variant="p">
-                                    <b>{`${mcqIndex + 1}.`}</b>
+                                    <b> Q{`${mcqIndex + 1}.`}</b>
                                 </Typography>
                                 <Typography variant="p" >
                                     {` ${mcq.question}`}
@@ -144,13 +128,6 @@ function MCQList({ lecture }) {
                                 spacing={2}
                             >
                                 {isShown && isShown.id === mcq.id ? <>
-                                    <Button size="small" startIcon={<Iconify icon="eva:plus-circle-outline" />}
-                                        onClick={e => editMCQContent(mcq)} 
-                                        variant="outlined"
-                                    >Edit Question
-                                        
-                                    </Button>
-
                                     <Iconify icon="eva:menu-outline" sx={{ pointer: 'cursor' }} />
                                 </> : null}
                             </Stack>
@@ -158,7 +135,6 @@ function MCQList({ lecture }) {
                         </Stack>
 
                     }
-                    {/* {showContent && showContentId===mcq.id ? <MCQContent mcq={mcq} cancel={cancelMCQEdit}  />: null } */}
                     
                 </Card>
             )

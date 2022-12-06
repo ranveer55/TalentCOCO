@@ -27,6 +27,7 @@ import Label from '../../../../components/Label';
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar, RHFEditor } from '../../../../components/hook-form';
 
 import TestCaseFiles from './TestCaseFiles'
+import LanguageSelect from './LanguageSelect'
 
 // ----------------------------------------------------------------------
 
@@ -42,48 +43,48 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(0),
 }));
 
-const getExtFromLanguage =(name) =>{
-  let ext ='';
+const getExtFromLanguage = (name) => {
+  let ext = '';
   switch (name) {
     case 'vanilla':
-      ext='js'
+      ext = 'js'
       break;
-  case 'javascript':
-      ext='js'
+    case 'javascript':
+      ext = 'js'
       break;
-  case 'react':
-      ext='js'
+    case 'react':
+      ext = 'js'
       break;
-  case 'python':
-      ext='py'
+    case 'python':
+      ext = 'py'
       break;
-  
+
     default:
       break;
   }
   return ext;
 }
-const jsSample ={"Student":[{"name":"index.js","code":"function sum(a, b) {\r\n    return a + b;\r\n  }\r\nmodule.exports = sum;\r\n"}],"Solution":[{"name":"index.js","code":"function sum(a, b) {\r\n    return a + b;\r\n  }\r\nmodule.exports = sum;\r\n"}],"Evaluation":[{"name":"index.js","code":"test('adds 1 + 2 to equal 3', () => {\r\n  expect(sum(1, 2)).toBe(3);\r\n});"}],"currentFileIndex":0,"currentFileType":"Student","index":1}
-const pySample ={"Student":[{"name":"index.py","code":"def add(a,b):\r\n    return a+b"}],"Solution":[{"name":"index.py","code":"def add(a,b):\r\n    return a+b"}],"Evaluation":[{"name":"index.py","code":"import sys\r\n\r\nimport unittest\r\nfrom unittest import TestCase\r\nclass Evaluate(TestCase):\r\n    def test_add(self):\r\n        import index\r\n        # import index  # Imports and runs student's solution\r\n        output = index.add(10,5)  # Returns output since this function started\r\n        self.assertEqual(output,15)\r\n\r\n"}],"currentFileIndex":0,"currentFileType":"Evaluation","index":1,"language":"python"}
+const jsSample = { "Student": [{ "name": "index.js", "code": "function sum(a, b) {\r\n    return a + b;\r\n  }\r\nmodule.exports = sum;\r\n" }], "Solution": [{ "name": "index.js", "code": "function sum(a, b) {\r\n    return a + b;\r\n  }\r\nmodule.exports = sum;\r\n" }], "Evaluation": [{ "name": "index.js", "code": "test('adds 1 + 2 to equal 3', () => {\r\n  expect(sum(1, 2)).toBe(3);\r\n});" }], "currentFileIndex": 0, "currentFileType": "Student", "index": 1 }
+const pySample = { "Student": [{ "name": "index.py", "code": "def add(a,b):\r\n    return a+b" }], "Solution": [{ "name": "index.py", "code": "def add(a,b):\r\n    return a+b" }], "Evaluation": [{ "name": "index.py", "code": "import sys\r\n\r\nimport unittest\r\nfrom unittest import TestCase\r\nclass Evaluate(TestCase):\r\n    def test_add(self):\r\n        import index\r\n        # import index  # Imports and runs student's solution\r\n        output = index.add(10,5)  # Returns output since this function started\r\n        self.assertEqual(output,15)\r\n\r\n" }], "currentFileIndex": 0, "currentFileType": "Evaluation", "index": 1, "language": "python" }
 
-export default function TestCaseNewEditForm({ language }) {
-  const [files, setFile] = useState(language==='python' ? pySample:jsSample)
+export default function TestCaseNewEditForm() {
+  const [language, setLanguage] = useState('javascript');
+  const [files, setFile] = useState(language === 'python' ? pySample : jsSample)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [t, setT] = useState();
   const [disabled, setDisabled] = useState(true);
   const { courseId, lectureId } = useParams();
   const [checked, setChecked] = useState(true);
-  const { testcase: { testcase, isEVLoading,isLoading }, app: { masterdata } } = useSelector((state) => state);
-  console.log({testcase});
+  const { testcase: { testcase, isEVLoading, isLoading }, app: { masterdata } } = useSelector((state) => state);
 
   useEffect(() => {
-    if(testcase && testcase.index.length >0){
+    if (testcase && testcase.index.length > 0) {
       setFile(
         {
           Student: testcase.index,
           Solution: testcase.solution,
-          Evaluation: testcase?.test ,
+          Evaluation: testcase?.test,
           currentFileIndex: 0,
           currentFileType: 'Student',
           index: 1,
@@ -91,11 +92,13 @@ export default function TestCaseNewEditForm({ language }) {
         }
       )
     } else {
-      setFile(language==='python' ? pySample:jsSample)
+      setFile(language === 'python' ? pySample : jsSample)
     }
-    
+
 
   }, [testcase])
+
+
 
 
   // useEffect(() => {
@@ -141,6 +144,10 @@ export default function TestCaseNewEditForm({ language }) {
 
   const values = watch();
 
+  useEffect(() => {
+    setFile(language === 'python' ? pySample : jsSample)
+  }, [language])
+
   const cb = () => {
     reset();
     navigate(`/dashboard/course/${courseId}`)
@@ -155,10 +162,8 @@ export default function TestCaseNewEditForm({ language }) {
       if (testcase) {
         dispatch(updateTestCase(testcase.id, payload, cb))
       } else {
-
         dispatch(createTestCase(payload, cb));
       }
-
     } catch (error) {
       console.error(error);
     }
@@ -166,7 +171,7 @@ export default function TestCaseNewEditForm({ language }) {
 
 
   const evaluate = () => {
-    dispatch(evaluateSolution(files, setDisabled));
+    dispatch(evaluateSolution({...files,language}, setDisabled));
   }
 
 
@@ -189,9 +194,17 @@ export default function TestCaseNewEditForm({ language }) {
     defaultValues.body = e;
 
   };
+  const onlanguagechange = (e) => {
+    setValue('subtype', String(e))
+    defaultValues.subtype = e;
+    setLanguage(e)
+
+  };
+
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      {!defaultValues.subtype ? <LanguageSelect onClose={onlanguagechange} open languages={masterdata ? masterdata.LectureSubTypes : []} /> : null}
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
 
@@ -204,35 +217,35 @@ export default function TestCaseNewEditForm({ language }) {
 
               </Typography>
               <RHFEditor simple name="body" onChange={(e) => handleBody(e)} />
-              <TestCaseFiles files={files} setFile={setFile} key={testcase?.id} />
-              </Stack>
-            
+              <TestCaseFiles files={files} setFile={setFile} key={language + testcase?.id} />
+            </Stack>
+
           </Card>
         </Grid>
 
 
         <Grid item xs={12} md={4}>
           <Card sx={{ p: 3 }}>
-              <FormGroup sx={{ marginLeft: '10px' }}>
-                <FormControlLabel
-                  control={<Switch size="large" name='active' checked={checked} onChange={handleChange} />}
-                  label="Active"
-                  labelPlacement="start"
-                  sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }}
-                />
-              </FormGroup>
-              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton disabled={disabled} type="submit" variant="contained" loading={isLoading}>
-                  Save Changes
-                </LoadingButton>
+            <FormGroup sx={{ marginLeft: '10px' }}>
+              <FormControlLabel
+                control={<Switch size="large" name='active' checked={checked} onChange={handleChange} />}
+                label="Active"
+                labelPlacement="start"
+                sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }}
+              />
+            </FormGroup>
+            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+              <LoadingButton disabled={disabled} type="submit" variant="contained" loading={isLoading}>
+                Save Changes
+              </LoadingButton>
 
-              </Stack>
-              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+            </Stack>
+            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
 
-                <LoadingButton onClick={evaluate} type="button" variant="contained" loading={isEVLoading}>
-                  Check Solution
-                </LoadingButton>
-              </Stack>
+              <LoadingButton onClick={evaluate} type="button" variant="contained" loading={isEVLoading}>
+                Check Solution
+              </LoadingButton>
+            </Stack>
           </Card>
         </Grid>
       </Grid>

@@ -29,8 +29,6 @@ import { countries } from '../../../../_mock';
 import { createStudent, getStudent, getStudents, updateStudent } from '../../../../pages/Students/store/actions'
 // components
 import Label from '../../../../components/Label';
-// import StudentMcq from '../../../../pages/MCQ/StudentMcq'
-import McqList from '../../../../pages/MCQ/McqList'
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar, RHFEditor } from '../../../../components/hook-form';
 
 // ----------------------------------------------------------------------

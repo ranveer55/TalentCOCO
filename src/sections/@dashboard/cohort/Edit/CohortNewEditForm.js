@@ -29,8 +29,6 @@ import { countries } from '../../../../_mock';
 import { createCohort, getCohort, getCohorts, updateCohort } from '../../../../pages/Cohort/store/actions'
 // components
 import Label from '../../../../components/Label';
-// import CohortMcq from '../../../../pages/MCQ/CohortMcq'
-import McqList from '../../../../pages/MCQ/McqList'
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar, RHFEditor } from '../../../../components/hook-form';
 
 // ----------------------------------------------------------------------

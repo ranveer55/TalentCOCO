@@ -116,6 +116,8 @@ export default function Router() {
             { path: 'course/new', element: <CourseCreate /> },
             { path: 'course/:id/edit', element: <CourseCreate /> },
             { path: 'course/view/:id', element: <CourseDetails /> },
+            { path: 'exercise/:courseId/:lectureId', element: <Testcase /> },
+          
           ],
         },
         {

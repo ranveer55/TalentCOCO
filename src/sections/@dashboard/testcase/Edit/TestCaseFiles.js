@@ -106,12 +106,12 @@ export default function TestCaseFiles({ files, setFile }) {
   return (
 
     <Box style={{ display: 'flex', justifyContent: "space-between" }}>
-      <Box style={{ width: 300, backgroundColor: 'grey', padding: 10 }}>
+      <Box style={{ width: 200, backgroundColor: 'grey', padding: 10 }}>
         {RenderFiles(files.Student, 'Student')}
         {RenderFiles(files.Solution, 'Solution')}
         {RenderFiles(files.Evaluation, 'Evaluation')}
       </Box>
-      <Box sx={{ p: 1 }}>
+      <Box style={{width:'calc(100% - 200px)', paddingLeft:10}}>
         <Typography variant="h6" >
           {files.currentFileType} File
         </Typography>

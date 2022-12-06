@@ -73,7 +73,6 @@ export function updateMcq(id, payload,cb) {
     try {
       const {data, status} = await axios.patch(`/mcqs/${id}`, payload);
       dispatch(setToast({severity:'success', message:'Mcq Updated', open:true}))
-      dispatch(getLecture(payload.lectureId))
       cb();
       dispatch(getMcqSuccess(null));
     } catch (error) {

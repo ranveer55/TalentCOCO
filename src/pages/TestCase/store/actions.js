@@ -9,6 +9,11 @@ export const startLoading = (payload) => ({
   payload
 })
 
+export const startEvaluationLoading = (payload) => ({
+  type: ActionTypes.FETCH_TESTCASE_EV_LOADING,
+  payload
+})
+
 
 export const getTestcaseSuccess = (payload) => ({
   type: ActionTypes.FETCH_TESTCASE_SUCCESS,
@@ -85,13 +90,13 @@ export function updateTestCase(id, payload,cb) {
 }
 export function evaluateSolution(payload,cb) {
   return async () => {
-    dispatch(startLoading(true));
+    dispatch(startEvaluationLoading(true));
     try {
 
       const {data, status} = await axios.post(`/test-cases/evaluateTestCaseJs`, payload);
-      dispatch(startLoading(false));
+      dispatch(startEvaluationLoading(false));
       if(data && data.status) {
-        console.log(data);
+      
         dispatch(setToast({severity:'success', message:'Test Case evaluated Successfully', open:true}))
         cb(false);
       } else {

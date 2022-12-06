@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
+import styled from "@emotion/styled";
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
-import { Paper, Typography, Box, Checkbox, Stack, OutlinedInput, MenuItem, IconButton, Button, Alert, Grid, Card } from '@mui/material';
+import { Paper, Typography, Box, Checkbox, Stack, OutlinedInput, MenuItem, IconButton, Button, Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from '../../redux/store';
@@ -10,13 +10,8 @@ import type { Quote as QuoteType } from "../types";
 import Image from '../../components/Image';
 import useToggle from '../../hooks/useToggle';
 import Iconify from '../../components/Iconify';
-import { createQuiz } from './store/actions'
+import { createMcq } from './store/actions'
 
-const SaveButton = styled(Button)(({ theme }) => ({
-  backgroundColor: "#46923c",
-  height: '42px',
-  marginTop: '-3px'
-}));
 
 
 let Massage = '';
@@ -83,8 +78,16 @@ function Quote({ option, setOption, index, error }) {
                 value={option.value}
                 onChange={(e) => setOption(option.id, 'value', e.target.value)}
                 inputRef={renameRef}
-                   />
-                
+                sx={{
+                  m: 0,
+                  typography: 'p',
+                  fontWeight: 'fontWeightBold',
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'transparent',
+                  },
+                }}
+              />
+
             </Stack>
             {error && <span style={{ color: "red", marginLeft: '60px' }}>{option.massage}</span>}
           </Paper>
@@ -95,7 +98,7 @@ function Quote({ option, setOption, index, error }) {
 }
 function QuoteLists({ options, setOption, error }) {
   return options.map((option: QuoteType, index: number) => (
-    <div
+    <Paper
       sx={{
         mb: 2,
         width: '100%',
@@ -108,7 +111,7 @@ function QuoteLists({ options, setOption, error }) {
       }}
     >
       <Quote option={option} index={index} key={option.id} setOption={setOption} error={error} />
-    </div>
+    </Paper>
   ));
 }
 const QuoteList = React.memo(QuoteLists);
@@ -133,7 +136,7 @@ const initial = ['A', 'B', 'C', 'D'].map(k => {
   return custom;
 });
 
-function Quiz({ lectureId, mcq = defaultmcq, cb }) {
+function McqQuestion({ lectureId, mcq = defaultmcq, cb }) {
   const [state, setState] = useState({ options: initial });
   const [question, setQuestion] = useState(mcq.question);
   const [error, setError] = useState(false);
@@ -182,7 +185,7 @@ function Quiz({ lectureId, mcq = defaultmcq, cb }) {
     cb()
   }
   const save = () => {
-    let Error = false;
+    let Error=false;
     const op = state.options.filter((item) => item.correct).map(item => item.id)
     let options = state.options.map((item) => {
       Error = item.value === '' || question === '' ? true : item.optionChecked
@@ -193,65 +196,59 @@ function Quiz({ lectureId, mcq = defaultmcq, cb }) {
       setError(Error)
     } else {
       const payload = { question, answer: op, options, lectureId }
-      dispatch(createQuiz(payload, onSave))
-    }
-    if (!Error) {
-      options = state.options.map((item) => {
-        delete item.value
-        delete item.correct;
-        return item;
-      })
-    }
+      dispatch(createMcq(payload, onSave))
+     }
+     if(!Error){
+     options = state.options.map((item) => {
+      delete item.value
+      delete item.correct;
+      return item;
+    })
+  }
   }
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={1}>{ }</Grid>
-      <Grid item xs={12} md={7}>
-        <Card sx={{ p: 3 }}>
-          <Stack direction="column"
-            justifyContent="flex-start"
-            alignItems="flex-start"
-            spacing={2}>
+    <Paper
+      variant="outlined"
+      sx={{ p: 1, bgcolor: 'grey.5008' }}
+    >
+      <Stack direction="column"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        spacing={2}>
 
-            <OutlinedInput
-              size="small"
-              multiline
-              minRows={1}
-              maxRows={10}
-              fullWidth
-              placeholder={'Write Question...'}
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              sx={{
-                typography: 'p',
-                fontWeight: 'fontWeightBold',
-                color: 'primary.dark'
-              }}
-            />
-            {error && Massage !== '' ? <Alert severity="error">{Massage}</Alert> : ((error) && (question === '')) && <Alert severity="error">Question is required</Alert> || ''}
-            <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable droppableId="list">
-                {provided => (
-                  <div ref={provided.innerRef} {...provided.droppableProps} style={{ width: '100%' }}>
-                    <QuoteList options={state.options} setOption={setOption} error={error} />
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={10}>{ }</Grid>
-              <Grid item xs={12} md={1}>
-                <SaveButton size="medium" variant="contained" loading={false} onClick={save}>
-                  Save
-                </SaveButton>
-                </Grid>
-                </Grid>
-              </Stack>
+        <OutlinedInput
+          size="small"
+          multiline
+          minRows={1}
+          maxRows={10}
+          fullWidth
+          placeholder={'Write Question...'}
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          sx={{
+            typography: 'p',
+            fontWeight: 'fontWeightBold',
+            color: 'primary.dark'
+          }}
+        />
+        {error && Massage !== '' ? <Alert severity="error">{Massage}</Alert> : ((error) && (question === '')) && <Alert severity="error">Question is required</Alert> || ''}
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="list">
+            {provided => (
+              <div ref={provided.innerRef} {...provided.droppableProps} style={{ width: '100%' }}>
+                <QuoteList options={state.options} setOption={setOption} error={error} />
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+        <LoadingButton size="medium" variant="contained" loading={false} onClick={save}>
+          Save
+        </LoadingButton>
 
-            </Card>
-          </Grid>
-      </Grid>
-      );
+      </Stack>
+
+    </Paper>
+  );
 }
-      export default Quiz
+export default McqQuestion

@@ -66,15 +66,16 @@ const getExtFromLanguage =(name) =>{
 const jsSample ={"Student":[{"name":"index.js","code":"function sum(a, b) {\r\n    return a + b;\r\n  }\r\nmodule.exports = sum;\r\n"}],"Solution":[{"name":"index.js","code":"function sum(a, b) {\r\n    return a + b;\r\n  }\r\nmodule.exports = sum;\r\n"}],"Evaluation":[{"name":"index.js","code":"test('adds 1 + 2 to equal 3', () => {\r\n  expect(sum(1, 2)).toBe(3);\r\n});"}],"currentFileIndex":0,"currentFileType":"Student","index":1}
 const pySample ={"Student":[{"name":"index.py","code":"def add(a,b):\r\n    return a+b"}],"Solution":[{"name":"index.py","code":"def add(a,b):\r\n    return a+b"}],"Evaluation":[{"name":"index.py","code":"import sys\r\n\r\nimport unittest\r\nfrom unittest import TestCase\r\nclass Evaluate(TestCase):\r\n    def test_add(self):\r\n        import index\r\n        # import index  # Imports and runs student's solution\r\n        output = index.add(10,5)  # Returns output since this function started\r\n        self.assertEqual(output,15)\r\n\r\n"}],"currentFileIndex":0,"currentFileType":"Evaluation","index":1,"language":"python"}
 
-export default function TestCaseNewEditForm({ isEdit, language }) {
+export default function TestCaseNewEditForm({ language }) {
   const [files, setFile] = useState(language==='python' ? pySample:jsSample)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [t, setT] = useState();
   const [disabled, setDisabled] = useState(true);
-  const { id, CourseId, lessonId, lectureId } = useParams();
+  const { courseId, lectureId } = useParams();
   const [checked, setChecked] = useState(true);
-  const { testcase: { testcase, isLoading }, app: { masterdata } } = useSelector((state) => state);
+  const { testcase: { testcase, isEVLoading,isLoading }, app: { masterdata } } = useSelector((state) => state);
+  console.log({testcase});
 
   useEffect(() => {
     if(testcase && testcase.index.length >0){
@@ -96,20 +97,10 @@ export default function TestCaseNewEditForm({ isEdit, language }) {
 
   }, [testcase])
 
-  useEffect(() => {
-    if (id) {
-      dispatch(getTestCase(id));
-    }
-    if (lessonId) {
-      dispatch(getTestCases(lectureId));
-    }
 
-  }, [dispatch]);
-
-
-  useEffect(() => {
-    return () => dispatch(clearTestCase())
-  }, [])
+  // useEffect(() => {
+  //   return () => dispatch(clearTestCase())
+  // }, [])
 
   const NewTestcaseSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').min(3),
@@ -149,19 +140,10 @@ export default function TestCaseNewEditForm({ isEdit, language }) {
   } = methods;
 
   const values = watch();
-  useEffect(() => {
-    if (isEdit && testcase) {
-      reset(defaultValues);
-    }
-    if (!isEdit) {
-      reset(defaultValues);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, testcase]);
 
   const cb = () => {
     reset();
-    navigate(`/dashboard/course/${CourseId}/lesson/${lessonId}/lecture/${lectureId}`)
+    navigate(`/dashboard/course/${courseId}`)
   }
 
   const onSubmit = async () => {
@@ -214,34 +196,23 @@ export default function TestCaseNewEditForm({ isEdit, language }) {
         <Grid item xs={12} md={8}>
 
           <Card sx={{ p: 2 }}>
-            <Box
-              sx={{
-                display: 'grid',
-                rowGap: 3,
-              }}
-            >
+            <Stack direction="column" spacing={2}>
               <RHFTextField name="name" label="TestCase Name" onChange={(e) => handleName(e)} />
               <Typography variant='h6'>Problem statement</Typography>
-              <Typography variant='p'>
+              <Typography variant='p'  >
                 This is the problem that your students will try to solve. Be as descriptive as you can. Remember your students won’t necessarily be able to ask clarifying questions.
 
               </Typography>
               <RHFEditor simple name="body" onChange={(e) => handleBody(e)} />
               <TestCaseFiles files={files} setFile={setFile} key={testcase?.id} />
-
-            </Box>
+              </Stack>
+            
           </Card>
         </Grid>
 
 
         <Grid item xs={12} md={4}>
           <Card sx={{ p: 3 }}>
-            <Box
-              sx={{
-                display: 'grid',
-                rowGap: 3,
-              }}
-            >
               <FormGroup sx={{ marginLeft: '10px' }}>
                 <FormControlLabel
                   control={<Switch size="large" name='active' checked={checked} onChange={handleChange} />}
@@ -251,18 +222,17 @@ export default function TestCaseNewEditForm({ isEdit, language }) {
                 />
               </FormGroup>
               <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton disabled={disabled} type="submit" variant="contained" loading={isSubmitting}>
+                <LoadingButton disabled={disabled} type="submit" variant="contained" loading={isLoading}>
                   Save Changes
                 </LoadingButton>
 
               </Stack>
               <Stack alignItems="flex-end" sx={{ mt: 3 }}>
 
-                <LoadingButton onClick={evaluate} type="button" variant="contained" loading={isLoading}>
+                <LoadingButton onClick={evaluate} type="button" variant="contained" loading={isEVLoading}>
                   Check Solution
                 </LoadingButton>
               </Stack>
-            </Box>
           </Card>
         </Grid>
       </Grid>

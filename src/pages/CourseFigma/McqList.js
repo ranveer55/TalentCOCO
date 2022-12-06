@@ -1,5 +1,5 @@
 
-import { useCallback, useState, useMemo } from 'react';
+import { useCallback, useState, useMemo, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { Navigate, useNavigate } from 'react-router';
 import { IconButton, Tooltip, Card, Stack, Button, Switch, Box, Typography, } from '@mui/material';
@@ -8,9 +8,9 @@ import { dispatch, useDispatch, useSelector } from '../../redux/store';
 // import LessonList from './LessonList';
 import DeleteAlert from './DeleteAlert';
 import SectionForm from './SectionForm';
-import LectureForm from './LectureForm';
-import LectureContent from './LectureContent';
-import { deleteLecture } from '../Lectures/store/actions';
+import MCQForm from './MCQForm';
+// import MCQContent from './MCQContent';
+import { deleteMcq } from '../MCQ/store/actions';
 import { getCourse } from '../Courses/store/actions';
 
 
@@ -29,45 +29,19 @@ const EditMenu = ({ editHandler, item }) => {
     )
 }
 
-const LectureType = ({ title = 'Add New', cancel, lectureId }) => {
-    const [type, setType] = useState(null)
 
-    return (
-        <Card sx={{ p: 2, m: 2, border: '1px dashed' }}>
-            {type ? <>
-                <LectureForm type={type} lectureId={lectureId} cancel={e => setType(null)} />
-            </> :
-                <Stack direction="row" spacing={2}>
-                    <Button size="small" startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('Lecture')} >
-                        Add Lecture
-                    </Button>
-                    <Button size="small" startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('MCQ')} >
-                        Add MCQ
-                    </Button>
-                    <Button size="small" startIcon={<Iconify icon="eva:plus-circle-outline" />} onClick={e => setType('Exercise')}  >
-                        Add Coding Exercise
-                    </Button>
-                    <Button size="small" color="error" startIcon={<Iconify icon="eva:close-circle-outline" />} onClick={cancel}>
-                        Cancel
-                    </Button>
-                </Stack>
-            }
 
-        </Card>
-    )
-}
-
-const EmptyLectureAddCard = ({ lectureId }) => {
+const EmptyMCQAddCard = ({ lectureId }) => {
     const [visible, setVisible] = useState(false)
     const onClick = () => {
         setVisible(!visible)
     }
     return (
-        <Card sx={{ p: 2, m: 2 }}>
-            {visible ? <LectureType hide={onClick} cancel={() => setVisible(false)} lectureId={lectureId} /> :
-                <Tooltip title='Add Lecture/MCQ/Exercise'>
+        <Card sx={{ p: 1, m: 0 }}>
+            {visible ? <MCQForm hide={onClick} cancel={() => setVisible(false)} lectureId={lectureId} /> :
+                <Tooltip title='Add Question'>
                     <IconButton size="small" aria-label="add" color="primary" onClick={onClick}>
-                        <Iconify icon="eva:plus-circle-outline" />
+                        <Iconify icon="eva:plus-circle-outline" /> 
                     </IconButton>
                 </Tooltip>
             }
@@ -78,7 +52,7 @@ const EmptyLectureAddCard = ({ lectureId }) => {
 
 
 
-function LectureList({ lesson }) {
+function MCQList({ lecture }) {
     const [isShown, setIsShown] = useState(null);
     const [edit, setEdit] = useState(null)
     const [deleteMe, setDelete] = useState(null)
@@ -87,9 +61,11 @@ function LectureList({ lesson }) {
     const [showContentId, setShowContentId] = useState(null)
     const navigate= useNavigate()
 
-    if (!lesson || !lesson.lectures) {
+    if (!lecture || !lecture.mcq) {
         return null;
     }
+
+    
 
     const editHandler = (editType, item) => {
         if (editType === 'delete') {
@@ -106,26 +82,24 @@ function LectureList({ lesson }) {
         setItem(null)
     }
     const cb = () => {
-        dispatch(getCourse(lesson.courseId))
+        // dispatch(getCourse(lecture.courseId))
         cancel()
         setItem(null)
     }
     const Iconfirm = () => {
         console.log({ targetItem });
-        dispatch(deleteLecture(targetItem.id, cb))
+        dispatch(deleteMcq(targetItem.id, cb))
     }
 
-    const editLectureContent =(l) =>{
+    const editMCQContent =(l) =>{
         if(l.type==='Exercise'){
-            const url =`/dashboard/exercise/${lesson.courseId}/${l.id}`;
-            console.log({url})
-          navigate(url)
+          navigate('/testcase')
         } else {
             setShowContentId(l.id)
             setShowContent(true)
         }
     }
-    const cancelLectureEdit =() =>{
+    const cancelMCQEdit =() =>{
             setShowContentId(null)
             setShowContent(false)
         
@@ -135,17 +109,18 @@ function LectureList({ lesson }) {
 
     return (
         <>
-            {lesson.lectures.map((lecture, lectureIndex) =>
-                <Card key={lecture.id} sx={{ p: 1, m: 3, border: '1px solid ' }}>
-                    {edit && targetItem.id === lecture.id ?
-                        <LectureForm type={lecture.type} lecture={lecture} lessonId={lecture.lessonId} cancel={cancel} courseId={lesson.courseId} />
+
+            {lecture.mcq.map((mcq, mcqIndex) =>
+                <Card key={mcq.id} sx={{ p: 1, m: 3, border: '1px solid ' }}>
+                    {edit && targetItem.id === mcq.id ?
+                        <MCQForm mcq={mcq} lectureId={lecture.lectureId} cancel={cancel} />
                         :
                         <Stack
                             direction="row"
                             justifyContent="space-between"
                             alignItems="center"
                             spacing={2}
-                            onMouseEnter={() => setIsShown(lecture)} onMouseLeave={() => setIsShown(null)}
+                            onMouseEnter={() => setIsShown(mcq)} onMouseLeave={() => setIsShown(null)}
                         >
                             <Stack
                                 direction="row"
@@ -153,12 +128,12 @@ function LectureList({ lesson }) {
                                 alignItems="center"
                                 spacing={1}>
                                 <Typography variant="p">
-                                    <b>{`${lectureIndex + 1}.`}</b>
+                                    <b>{`${mcqIndex + 1}.`}</b>
                                 </Typography>
                                 <Typography variant="p" >
-                                    {` ${lecture.name}`}
+                                    {` ${mcq.question}`}
                                 </Typography>
-                                {isShown && isShown.id === lecture.id ? <EditMenu editHandler={editHandler} item={lecture} /> : null}
+                                {isShown && isShown.id === mcq.id ? <EditMenu editHandler={editHandler} item={mcq} /> : null}
 
 
                             </Stack>
@@ -168,14 +143,12 @@ function LectureList({ lesson }) {
                                 alignItems="center"
                                 spacing={2}
                             >
-                                {isShown && isShown.id === lecture.id ? <>
+                                {isShown && isShown.id === mcq.id ? <>
                                     <Button size="small" startIcon={<Iconify icon="eva:plus-circle-outline" />}
-                                        onClick={e => editLectureContent(lecture)} 
+                                        onClick={e => editMCQContent(mcq)} 
                                         variant="outlined"
-                                    >
-                                        {lecture.type === 'Lecture' && 'Add Content'}
-                                        {lecture.type === 'MCQ' && 'Add Question'}
-                                        {lecture.type === 'Exercise' && 'Edit Exercise'}
+                                    >Edit Question
+                                        
                                     </Button>
 
                                     <Iconify icon="eva:menu-outline" sx={{ pointer: 'cursor' }} />
@@ -185,15 +158,15 @@ function LectureList({ lesson }) {
                         </Stack>
 
                     }
-                    {showContent && showContentId===lecture.id ? <LectureContent lecture={lecture} cancel={cancelLectureEdit}  />: null }
-                    {/* <LectureList lecture={lecture} /> */}
-                    {/* <EmptyLectureAddCard lectureId={lecture.id} /> */}
+                    {/* {showContent && showContentId===mcq.id ? <MCQContent mcq={mcq} cancel={cancelMCQEdit}  />: null } */}
+                    
                 </Card>
             )
             }
             <DeleteAlert cancel={cancel} Iconfirm={Iconfirm} open={deleteMe} />
+            <EmptyMCQAddCard lectureId={lecture.id} />
         </>
     );
 }
-export default LectureList;
+export default MCQList;
 

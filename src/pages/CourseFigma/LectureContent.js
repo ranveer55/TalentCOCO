@@ -18,6 +18,7 @@ import { dispatch, useDispatch, useSelector } from '../../redux/store';
 import { RHFEditor, FormProvider } from '../../components/hook-form';
 import { getCourse } from '../Courses/store/actions';
 import { updateLecture } from '../Lectures/store/actions';
+import MCQList from './McqList';
 
 
 
@@ -74,7 +75,7 @@ export default function LectureContent({ lecture, cancel }) {
         defaultValues.body = e;
     };
 
-
+    
     return (
         <>
             {lecture.type === 'Lecture' ?
@@ -98,6 +99,12 @@ export default function LectureContent({ lecture, cancel }) {
                     </FormProvider>
                 </Box>
                 : null}
+            {lecture.type === 'MCQ' ?
+                <Box sx={{ m: 1 }}>
+                    <MCQList lecture={lecture} />
+                </Box>
+                : null}
+
         </>
     );
 }

@@ -10,7 +10,7 @@ import DeleteAlert from './DeleteAlert';
 import SectionForm from './SectionForm';
 import MCQForm from './MCQForm';
 // import MCQContent from './MCQContent';
-import { deleteMcq } from '../MCQ/store/actions';
+import { deleteMcq } from './storeMcq/actions';
 import { getCourse } from '../Courses/store/actions';
 
 

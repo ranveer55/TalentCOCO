@@ -25,7 +25,7 @@ import { RHFSwitch, RHFEditor, FormProvider, RHFTextField, RHFUploadSingleFile }
 //
 import BlogNewPostPreview from '../../blog/BlogNewPostPreview';
 
-import { createLecture, updateLecture, getLecture } from '../../../../pages/Lectures/store/actions'
+import { createLecture, updateLecture, getLecture } from '../../../../pages/CourseDetail/storeLecture/actions'
 import { ProfilePostCard } from '../../user/profile';
 import Quiz from './Quiz';
 // ----------------------------------------------------------------------

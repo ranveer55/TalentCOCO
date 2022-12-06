@@ -2,7 +2,7 @@ import * as ActionTypes from './Types';
 import axios from '../../../utils/axios';
 import { dispatch } from '../../../redux/store';
 import {  setToast } from '../../app/store/actions';
-import { getLecture } from '../../Lectures/store/actions';
+import { getLecture } from '../storeLecture/actions';
 
 
 export const startLoading = (payload) => ({

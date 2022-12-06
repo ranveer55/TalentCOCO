@@ -25,7 +25,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getLectures, deleteLecture } from './store/actions';
+import { getLectures, deleteLecture } from '../CourseDetail/storeLecture/actions';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks

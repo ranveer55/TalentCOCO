@@ -10,7 +10,7 @@ import type { Quote as QuoteType } from "../types";
 import Image from '../../components/Image';
 import useToggle from '../../hooks/useToggle';
 import Iconify from '../../components/Iconify';
-import { createMcq } from './store/actions'
+import { createMcq } from '../CourseDetail/storeMcq/actions'
 
 
 

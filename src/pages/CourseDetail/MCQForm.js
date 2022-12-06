@@ -25,7 +25,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 // components
 import { RHFSwitch, RHFEditor, FormProvider, RHFTextField, RHFUploadSingleFile } from '../../components/hook-form';
 import { getCourse } from '../Courses/store/actions'
-import { createMcq, updateMcq } from '../MCQ/store/actions';
+import { createMcq, updateMcq } from './storeMcq/actions';
 
 
 const MCQForm = ({ cancel, lectureId, mcq = null }) => {

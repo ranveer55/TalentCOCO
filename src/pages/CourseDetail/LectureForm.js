@@ -26,7 +26,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { RHFSwitch, RHFEditor, FormProvider, RHFTextField, RHFUploadSingleFile } from '../../components/hook-form';
 //
 
-import { createLecture, updateLecture } from '../Lectures/store/actions'
+import { createLecture, updateLecture } from './storeLecture/actions'
 import {getCourse } from '../Courses/store/actions'
 
 

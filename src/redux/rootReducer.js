@@ -10,10 +10,9 @@ import kanbanReducer from './slices/kanban';
 import userReducer from  '../pages/Users/store/Reducer';
 import courseReducer from '../pages/Courses/store/Reducer';
 import reportReducer from '../pages/Report/store/Reducer';
-import lectureReducer from '../pages/Lectures/store/Reducer';
+import lectureReducer from '../pages/CourseDetail/storeLecture/Reducer';
 import testcaseReducer from '../pages/TestCase/store/Reducer';
-import coursefigmaReducer from '../pages/CourseFigma/store/Reducer';
-import mcqReducer from '../pages/MCQ/store/Reducer';
+import mcqReducer from '../pages/CourseDetail/storeMcq/Reducer';
 import lessonReducer from '../pages/Lessons/store/Reducer';
 import companyReducer from '../pages/Companies/store/Reducer';
 import appReducer from '../pages/app/store/Reducer';
@@ -113,7 +112,6 @@ const rootReducer = combineReducers({
   course: persistReducer(coursePersistConfig, courseReducer),
   lecture: persistReducer(lecturePersistConfig, lectureReducer),
   testcase: persistReducer(testcasePersistConfig, testcaseReducer),
-  coursefigma: persistReducer(coursefigmaPersistConfig, coursefigmaReducer),
   report: persistReducer(reportPersistConfig, reportReducer),
   mcq: persistReducer(mcqPersistConfig, mcqReducer),
   lesson: persistReducer(lessonPersistConfig, lessonReducer),

@@ -32,12 +32,12 @@ const EmptySectionCard = ({ courseId }) => {
   )
 }
 
-export default function CourseFigma() {
+export default function CourseDetail() {
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { courseId } = useParams();
   const { course: { course, isLoading } } = useSelector((state) => state);
   useEffect(() => {
-    dispatch(getCourse(id ?? '638ddc3c5ae12d3c2071cff2'));
+    dispatch(getCourse(courseId));
   }, [dispatch]);
   return (<Page title="courses: Course List">
     <Container maxWidth={'lg'}>

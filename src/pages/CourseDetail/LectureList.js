@@ -10,7 +10,7 @@ import DeleteAlert from './DeleteAlert';
 import SectionForm from './SectionForm';
 import LectureForm from './LectureForm';
 import LectureContent from './LectureContent';
-import { deleteLecture } from '../Lectures/store/actions';
+import { deleteLecture } from './storeLecture/actions';
 import { getCourse } from '../Courses/store/actions';
 
 

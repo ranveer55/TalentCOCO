@@ -25,7 +25,7 @@ import {
  } from '../../sections/@dashboard/lectures/lecture-details';
 
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
-import { getLecture } from './store/actions';
+import { getLecture } from '../CourseDetail/storeLecture/actions';
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
   margin: 'auto',

@@ -101,21 +101,9 @@ export default function Router() {
         {
           children: [
             { path: 'course', element: <Course /> },
-            { path: 'course/:CourseId', element: <Lesson /> },
-            { path: 'course/:CourseId/new', element: <LessonCreate /> },
-            { path: 'course/:CourseId/:id/edit', element: <LessonCreate /> },
-            { path: 'course/:CourseId/view/:id', element: <LessonDetails /> },
-            { path: 'course/:CourseId/lesson/:lessonId', element: <Lecture /> },
-            { path: 'course/:CourseId/lesson/:lessonId/lecture/new', element: <LectureCreate /> },
-            { path: 'course/:CourseId/lesson/:lessonId/lecture/:id/edit', element: <LectureCreate /> },
-            { path: 'course/:CourseId/lesson/:lessonId/lecture/view/:id', element: <LectureDetails /> },
-            { path: 'course/:CourseId/lesson/:lessonId/lecture/:lectureId', element: <Testcase /> },
-            { path: 'course/:CourseId/lesson/:lessonId/lecture/:lectureId/testcase/new', element: <TestcaseCreate /> },
-            { path: 'course/:CourseId/lesson/:lessonId/lecture/:lectureId/testcase/:id/edit', element: <TestcaseCreate /> },
-            { path: 'course/:CourseId/lesson/:lessonId/lecture/:lectureId/testcase/view/:id', element: <TestcaseDetails /> },
+            { path: 'course/:courseId', element: <CourseDetail /> },
             { path: 'course/new', element: <CourseCreate /> },
             { path: 'course/:id/edit', element: <CourseCreate /> },
-            { path: 'course/view/:id', element: <CourseDetails /> },
             { path: 'exercise/:courseId/:lectureId', element: <Testcase /> },
           
           ],
@@ -125,46 +113,8 @@ export default function Router() {
             { path: `report`, element: <Report /> },
            ],
         },
-        {
-          children: [
-            { path: `coursefigma`, element: <CourseFigma /> },
-           ],
-        },
-        {
-          path: 'lectures',
-          children: [
-            { element: <Navigate to="/dashboard/Lectures/lectures/lecture" replace />, index: true },
-            { path: 'lecture', element: <Lecture /> },
-
-          ],
-        },
-        {
-          path: 'lessons',
-          children: [
-            { element: <Navigate to="/dashboard/Lessons/lessons/lesson" replace />, index: true },
-
-          ],
-        },
        
-        {
-          path: 'tallys',
-          children: [
-            { element: <Navigate to="/dashboard/tallys/tally" replace />, index: true },
-            { path: 'tally', element: <Tally /> },
-            { path: 'tally/new', element: <TallyCreate /> },
-            { path: 'tally/:id/edit', element: <TallyCreate /> },
-          ],
-        },
-        {
-          path: 'teams',
-          children: [
-            { element: <Navigate to="/dashboard/teams/team" replace />, index: true },
-            { path: 'team', element: <Team /> },
-            { path: 'team/new', element: <TeamCreate /> },
-            { path: 'team/:name/edit', element: <TeamCreate /> },
-          ],
-        },
-
+       
         { /*
           path: 'user',
           children: [
@@ -279,34 +229,15 @@ const UserCreate = Loadable(lazy(() => import('../pages/Users/UsersCreate')));
 const UserDetails = Loadable(lazy(() => import('../pages/Users/UsersDetails')));
 // REPORT
 const Report = Loadable(lazy(() => import('../pages/Report/Report')));
-// COURSEFIGMA
-const CourseFigma = Loadable(lazy(() => import('../pages/CourseFigma/CourseFigma')));
-// COURSE
 const Course = Loadable(lazy(() => import('../pages/Courses/Courses')));
 const CourseCreate = Loadable(lazy(() => import('../pages/Courses/CoursesCreate')));
-const CourseDetails = Loadable(lazy(() => import('../pages/Courses/CoursesDetails')));
-// LECTURE
-const Lecture = Loadable(lazy(() => import('../pages/Lectures/Lecture')));
-const LectureCreate = Loadable(lazy(() => import('../pages/Lectures/LectureCreate')));
-const LectureDetails = Loadable(lazy(() => import('../pages/Lectures/LectureDetails')));
+const CourseDetail = Loadable(lazy(() => import('../pages/CourseDetail/index')));
 // TESTCASE
 const Testcase = Loadable(lazy(() => import('../pages/TestCase/testCase')));
-const TestcaseCreate = Loadable(lazy(() => import('../pages/TestCase/TestcaseCreate')));
-const TestcaseDetails = Loadable(lazy(() => import('../pages/TestCase/TestcaseDetails')));
-// LESSONS
-const Lesson = Loadable(lazy(() => import('../pages/Lessons/Lessons')));
-const LessonCreate = Loadable(lazy(() => import('../pages/Lessons/LessonsCreate')));
-const LessonDetails = Loadable(lazy(() => import('../pages/Lessons/LessonsDetails')));
 // COMPANY
 const Company = Loadable(lazy(() => import('../pages/Companies/List')));
 const CompanyCreate = Loadable(lazy(() => import('../pages/Companies/CompanyCreate')));
 const CompanyDetails = Loadable(lazy(() => import('../pages/Companies/CompanyDetails')));
-// TALLY
-const Tally = Loadable(lazy(() => import('../pages/dashboard/Tally')));
-const TallyCreate = Loadable(lazy(() => import('../pages/dashboard/TallyCreate')));
-// TEAM
-const Team = Loadable(lazy(() => import('../pages/dashboard/Team')));
-const TeamCreate = Loadable(lazy(() => import('../pages/dashboard/TeamCreate')));
 
 // INVOICE
 const InvoiceList = Loadable(lazy(() => import('../pages/dashboard/InvoiceList')));

@@ -6,7 +6,8 @@ import { IconButton, Tooltip, Card, Stack, Button, Box, Typography} from '@mui/m
 import Iconify from '../../components/Iconify';
 // routes
 import { dispatch, useDispatch, useSelector } from '../../redux/store';
-import { deleteSection, getCourse } from './store/actions'
+import { deleteSection } from './store/actions'
+import { getCourse } from '../Courses/store/actions';
 import LectureForm from './LectureForm';
 import LectureList from './LectureList';
 import DeleteAlert from './DeleteAlert';

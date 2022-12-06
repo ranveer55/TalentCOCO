@@ -26,7 +26,7 @@ import { fData } from '../../../../utils/formatNumber';
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // _mock
 import { countries } from '../../../../_mock';
-import { createLecture, getLecture, getLectures, updateLecture } from '../../../../pages/Lectures/store/actions'
+import { createLecture, getLecture, getLectures, updateLecture } from '../../../../pages/CourseDetail/storeLecture/actions'
 // components
 import Label from '../../../../components/Label';
 // import LectureMcq from '../../../../pages/MCQ/LectureMcq'

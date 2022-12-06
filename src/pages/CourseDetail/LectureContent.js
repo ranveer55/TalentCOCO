@@ -17,7 +17,7 @@ import { capitalize, unescape } from 'lodash';
 import { dispatch, useDispatch, useSelector } from '../../redux/store';
 import { RHFEditor, FormProvider } from '../../components/hook-form';
 import { getCourse } from '../Courses/store/actions';
-import { updateLecture } from '../Lectures/store/actions';
+import { updateLecture } from './storeLecture/actions';
 import MCQList from './McqList';
 
 

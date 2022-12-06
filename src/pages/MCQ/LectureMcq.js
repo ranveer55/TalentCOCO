@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import Image from '../../components/Image';
 import useToggle from '../../hooks/useToggle';
 import Iconify from '../../components/Iconify';
-import { createMcq } from './store/actions'
+import { createMcq } from '../CourseDetail/storeMcq/actions'
 import { DialogAnimate } from '../../components/animate';
 import McqQuestion from "./McqQuestion";
 

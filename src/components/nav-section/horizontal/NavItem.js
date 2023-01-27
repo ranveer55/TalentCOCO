@@ -3,12 +3,13 @@ import { forwardRef } from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
 // @mui
 import { Box, Link } from '@mui/material';
+
 // hooks
 import useLocales from '../../../hooks/useLocales';
 // guards
 import RoleBasedGuard from '../../../guards/RoleBasedGuard';
 // config
-import { ICON } from '../../../config';
+import { ICON ,NAVBAR } from '../../../config';
 //
 import Iconify from '../../Iconify';
 import { ListItemStyle } from './style';
@@ -16,10 +17,11 @@ import { isExternalLink } from '..';
 
 // ----------------------------------------------------------------------
 
+
 // HANDLE SHOW ITEM BY ROLE
 const ListItem = forwardRef((props, ref) => (
   <RoleBasedGuard roles={props.roles}>
-    <ListItemStyle {...props} ref={ref}>
+    <ListItemStyle >
       {props.children}
     </ListItemStyle>
   </RoleBasedGuard>

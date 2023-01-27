@@ -22,10 +22,10 @@ export const ListItemStyle = styled(Button, {
     margin: theme.spacing(0, 0.5),
     padding: theme.spacing(0, 1),
     color: theme.palette.text.secondary,
+    fontSize:'25px',
     height: NAVBAR.DASHBOARD_ITEM_HORIZONTAL_HEIGHT,
     '&:hover': {
       color: theme.palette.text.primary,
-      backgroundColor: theme.palette.background.paper,
     },
     // activeRoot
     ...(activeRoot && {

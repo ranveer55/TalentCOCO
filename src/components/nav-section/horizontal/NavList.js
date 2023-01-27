@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Stack } from '@mui/material';
 //
 import { NavItemRoot, NavItemSub } from './NavItem';
 import { PaperStyle } from './style';
@@ -53,7 +54,7 @@ export function NavListRoot({ list }) {
           onMouseLeave={handleClose}
         />
 
-        <PaperStyle
+        <Stack
           open={open}
           anchorEl={menuRef.current}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
@@ -66,7 +67,7 @@ export function NavListRoot({ list }) {
           {(list.children || []).map((item) => (
             <NavListSub key={item.title + item.path} list={item} />
           ))}
-        </PaperStyle>
+        </Stack>
       </>
     );
   }
@@ -114,7 +115,7 @@ function NavListSub({ list }) {
           onMouseLeave={handleClose}
         />
 
-        <PaperStyle
+        <Stack
           open={open}
           anchorEl={menuRef.current}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -127,7 +128,7 @@ function NavListSub({ list }) {
           {(list.children || []).map((item) => (
             <NavListSub key={item.title + item.path} list={item} />
           ))}
-        </PaperStyle>
+        </Stack>
       </>
     );
   }
